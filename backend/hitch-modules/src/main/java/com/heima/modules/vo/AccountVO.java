@@ -56,7 +56,7 @@ public class AccountVO implements VO {
     private String phone;
 
     /**
-     * 角色 乘客：1司机：2
+     * 角色 乘客：1 司机：2
      */
     private Integer role;
 

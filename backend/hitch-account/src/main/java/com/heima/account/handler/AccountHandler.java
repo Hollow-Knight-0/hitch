@@ -83,15 +83,28 @@ public class AccountHandler {
      * @return
      */
     public ResponseVO<AccountVO> modifyPassword(AccountVO accountVO) {
-        //获取当前登录用户的id
-        String userid = accountVO.getCurrentUserId();
-        //TODO:任务1-修改密码-1day
+        //校验用户输入
+        if(StringUtils.isAnyEmpty(accountVO.getPassword(), accountVO.getNewPassword())){
+            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST,"旧密码或新密码为空");
+        }
         //获取当前用户在数据库里的信息
+        String userId = accountVO.getCurrentUserId();
+        AccountPO accountPO = accountAPIService.getAccountByID(userId);
+        if(null == accountPO){
+            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST,"用户不存在");
+        }
+        String oldPassword = accountPO.getPassword();
         //旧密码加密，对比数据库，防止输入错误
+        if(!oldPassword.equals(CommonsUtils.encodeMD5(accountVO.getPassword()))){
+            throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"旧密码错误");
+        }
         //新密码加密，对比旧密码，不允许相同
+        if(oldPassword.equals(CommonsUtils.encodeMD5(accountVO.getNewPassword()))){
+            throw new BusinessRuntimeException(BusinessErrors.DATA_DUPLICATION,"新密码不能与旧密码相同");
+        }
         //校验通过，将新密码写入数据库，修改成功
-
-
+        accountPO.setPassword(CommonsUtils.encodeMD5(accountVO.getNewPassword()));
+        accountAPIService.update(accountPO);
         return ResponseVO.success(null, "修改密码成功");
     }
 

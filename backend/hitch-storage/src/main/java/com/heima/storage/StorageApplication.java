@@ -12,6 +12,5 @@ import org.springframework.cache.annotation.EnableCaching;
 public class StorageApplication {
     public static void main(String[] args) {
         SpringApplication.run(StorageApplication.class, args);
-
     }
 }

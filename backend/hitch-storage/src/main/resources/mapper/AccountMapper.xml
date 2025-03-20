@@ -17,10 +17,12 @@
         <result column="UPDATED_BY" jdbcType="VARCHAR" property="updatedBy"/>
         <result column="UPDATED_TIME" jdbcType="TIMESTAMP" property="updatedTime"/>
     </resultMap>
+
     <sql id="Base_Column_List">
     id, username, useralias, password, phone, role, avatar, paycode,status, REVISION, CREATED_BY,
     CREATED_TIME, UPDATED_BY, UPDATED_TIME
   </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
