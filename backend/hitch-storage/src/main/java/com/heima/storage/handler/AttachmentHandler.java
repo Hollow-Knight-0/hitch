@@ -77,6 +77,4 @@ public class AttachmentHandler {
         attachmentPO.setMd5(CommonsUtils.fileSignature(file.getBytes()));
         return attachmentPO;
     }
-
-
 }

@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/api/")
@@ -99,7 +101,7 @@ public class APIController {
 
     @ApiOperation(value = "身份认证接口", tags = {"账户管理"})
     @PostMapping("/identityAuth")
-    public ResponseVO<AuthenticationVO> identityAuth() {
+    public ResponseVO<AuthenticationVO> identityAuth() throws IOException {
         return accountHandler.identityAuth();
     }
 
@@ -108,6 +110,4 @@ public class APIController {
     public ResponseVO<VehicleVO> vehicleAuth() {
         return accountHandler.vehicleAuth();
     }
-
-
 }

@@ -39,5 +39,4 @@ public class RequestInitialAspect {
         Method method = signature.getMethod();
         return method.getAnnotation(RequestInitial.class);
     }
-
 }

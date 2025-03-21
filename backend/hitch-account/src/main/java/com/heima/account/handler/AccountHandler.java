@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 @Component
@@ -189,26 +190,28 @@ public class AccountHandler {
      *
      * @return
      */
-    public ResponseVO<AuthenticationVO> identityAuth() {
+    public ResponseVO<AuthenticationVO> identityAuth() throws IOException {
         AccountPO accountPO = getCurrentAccountPO();
         AuthenticationPO authenticationPO = getAuthenticationPO(accountPO);
         if (null == authenticationPO) {
             throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "用户认证信息不存在");
         }
-        String cardIdFrontPhotoAddr = authenticationPO.getCardIdFrontPhoto();
-        if (StringUtils.isEmpty(cardIdFrontPhotoAddr)) {
+        if (StringUtils.isEmpty(authenticationPO.getCardIdFrontPhoto())) {
             throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "身份证正面照片不存在");
+        }
+        if (StringUtils.isEmpty(authenticationPO.getCardIdBackPhoto())) {
+            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "身份证背面照片不存在");
         }
 
         //TODO:任务2.2-个人实名认证（选做）
         //【可选作业】：调百度完成身份证识别，将识别信息更新到数据库对应字段
         //文档（身份证识别）：https://cloud.baidu.com/doc/OCR/s/rk3h7xzck
-        //文档（h5人脸实名认证接口）：https://ai.baidu.com/ai-doc/FACE/skxie72kp
-        //备注：真实的实名认证需要企业身份，个人无法使用。
+        //文档（h5人脸实名认证接口）：https://ai.baidu.com/ai-doc/FACE/skxie72kp(需要企业身份，个人无法使用)
 
+        //获得用户信息
+        authenticationPO = aiHelper.getUserLicense(authenticationPO);
 
-        //真实业务需要设置Account用户真实姓名，这里直接用用户名
-        accountPO.setUseralias(accountPO.getUsername());
+        accountPO.setUseralias(authenticationPO.getUseralias());
         accountPO.setStatus(1); //状态改成已认证
         //更新Redis缓存
         sessionTemplate.updateSessionUseralias(accountPO.getId(), accountPO.getUseralias());
@@ -261,10 +264,17 @@ public class AccountHandler {
         AccountPO accountPO = getCurrentAccountPO();
         VehiclePO vehiclePO = getVehiclePO(accountPO);
         try {
-            //TODO:任务2.1-车辆信息验证入口-2day
-            String license = aiHelper.getLicense(vehiclePO);
-            vehiclePO.setCarNumber(license);
+            //车辆信息验证，返回车牌号
+            String license = aiHelper.getCarLicense(vehiclePO);
+            if(license == null){
+                throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"车牌号识别失败");
+            }
+            String userId = RequestUtils.getCurrentUserId();
             accountPO.setRole(1);
+            vehiclePO.setCarNumber(license);
+            vehiclePO.setStatus(1);
+            vehiclePO.setCreatedBy(userId);
+            vehiclePO.setUpdatedBy(userId);
             accountAPIService.update(accountPO);
             vehicleAPIService.update(vehiclePO);
         } catch (Exception e) {

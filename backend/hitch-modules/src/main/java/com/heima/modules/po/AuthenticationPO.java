@@ -23,7 +23,7 @@ public class AuthenticationPO implements Serializable, PO {
     private String phone;
 
     /**
-     * 年龄
+     * 出生年月
      */
     private String birth;
 
