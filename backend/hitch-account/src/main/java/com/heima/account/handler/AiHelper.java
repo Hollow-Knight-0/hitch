@@ -7,13 +7,14 @@ import com.heima.modules.po.AuthenticationPO;
 import com.heima.modules.po.VehiclePO;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.Base64;
 
 @Component
@@ -23,7 +24,7 @@ public class AiHelper {
     @Value("${baidu.secretkey}")
     private String SECRET_KEY;
 
-//    public static final Logger logger = LoggerFactory.getLogger(AiHelper.class);
+    public static final Logger logger = LoggerFactory.getLogger(AiHelper.class);
 
     public static final OkHttpClient HTTP_CLIENT = new OkHttpClient().newBuilder().build();
 
@@ -84,6 +85,7 @@ public class AiHelper {
         //解析数据
         Response response = HTTP_CLIENT.newCall(request).execute();
         JsonNode jsonNode = OBJECT_MAPPER.readTree(response.body().string());
+        logger.info("身份证照片百度AI知别结果：" + jsonNode.toString());
 
 //        //用户照片
 //        String photoBase64 = jsonNode.path("photo").asText();
@@ -139,6 +141,7 @@ public class AiHelper {
         //解析数据
         Response response = HTTP_CLIENT.newCall(request).execute();
         JsonNode jsonNode = OBJECT_MAPPER.readTree(response.body().string());
+        logger.info("车辆前部照片百度AI知别结果：" + jsonNode.toString());
         return jsonNode.path("words_result").path("number").asText();
     }
 
@@ -161,6 +164,7 @@ public class AiHelper {
         //解析数据
         Response response = HTTP_CLIENT.newCall(request).execute();
         JsonNode jsonNode = OBJECT_MAPPER.readTree(response.body().string());
+        logger.info("身行驶证照片百度AI知别结果：" + jsonNode.toString());
         return jsonNode.path("words_result").path("号牌号码").path("words").asText();
     }
 

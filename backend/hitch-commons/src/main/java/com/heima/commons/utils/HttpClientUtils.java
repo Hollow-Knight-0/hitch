@@ -28,14 +28,17 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * HttpClient工具类
@@ -115,6 +118,7 @@ public class HttpClientUtils {
             return result;
         }
     }
+
 
     public static String doGet(String url, Map params, String charset) throws Exception {
         String result = null;

@@ -391,7 +391,7 @@ public class StrokeHandler {
     @Autowired
     BaiduMapClient baiduMapClient;
     //构建装饰着
-    private static final Valuation valuation = new FuelCostValuation(new StartPriceValuation(new BasicValuation(null)));
+    private static final Valuation valuation = new StartPriceValuation(new BasicValuation(new FuelCostValuation(null)));
     /**
      * 添加订单
      *
@@ -401,20 +401,34 @@ public class StrokeHandler {
     private void addOrder(StrokePO inviter, StrokePO invitee) {
         OrderPO orderPO = new OrderPO();
         orderPO.setId(CommonsUtils.getWorkerID());//雪花算法主键序列
-        orderPO.setStatus(0);//初始状态：未支付
+        orderPO.setStatus(0);//初始状态：新创建
+
         //TODO:任务3.1-生成订单-3day
-
-        //注意传入的两个参数，包含了下面想要的信息：
-
         //3.1 给orderPo设置基本的乘客、车主、行程信息
+        orderPO.setDriverId(inviter.getPublisherId());
+        orderPO.setDriverStrokeId(inviter.getId());
+        orderPO.setPassengerId(invitee.getPublisherId());
+        orderPO.setPassengerStrokeId(invitee.getId());
+        orderPO.setCreatedBy(invitee.getCreatedBy());
+        orderPO.setCreatedTime(new Date());
+        orderPO.setUpdatedBy(invitee.getCreatedBy());
+        orderPO.setUpdatedTime(new Date());
 
         //3.2 对接百度路径计算，给orderPo设置路径长度distance、估计时间duration
-        //对接文档：https://lbs.baidu.com/faq/api?title=webapi/routchtout-drive
+        String start = invitee.getStartGeoLat() + "," + invitee.getStartGeoLng();
+        String end = invitee.getEndGeoLat() + "," + invitee.getEndGeoLng();
+        RoutePlanResultBO routePlanResultBO = baiduMapClient.pathPlanning(start, end);
+        if(routePlanResultBO != null){
+            int distance = routePlanResultBO.getDistance().getValue();
+            int estimatedTime = routePlanResultBO.getDuration().getValue();
+            orderPO.setDistance(distance);
+            orderPO.setEstimatedTime(estimatedTime);
 
-        //3.3 完成计费功能，给orderPo设置金额
-        //计费规则：3公里以内起步价13元；3公里以上2.3元/公里；燃油附加费1次收取1元
-        //建议：使用装饰着模式来完成
-
+            //3.3 完成计费功能，给orderPo设置金额
+            //计费规则：3公里以内起步价10元；3公里以上2.3元/公里；燃油附加费1次收取1元
+            //使用装饰着模式来完成
+            orderPO.setCost(valuation.calculation((float) orderPO.getDistance() /1000));
+        }
 
         orderAPIService.add(orderPO);
     }
