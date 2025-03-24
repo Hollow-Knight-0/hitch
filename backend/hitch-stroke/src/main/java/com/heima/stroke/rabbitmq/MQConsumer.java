@@ -36,12 +36,11 @@ public class MQConsumer{
      * @param channel
      * @param tag
      */
-    @RabbitListener(
-            bindings =
-                    {
-                            @QueueBinding(value = @Queue(value = RabbitConfig.STROKE_DEAD_QUEUE, durable = "true"),
-                                    exchange = @Exchange(value = RabbitConfig.STROKE_DEAD_QUEUE_EXCHANGE), key = RabbitConfig.STROKE_DEAD_KEY)
-                    })
+    @RabbitListener(bindings = {@QueueBinding(
+            value = @Queue(value = RabbitConfig.STROKE_DEAD_QUEUE, durable = "true"),
+            exchange = @Exchange(value = RabbitConfig.STROKE_DEAD_QUEUE_EXCHANGE),
+            key = RabbitConfig.STROKE_DEAD_KEY)
+    })
     @RabbitHandler
     public void processStroke(Message massage, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
         //TODO:任务4.3-接收死信队列消息(以下代码已完成，用于验证配置和发送无误)

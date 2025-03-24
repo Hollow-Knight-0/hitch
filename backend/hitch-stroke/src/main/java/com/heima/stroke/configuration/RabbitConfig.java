@@ -1,10 +1,6 @@
 package com.heima.stroke.configuration;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.config.RabbitListenerConfigUtils;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO:任务4.1-Rabbitmq配置
+
+/**
+ * 消息发送到 STROKE_OVER_QUEUE（超时队列）。
+ * TTL 后 将该消息转发到 STROKE_DEAD_QUEUE_EXCHANGE（死信交换机），并使用 STROKE_DEAD_KEY 进行路由。
+ * 消费者监听 STROKE_DEAD_QUEUE 并处理超时的消息。
+ */
 @Configuration
 public class RabbitConfig {
     /**
@@ -27,12 +29,11 @@ public class RabbitConfig {
 
     //行程超时队列交换器
     public static final String STROKE_OVER_QUEUE_EXCHANGE = "STROKE_OVER_QUEUE_EXCHANGE";
-
     //行程死信队列交换器
     public static final String STROKE_DEAD_QUEUE_EXCHANGE = "STROKE_DEAD_QUEUE_EXCHANGE";
+
     //行程超时交换器 ROUTINGKEY
     public static final String STROKE_OVER_KEY = "STROKE_OVER_KEY";
-
     //行程死信交换器 ROUTINGKEY
     public static final String STROKE_DEAD_KEY = "STROKE_DEAD_KEY";
 
@@ -45,16 +46,14 @@ public class RabbitConfig {
      */
     @Bean
     public Queue strokeOverQueue() {
-        //【重要配置】超时队列配置，死信队列的绑定在该方法中实现
-        //需要用到以下属性：
-
+        Map<String,Object> args = new HashMap<>();
         // x-dead-letter-exchange    这里声明当前队列绑定的死信交换机
-
+        args.put("x-dead-letter-exchange",STROKE_DEAD_QUEUE_EXCHANGE);
         // x-dead-letter-routing-key  这里声明当前队列的死信路由key
-
+        args.put("x-dead-letter-routing-key",STROKE_DEAD_KEY);
         // x-message-ttl  声明队列的TTL
-
-        return null;
+        args.put("x-message-ttl",DELAY_TIME);
+        return QueueBuilder.durable(STROKE_OVER_QUEUE).withArguments(args).build();
     }
 
 
@@ -65,7 +64,7 @@ public class RabbitConfig {
      */
     @Bean
     public Queue strokeDeadQueue() {
-        return null;
+        return QueueBuilder.durable(STROKE_DEAD_QUEUE).build();
     }
 
     /**
@@ -75,7 +74,7 @@ public class RabbitConfig {
      */
     @Bean
     DirectExchange strokeOverQueueExchange() {
-        return null;
+        return new DirectExchange(STROKE_OVER_QUEUE_EXCHANGE,true,false);
     }
 
     /**
@@ -85,7 +84,7 @@ public class RabbitConfig {
      */
     @Bean
     DirectExchange strokeDeadQueueExchange() {
-        return null;
+        return new DirectExchange(STROKE_DEAD_QUEUE_EXCHANGE,true,false);
     }
 
 
@@ -97,7 +96,9 @@ public class RabbitConfig {
      */
     @Bean
     Binding bindingStrokeOverDirect() {
-        return null;
+        return BindingBuilder.bind(strokeOverQueue())
+                .to(strokeOverQueueExchange())
+                .with(STROKE_OVER_KEY);
     }
 
     /**
@@ -107,9 +108,8 @@ public class RabbitConfig {
      */
     @Bean
     Binding bindingStrokeDeadDirect() {
-        return null;
+        return BindingBuilder.bind(strokeDeadQueue())
+                .to(strokeDeadQueueExchange())
+                .with(STROKE_DEAD_KEY);
     }
-
-
-
 }
