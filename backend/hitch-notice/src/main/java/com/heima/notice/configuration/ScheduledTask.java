@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.websocket.Session;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 定时任务 推送暂存消息
@@ -39,12 +41,25 @@ public class ScheduledTask {
         //定时调度，获取mongodb里的未读消息，推送给对应用户
         executorService.scheduleAtFixedRate(() -> {
             //获取所有在线的用户accountId，提示：WebSocketServer里有用户链接的池子
-
-            //在MongoDB中获取需要推送的消息，noticeService里的方法研究一下，可以帮到你
-
+            List<String> accountIds = new ArrayList<>(WebSocketServer.sessionPools.keySet());
+            if(CollectionUtils.isEmpty(accountIds)){
+                return;
+            }
+            //在MongoDB中获取需要推送的消息
+            List<NoticePO> pushMessagesList = noticeService.getNoticeByAccountIds(accountIds);
+            if(CollectionUtils.isEmpty(pushMessagesList)){
+                return;
+            }
             //遍历所有消息，逐个发送消息到浏览器
-            //方法：session.getBasicRemote().sendText(json);
-
+            logger.debug("推送消息线程工作中,推送数据条数:{}", pushMessagesList.size());
+            for (NoticePO noticePO : pushMessagesList) {
+                Session session = WebSocketServer.sessionPools.get(noticePO.getSenderId());
+                try {
+                    session.getBasicRemote().sendText(JSON.toJSONString(noticePO.getMessage()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }, 0,1 , TimeUnit.SECONDS);
     }
 

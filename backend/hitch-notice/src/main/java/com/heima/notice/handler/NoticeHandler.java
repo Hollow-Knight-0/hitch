@@ -52,15 +52,15 @@ public class NoticeHandler {
      * @param noticeVO
      */
     public boolean saveNotice(NoticeVO noticeVO) {
-        boolean sendOK = false;
         initNotifyData(noticeVO);
         NoticePO noticePO = CommonsUtils.toPO(noticeVO);
         boolean check = checkParameter(noticePO);
         if (check) {
+            //存储消息
             noticeService.addNotice(noticePO);
-            sendOK = true;
+            return true;
         }
-        return sendOK;
+        return false;
     }
 
     /**

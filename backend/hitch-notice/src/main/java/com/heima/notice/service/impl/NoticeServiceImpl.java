@@ -39,19 +39,26 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     public List<NoticePO> getNoticeByAccountIds(List<String> receiverIds) {
-        //根据用户ID获取消息 并获取前十条
+        // 1. 构造查询条件：查询 receiverId 在 receiverIds 列表中的，并且 read=false（未读）
         Criteria criteria = Criteria.where("receiverId").in(receiverIds);
         criteria.andOperator(Criteria.where("read").is(false));
         Query query = new Query(criteria);
 
+        // 2. 构造更新条件：将 read 字段设置为 true（标记为已读）
         Update update = Update.update("read", true);
-        //查询并删除数据
+
+        // 3. 查询未读消息
         List<NoticePO> noticePOList = mongoTemplate.find(query, NoticePO.class, HtichConstants.NOTICE_COLLECTION);
+
+        // 4. 如果查询到了未读消息，则批量更新，将 read 设置为 true
         if (!noticePOList.isEmpty()) {
             mongoTemplate.updateMulti(query, update, NoticePO.class, HtichConstants.NOTICE_COLLECTION);
         }
+
+        // 5. 返回查询到的消息
         return noticePOList;
     }
+
 
     @Override
     public List<NoticePO> queryList(NoticeVO noticeVO) {

@@ -1,15 +1,21 @@
 package com.heima.notice.socket;
 
 
+import com.alibaba.fastjson.JSON;
 import com.heima.commons.constant.HtichConstants;
+import com.heima.commons.domin.vo.response.ResponseVO;
 import com.heima.commons.entity.SessionContext;
+import com.heima.commons.enums.BusinessErrors;
 import com.heima.commons.helper.RedisSessionHelper;
 import com.heima.commons.utils.SpringUtil;
+import com.heima.modules.vo.NoticeVO;
 import com.heima.notice.handler.NoticeHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,11 +36,23 @@ public class WebSocketServer {
     @OnMessage
     public void onMessage(Session session, String message) {
         String accountId = getAccountId(session);
-
+        if(StringUtils.isEmpty(accountId)){
+            return;
+        }
+        NoticeVO noticeVO = JSON.parseObject(message, NoticeVO.class);
+        noticeVO.setSenderId(accountId);    //发送人ID
+        //设置相关消息内容并存入mongodb
         NoticeHandler noticeHandler = SpringUtil.getBean(NoticeHandler.class);
-        //设置相关消息内容并存入mongodb：noticeHandler.saveNotice(noticeVO);
-
-
+        boolean sendOk = noticeHandler.saveNotice(noticeVO);
+        if(!sendOk){
+            ResponseVO responseVO = ResponseVO.error(BusinessErrors.WS_SEND_FAILED);
+            try {
+                // WebSocket 服务器端向客户端发送错误消息
+                session.getBasicRemote().sendText(JSON.toJSONString(responseVO));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 
@@ -46,7 +64,12 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session) {
-
+        String accountId = getAccountId(session);
+        if(StringUtils.isEmpty(accountId)){
+            return;
+        }
+        sessionPools.remove(accountId);
+        sessionPools.put(accountId,session);
     }
 
     /**
@@ -56,7 +79,11 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose(Session session) {
-
+        String accountId = getAccountId(session);
+        if(StringUtils.isEmpty(accountId)){
+            return;
+        }
+        sessionPools.remove(accountId);
     }
 
 
@@ -71,7 +98,6 @@ public class WebSocketServer {
         System.out.println("发生错误");
         throwable.printStackTrace();
     }
-
 
 
     /*
@@ -95,5 +121,4 @@ public class WebSocketServer {
         }
         return null;
     }
-
 }
