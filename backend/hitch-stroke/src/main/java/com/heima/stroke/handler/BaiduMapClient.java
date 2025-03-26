@@ -3,7 +3,6 @@ package com.heima.stroke.handler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heima.commons.domin.bo.RoutePlanResultBO;
 import com.heima.commons.utils.HttpClientUtils;
 import org.slf4j.Logger;

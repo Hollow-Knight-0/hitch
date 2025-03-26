@@ -6,7 +6,16 @@ public interface HtichConstants {
     String HEADER_ACCOUNT_KEY = "X_ACCOUNT_KEY";
     String SESSION_TOKEN_PREFIX = "SESSION_TOKEN_";
     String ACCOUNT_TOKEN_PREFIX = "ACCOUNT_TOKEN_";
+
+
     //行程相关
+    /*
+    Key前缀	                    存储类型	    用途	                                    示例数据
+    STROKE_GEO_PREFIX	        GEO	        存储行程的地理位置信息	                    trip_1001 -> (116.4, 39.9)
+    STROKE_GEO_DISTANCE_PREFIX	Hash	    存储两次行程的距离信息（起点距离和终点距离）	"trip_1001" -> { "trip_2002": "3.2:4.1" }
+    STROKE_GEO_ZSET_PREFIX	    ZSet	    存储匹配行程的评分	                        "trip_1001" -> { "trip_2002": 95.5 }
+    STROKE_INVITE_PREFIX	    Hash	    存储行程的邀请状态	                        "trip_1001" -> { "trip_2002": "1" }
+     */
     //出行直径范围
     float STROKE_DIAMETER_RANGE = 100;
     /* String STROKE_DATIL_PREFIX = "STROKE_DETAIL_";*/
@@ -46,6 +55,5 @@ public interface HtichConstants {
     static String getImageUrl(String imageUrl) {
         return IMAGE_SERVER_ADDR + imageUrl;
     }
-
 
 }

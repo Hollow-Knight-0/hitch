@@ -6,6 +6,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class GeoBO implements Serializable {
+    private String targetId;
+    private float distance;
+    private String lng;
+    private String lat;
+
     public GeoBO(String targetId, float distance, String lng, String lat) {
         this.targetId = targetId;
         this.distance = distance;
@@ -16,11 +21,6 @@ public class GeoBO implements Serializable {
     public GeoBO() {
 
     }
-
-    private String targetId;
-    private float distance;
-    private String lng;
-    private String lat;
 
 
     public String getTargetId() {

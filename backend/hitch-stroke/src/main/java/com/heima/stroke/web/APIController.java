@@ -35,12 +35,12 @@ public class APIController {
         return strokeHandler.publish(strokeVO);
     }
 
-    @ApiOperation(value = "发送起始坐标", tags = {"行程管理"})
-    @PostMapping("/sendStartGeo")
-    public ResponseVO<StrokeVO> sendStartGeo(@RequestBody WorldMapBO worldMapBO) {
-        strokeHandler.sendStartGeo(worldMapBO);
-        return ResponseVO.success(null);
-    }
+//    @ApiOperation(value = "发送起始坐标", tags = {"行程管理"})
+//    @PostMapping("/sendStartGeo")
+//    public ResponseVO<StrokeVO> sendStartGeo(@RequestBody WorldMapBO worldMapBO) {
+//        strokeHandler.sendStartGeo(worldMapBO);
+//        return ResponseVO.success(null);
+//    }
 
     @ApiOperation(value = "修改行程信息", tags = {"行程管理"})
     @PostMapping("/update")
@@ -48,7 +48,6 @@ public class APIController {
     public ResponseVO<StrokeVO> update(@Validated(Group.Update.class) @RequestBody StrokeVO strokeVO) {
         return strokeHandler.update(strokeVO);
     }
-
 
     @ApiOperation(value = "查看个人行程列表", tags = {"行程管理"})
     @PostMapping("/list")
@@ -115,6 +114,4 @@ public class APIController {
     public ResponseVO<StrokeVO> delivery(@PathVariable("tripid") String tripid) {
         return strokeHandler.delivery(tripid);
     }
-
-
 }

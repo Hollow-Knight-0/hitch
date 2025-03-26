@@ -1,6 +1,5 @@
 package com.heima.stroke.handler;
 
-import com.alibaba.fastjson.JSON;
 import com.heima.commons.constant.HtichConstants;
 import com.heima.commons.domin.bo.*;
 import com.heima.commons.domin.vo.response.ResponseVO;
@@ -68,21 +67,21 @@ public class StrokeHandler {
         //入mysql库
         StrokePO tmp = strokeAPIService.publish(strokePO);
         Collection<HitchGeoBO> collection = initGeoData(tmp);
-        for (HitchGeoBO hitchGeoBO : collection) {
-            WorldMapBO worldMapBO = new WorldMapBO(hitchGeoBO.getStartGeo(), hitchGeoBO.getTargetId());
-            sendStartGeo(worldMapBO);
-        }
+//        for (HitchGeoBO hitchGeoBO : collection) {
+//            WorldMapBO worldMapBO = new WorldMapBO(hitchGeoBO.getStartGeo(), hitchGeoBO.getTargetId());
+//            sendStartGeo(worldMapBO);
+//        }
         return ResponseVO.success(tmp);
     }
 
-    /**
-     * 起始行程GEO发送
-     *
-     * @param worldMapBO
-     */
-    public void sendStartGeo(WorldMapBO worldMapBO) {
+//    /**
+//     * 起始行程GEO发送
+//     *
+//     * @param worldMapBO
+//     */
+//    public void sendStartGeo(WorldMapBO worldMapBO) {
 //        kafkaTemplate.send(HtichConstants.STROKE_START_GEO, JSON.toJSONString(worldMapBO));
-    }
+//    }
 
 
     /**
@@ -120,7 +119,7 @@ public class StrokeHandler {
     }
 
     /**
-     * 根据行程ID查看行程列表
+     * 根据行程ID查看顺路行程列表
      *
      * @param strokeVO
      * @return
@@ -156,7 +155,6 @@ public class StrokeHandler {
         redisHelper.addHash(HtichConstants.STROKE_INVITE_PREFIX, inviterTripId, inviteeTripId, String.valueOf(InviteState.UNCONFIRMED.getCode()));
         //发送延时消息
         mqProducer.sendOver(strokeVO);
-
 
         quickConfirm(strokeVO);
         return ResponseVO.success(null);
@@ -293,7 +291,7 @@ public class StrokeHandler {
         isFullStarffed(strokeVO);
         //获取司机行程ID
         String inviterTripId = strokeVO.getInviterTripId();
-        //判断司机是否已经发车
+        //判断司机是否已经发车(发车会删除邀请状态)
         boolean isDepart = redisHelper.exists(HtichConstants.STROKE_INVITE_PREFIX, inviterTripId);
         if (!isDepart) {
             throw new BusinessRuntimeException(BusinessErrors.STOCK_ALREADY_DEPART);
@@ -380,9 +378,8 @@ public class StrokeHandler {
      * @param strokeVO
      */
     private void isFullStarffed(StrokeVO strokeVO) {
-        //获取司机行程ID
+        //获取剩余座位数
         int surplusSeats = getSurplusSeats(strokeVO.getInviterTripId());
-        //座位数大于等于已确认人数 抛出异常
         if (surplusSeats <= 0) {
             throw new BusinessRuntimeException(BusinessErrors.STOCK_FULL_STARFFED);
         }
@@ -390,7 +387,7 @@ public class StrokeHandler {
 
     @Autowired
     BaiduMapClient baiduMapClient;
-    //构建装饰着
+    //构建装饰者
     private static final Valuation valuation = new StartPriceValuation(new BasicValuation(new FuelCostValuation(null)));
     /**
      * 添加订单
@@ -528,7 +525,7 @@ public class StrokeHandler {
 
     /**
      * 行程数据渲染
-     *
+     *  填充行程对象 StrokeVO 的额外数据，主要包括 起点/终点的距离信息 和 发布者的用户信息
      * @param strokeVO
      */
     private StrokeVO renderStrokeVO(StrokeVO strokeVO) {
@@ -563,6 +560,7 @@ public class StrokeHandler {
         Collection<HitchGeoBO> hitchGeoBOList = geoFilterMatch(strokePO);
         //记录所有行程
         for (HitchGeoBO hitchGeoBO : hitchGeoBOList) {
+            //Zset存储匹配分值，Hash存储距离信息
             //所有行程记录我
             redisHelper.addZset(HtichConstants.STROKE_GEO_ZSET_PREFIX, hitchGeoBO.getTargetId(), strokePO.getId(), getScore(hitchGeoBO));
             redisHelper.addHash(HtichConstants.STROKE_GEO_DISTANCE_PREFIX, hitchGeoBO.getTargetId(), strokePO.getId(), getDistanceStr(hitchGeoBO));
@@ -684,6 +682,4 @@ public class StrokeHandler {
     private String getDistanceStr(HitchGeoBO hitchGeoBO) {
         return hitchGeoBO.getStartGeo().toKilometre() + ":" + hitchGeoBO.getEndGeo().toKilometre().toString();
     }
-
-
 }

@@ -74,7 +74,7 @@ public class RedisHelper {
                 new Point(lng, lat),
                 new Distance(HtichConstants.STROKE_DIAMETER_RANGE, Metrics.KILOMETERS)
         );
-        //限制20条，可以根据实际情况调整
+        //设置查询参数，限制20条
         RedisGeoCommands.GeoRadiusCommandArgs args =
                 RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs()
                 .includeDistance().includeCoordinates()

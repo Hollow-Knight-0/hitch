@@ -2,6 +2,10 @@ package com.heima.commons.domin.bo;
 
 public class HitchGeoBO {
 
+    private String targetId;
+    private GeoBO startGeo;
+    private GeoBO endGeo;
+
     public HitchGeoBO(String targetId, GeoBO startGeo, GeoBO endGeo) {
         this.targetId = targetId;
         this.startGeo = startGeo;
@@ -12,10 +16,6 @@ public class HitchGeoBO {
     public HitchGeoBO(String targetId) {
         this.targetId = targetId;
     }
-
-    private String targetId;
-    private GeoBO startGeo;
-    private GeoBO endGeo;
 
     public String getTargetId() {
         return targetId;

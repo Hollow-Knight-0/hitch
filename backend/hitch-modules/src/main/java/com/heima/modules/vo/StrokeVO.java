@@ -45,8 +45,8 @@ public class StrokeVO implements VO {
     private String avatar;
 
     /**
-     * 发布人角色 乘客：1
-     * 司机：2
+     * 发布人角色 乘客：0
+     * 司机：1
      */
     @NotNull(message = "发布人角色不能为空", groups = {Group.Create.class, Group.Select.class})
     private Integer role;
