@@ -66,7 +66,8 @@ public class StrokeHandler {
         StrokePO strokePO = CommonsUtils.toPO(strokeVO);
         //入mysql库
         StrokePO tmp = strokeAPIService.publish(strokePO);
-        Collection<HitchGeoBO> collection = initGeoData(tmp);
+        initGeoData(tmp);
+//        Collection<HitchGeoBO> collection = initGeoData(tmp);
 //        for (HitchGeoBO hitchGeoBO : collection) {
 //            WorldMapBO worldMapBO = new WorldMapBO(hitchGeoBO.getStartGeo(), hitchGeoBO.getTargetId());
 //            sendStartGeo(worldMapBO);
@@ -389,6 +390,7 @@ public class StrokeHandler {
     BaiduMapClient baiduMapClient;
     //构建装饰者
     private static final Valuation valuation = new StartPriceValuation(new BasicValuation(new FuelCostValuation(null)));
+
     /**
      * 添加订单
      *
@@ -415,7 +417,7 @@ public class StrokeHandler {
         String start = invitee.getStartGeoLat() + "," + invitee.getStartGeoLng();
         String end = invitee.getEndGeoLat() + "," + invitee.getEndGeoLng();
         RoutePlanResultBO routePlanResultBO = baiduMapClient.pathPlanning(start, end);
-        if(routePlanResultBO != null){
+        if (routePlanResultBO != null) {
             int distance = routePlanResultBO.getDistance().getValue();
             int estimatedTime = routePlanResultBO.getDuration().getValue();
             orderPO.setDistance(distance);
@@ -424,12 +426,11 @@ public class StrokeHandler {
             //3.3 完成计费功能，给orderPo设置金额
             //计费规则：3公里以内起步价10元；3公里以上2.3元/公里；燃油附加费1次收取1元
             //使用装饰着模式来完成
-            orderPO.setCost(valuation.calculation((float) orderPO.getDistance() /1000));
+            orderPO.setCost(valuation.calculation((float) orderPO.getDistance() / 1000));
         }
 
         orderAPIService.add(orderPO);
     }
-
 
 
     /**
@@ -485,7 +486,7 @@ public class StrokeHandler {
             unbindId = strokeVO.getInviteeTripId();
             //删除乘客端起点GEO信息
             redisHelper.delGEO(HtichConstants.STROKE_PASSENGER_GEO_START, "", unbindId);
-            //删除乘客端终点点GEO信息
+            //删除乘客端终点GEO信息
             redisHelper.delGEO(HtichConstants.STROKE_PASSENGER_GEO_END, "", unbindId);
         } else if (strokeVO.getRole().equals(1)) {
             unbindId = strokeVO.getInviterTripId();
@@ -525,7 +526,8 @@ public class StrokeHandler {
 
     /**
      * 行程数据渲染
-     *  填充行程对象 StrokeVO 的额外数据，主要包括 起点/终点的距离信息 和 发布者的用户信息
+     * 填充行程对象 StrokeVO 的额外数据，主要包括 起点/终点的距离信息 和 发布者的用户信息
+     *
      * @param strokeVO
      */
     private StrokeVO renderStrokeVO(StrokeVO strokeVO) {
@@ -677,7 +679,7 @@ public class StrokeHandler {
      * 获取距离数据
      *
      * @param hitchGeoBO
-     * @return
+     * @return "起点距离":"终点距离"
      */
     private String getDistanceStr(HitchGeoBO hitchGeoBO) {
         return hitchGeoBO.getStartGeo().toKilometre() + ":" + hitchGeoBO.getEndGeo().toKilometre().toString();
