@@ -38,5 +38,4 @@ public class RequestUtils {
     public static String getCurrentUserId() {
         return getRequestHeader(HtichConstants.HEADER_ACCOUNT_KEY);
     }
-
 }

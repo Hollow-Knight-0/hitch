@@ -10,11 +10,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * 对 Redis 的具体读写逻辑
+ */
 public class RedisSessionHelper extends SessionTemplate {
 
+    //处理accountId -> sessionId 映射
     @Autowired
     private RedisTemplate<String, String> stringRedisTemplate;
 
+    //存储会话详情
     @Autowired
     private RedisTemplate<String, SessionContext> redisSessionTemplate;
 
@@ -47,8 +52,8 @@ public class RedisSessionHelper extends SessionTemplate {
     }
 
     @Override
-    public SessionContext getSessionByAccount(String accountID) {
-        String sessionId = stringRedisTemplate.opsForValue().get(SessionContext.getAccountTokenKey(accountID));
+    public SessionContext getSessionByAccount(String accountId) {
+        String sessionId = stringRedisTemplate.opsForValue().get(SessionContext.getAccountTokenKey(accountId));
         if (StringUtils.isEmpty(sessionId)) {
             return null;
         }

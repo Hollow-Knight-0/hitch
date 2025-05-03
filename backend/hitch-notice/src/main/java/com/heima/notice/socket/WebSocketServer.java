@@ -7,10 +7,10 @@ import com.heima.commons.domin.vo.response.ResponseVO;
 import com.heima.commons.entity.SessionContext;
 import com.heima.commons.enums.BusinessErrors;
 import com.heima.commons.helper.RedisSessionHelper;
-import com.heima.commons.utils.SpringUtil;
 import com.heima.modules.vo.NoticeVO;
 import com.heima.notice.handler.NoticeHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -26,13 +26,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketServer {
 
     //Websocket用户链接池
-    //concurrent包的线程安全Map，用来存放每个客户端对应的WebSocketServer对象。
+    //存放每个客户端对应的WebSocketServer对象
     //key是accountId，可以通过本类中的getAccountId方法获取到，value是session
     public final static Map<String, Session> sessionPools = new ConcurrentHashMap<>();
 
-    /*
-        用户发送ws消息，message为json格式{'receiverId':'接收人','tripId':'行程id','message':'消息内容'}
-    */
+    @Autowired
+    private RedisSessionHelper redisSessionHelper;
+
+    @Autowired
+    private NoticeHandler noticeHandler;
+
+
+    /**
+     * 发送消息时调用
+     *
+     * @param session
+     * @param message json格式{'receiverId':'接收人','tripId':'行程id','message':'消息内容'}
+     */
     @OnMessage
     public void onMessage(Session session, String message) {
         String accountId = getAccountId(session);
@@ -42,7 +52,7 @@ public class WebSocketServer {
         NoticeVO noticeVO = JSON.parseObject(message, NoticeVO.class);
         noticeVO.setSenderId(accountId);    //发送人ID
         //设置相关消息内容并存入mongodb
-        NoticeHandler noticeHandler = SpringUtil.getBean(NoticeHandler.class);
+//        NoticeHandler noticeHandler = SpringUtil.getBean(NoticeHandler.class);
         boolean sendOk = noticeHandler.saveNotice(noticeVO);
         if(!sendOk){
             ResponseVO responseVO = ResponseVO.error(BusinessErrors.WS_SEND_FAILED);
@@ -107,13 +117,13 @@ public class WebSocketServer {
         String token = null;
         Map<String, List<String>> paramMap = session.getRequestParameterMap();
         List<String> paramList = paramMap.get(HtichConstants.SESSION_TOKEN_KEY);
-        if (paramList!=null && paramList.size() != 0){
+        if (paramList!=null && !paramList.isEmpty()){
             token = paramList.get(0);
         }
-        RedisSessionHelper redisSessionHelper = SpringUtil.getBean(RedisSessionHelper.class);
-        if (null == redisSessionHelper) {
-            return null;
-        }
+//        RedisSessionHelper redisSessionHelper = SpringUtil.getBean(RedisSessionHelper.class);
+//        if (null == redisSessionHelper) {
+//            return null;
+//        }
         SessionContext context = redisSessionHelper.getSession(token);
         boolean isisValid = redisSessionHelper.isValid(context);
         if (isisValid) {

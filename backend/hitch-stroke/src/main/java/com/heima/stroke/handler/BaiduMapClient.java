@@ -23,30 +23,34 @@ public class BaiduMapClient {
     private final static Logger logger = LoggerFactory.getLogger(BaiduMapClient.class);
 
     //TODO:任务3.2-调百度路径计算两点间的距离，和预估抵达时长
+    /**
+     * 计算两点间的距离，和预估抵达时长
+     * @param origins 起点
+     * @param destinations 终点
+     * @return
+     */
     public RoutePlanResultBO pathPlanning(String origins, String destinations) {
         //对接文档：https://lbs.baidu.com/faq/api?title=webapi/routchtout-drive
-//        String url = api + "?origins=" + origins + "&destinations=" + destinations + "&ak=" + ak;
+        //api + "?origins=" + origins + "&destinations=" + destinations + "&ak=" + ak;
 
-        Map<String,String> reqMap = new HashMap<>();
+        Map<String, String> reqMap = new HashMap<>();
         reqMap.put("origins", origins);
         reqMap.put("destinations", destinations);
-        reqMap.put("ak",ak);
-        logger.info("send to Baidu:{}",reqMap);
+        reqMap.put("ak", ak);
+        logger.info("send to Baidu:{}", reqMap);
         String result = null;
         try {
             result = HttpClientUtils.doGet(api, reqMap);
-            logger.info("get from Baidu:{}",result);
+            logger.info("get from Baidu:{}", result);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-
-
         RoutePlanResultBO routePlanResultBO = null;
         JSONObject jsonObject = JSON.parseObject(result);
-        if(jsonObject != null && jsonObject.getString("status").equals("0")){
+        if (jsonObject != null && jsonObject.getString("status").equals("0")) {
             JSONArray resultArray = jsonObject.getJSONArray("result");
-            if(resultArray != null && !resultArray.isEmpty()){
+            if (resultArray != null && !resultArray.isEmpty()) {
                 routePlanResultBO = resultArray.toJavaList(RoutePlanResultBO.class).get(0);
             }
         }

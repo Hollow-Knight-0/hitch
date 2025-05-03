@@ -21,6 +21,11 @@ public interface AuthenticationAPIService {
     @RequestMapping("/add")
     public AuthenticationPO add(@RequestBody AuthenticationPO record);
 
+    /**
+     * 修改订单
+     *
+     * @param record
+     */
     @RequestMapping("/update")
     public void update(@RequestBody AuthenticationPO record);
 

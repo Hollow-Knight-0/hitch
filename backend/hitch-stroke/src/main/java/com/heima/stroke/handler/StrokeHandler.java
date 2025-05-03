@@ -403,7 +403,7 @@ public class StrokeHandler {
         orderPO.setStatus(0);//初始状态：新创建
 
         //TODO:任务3.1-生成订单-3day
-        //3.1 给orderPo设置基本的乘客、车主、行程信息
+        //给orderPo设置基本的乘客、车主、行程信息
         orderPO.setDriverId(inviter.getPublisherId());
         orderPO.setDriverStrokeId(inviter.getId());
         orderPO.setPassengerId(invitee.getPublisherId());
@@ -413,7 +413,7 @@ public class StrokeHandler {
         orderPO.setUpdatedBy(invitee.getCreatedBy());
         orderPO.setUpdatedTime(new Date());
 
-        //3.2 对接百度路径计算，给orderPo设置路径长度distance、估计时间duration
+        //对接百度路径计算，给orderPo设置路径长度distance、估计时间duration
         String start = invitee.getStartGeoLat() + "," + invitee.getStartGeoLng();
         String end = invitee.getEndGeoLat() + "," + invitee.getEndGeoLng();
         RoutePlanResultBO routePlanResultBO = baiduMapClient.pathPlanning(start, end);
@@ -423,9 +423,8 @@ public class StrokeHandler {
             orderPO.setDistance(distance);
             orderPO.setEstimatedTime(estimatedTime);
 
-            //3.3 完成计费功能，给orderPo设置金额
+            //完成计费功能，使用装饰着模式，给orderPo设置金额
             //计费规则：3公里以内起步价10元；3公里以上2.3元/公里；燃油附加费1次收取1元
-            //使用装饰着模式来完成
             orderPO.setCost(valuation.calculation((float) orderPO.getDistance() / 1000));
         }
 

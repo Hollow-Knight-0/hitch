@@ -47,11 +47,11 @@ public class RabbitConfig {
     @Bean
     public Queue strokeOverQueue() {
         Map<String,Object> args = new HashMap<>();
-        // x-dead-letter-exchange    这里声明当前队列绑定的死信交换机
+        // 声明当前队列绑定的死信交换机
         args.put("x-dead-letter-exchange",STROKE_DEAD_QUEUE_EXCHANGE);
-        // x-dead-letter-routing-key  这里声明当前队列的死信路由key
+        // 声明当前队列的死信路由key
         args.put("x-dead-letter-routing-key",STROKE_DEAD_KEY);
-        // x-message-ttl  声明队列的TTL
+        // 声明队列的TTL
         args.put("x-message-ttl",DELAY_TIME);
         return QueueBuilder.durable(STROKE_OVER_QUEUE).withArguments(args).build();
     }

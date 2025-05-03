@@ -64,7 +64,7 @@ public class NoticeHandler {
     }
 
     /**
-     * 初始化数据
+     * 初始化数据，填充接收人ID、姓名
      *
      * @param noticeVO
      */
@@ -82,6 +82,12 @@ public class NoticeHandler {
         noticeVO.setReceiverUseralias(getUserAlias(receiverId));
     }
 
+    /**
+     * 校验消息完整性
+     *
+     * @param noticePO
+     * @return
+     */
     public boolean checkParameter(NoticePO noticePO) {
         if (null == noticePO) {
             return false;
@@ -111,6 +117,4 @@ public class NoticeHandler {
         }
         return StringUtils.isEmpty(accountPO.getUseralias()) ? accountPO.getUsername() : accountPO.getUseralias();
     }
-
-
 }

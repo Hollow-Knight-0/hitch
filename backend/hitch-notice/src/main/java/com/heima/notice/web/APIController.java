@@ -25,11 +25,10 @@ public class APIController {
     private NoticeHandler noticeHandler;
 
 
-    @ApiOperation(value = "订单列表", tags = {"通知管理"})
+    @ApiOperation(value = "消息列表", tags = {"通知管理"})
     @PostMapping("/list")
     @RequestInitial(groups = {Group.Select.class})
     public ResponseVO<NoticeVO> list(@RequestBody NoticeVO noticeVO) {
         return noticeHandler.list(noticeVO);
     }
-
 }

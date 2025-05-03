@@ -39,23 +39,22 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     public List<NoticePO> getNoticeByAccountIds(List<String> receiverIds) {
-        // 1. 构造查询条件：查询 receiverId 在 receiverIds 列表中的，并且 read=false（未读）
+        // 构造查询条件：查询 receiverId 在 receiverIds 列表中的，并且 read=false（未读）
         Criteria criteria = Criteria.where("receiverId").in(receiverIds);
         criteria.andOperator(Criteria.where("read").is(false));
         Query query = new Query(criteria);
 
-        // 2. 构造更新条件：将 read 字段设置为 true（标记为已读）
+        // 构造更新条件：标记为已读
         Update update = Update.update("read", true);
 
-        // 3. 查询未读消息
+        // 查询未读消息
         List<NoticePO> noticePOList = mongoTemplate.find(query, NoticePO.class, HtichConstants.NOTICE_COLLECTION);
 
-        // 4. 如果查询到了未读消息，则批量更新，将 read 设置为 true
+        // 批量更新，将 read 设置为 true
         if (!noticePOList.isEmpty()) {
             mongoTemplate.updateMulti(query, update, NoticePO.class, HtichConstants.NOTICE_COLLECTION);
         }
 
-        // 5. 返回查询到的消息
         return noticePOList;
     }
 
@@ -64,13 +63,18 @@ public class NoticeServiceImpl implements NoticeService {
     public List<NoticePO> queryList(NoticeVO noticeVO) {
         Criteria criteria = new Criteria();
         List<Criteria> orCriterias = new ArrayList<>();
-        orCriterias.add(Criteria.where("receiverId").in(noticeVO.getReceiverId()).andOperator(Criteria.where("senderId").in(noticeVO.getSenderId())));
-        orCriterias.add(Criteria.where("senderId").in(noticeVO.getReceiverId()).andOperator(Criteria.where("receiverId").in(noticeVO.getSenderId())));
+        //查询聊天记录（双向）
+        orCriterias.add(Criteria.where("receiverId").in(noticeVO.getReceiverId())
+                .andOperator(Criteria.where("senderId").in(noticeVO.getSenderId())));
+        orCriterias.add(Criteria.where("senderId").in(noticeVO.getReceiverId())
+                .andOperator(Criteria.where("receiverId").in(noticeVO.getSenderId())));
         criteria.orOperator(orCriterias.toArray(new Criteria[0]));
         Query query = new Query(criteria);
         query.limit(20);
+        //从新到旧获取20条消息
         query.with(Sort.by(Sort.Order.desc("createdTime")));
         List<NoticePO> noticePOList = mongoTemplate.find(query, NoticePO.class, HtichConstants.NOTICE_COLLECTION);
+        //再从旧到新返回
         Collections.reverse(noticePOList);
         return noticePOList;
     }

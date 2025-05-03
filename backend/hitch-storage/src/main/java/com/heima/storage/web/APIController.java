@@ -29,17 +29,11 @@ public class APIController {
         return attachmentHandler.uploadFile(file);
     }
 
-    @GetMapping("/test1")
-    @Cacheable(cacheNames = "cache-demo",key = "#id")
-    public Object test1(@RequestParam String id){
-        System.out.println("load,"+id);
-        return "hello,"+id;
-    }
-
-    @GetMapping("/test2")
-    @CacheEvict(cacheNames = "cache-demo",key = "#id")
-    public Object test2(@RequestParam String id){
-        return "hello,"+id;
-    }
+//    @GetMapping("/test1")
+//    @Cacheable(cacheNames = "cache-demo",key = "#id")
+//    public Object test1(@RequestParam String id){
+//        System.out.println("load,"+id);
+//        return "hello,"+id;
+//    }
 
 }

@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBufAllocator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -17,7 +18,9 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.nio.CharBuffer;
@@ -69,43 +72,46 @@ public class TokenAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<
 
     @Override
     public GatewayFilter apply(PathConfig config) {
-        return (exchange, chain) -> {
-            // 获取request和response，注意：不是HttpServletRequest及HttpServletResponse
-            ServerHttpRequest request = exchange.getRequest();
-            ServerHttpResponse response = exchange.getResponse();
+        return new GatewayFilter() {
+            @Override
+            public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+                // 获取request和response，注意：不是HttpServletRequest及HttpServletResponse
+                ServerHttpRequest request = exchange.getRequest();
+                ServerHttpResponse response = exchange.getResponse();
 
-            RequestPath requestPath = request.getPath();
-            String sessionToken = getSessionToken(request);
-            //验证放行路径
-            if (verifyPassPath(requestPath, config)) {
+                RequestPath requestPath = request.getPath();
+                String sessionToken = getSessionToken(request);
+                //验证放行路径
+                if (verifyPassPath(requestPath, config)) {
+                    // 认证通过放行
+                    return chain.filter(exchange);
+                }
+                //非空判断
+                if (StringUtils.isEmpty(sessionToken)) {
+                    // 响应未认证！
+                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                    // 结束请求
+                    return response.setComplete();
+
+                }
+                SessionContext context = redisSessionHelper.getSession(sessionToken);
+                boolean isisValid = redisSessionHelper.isValid(context);
+                //session已经失效
+                if (!isisValid) {
+                    // 响应未认证！
+                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                    // 结束请求
+                    return response.setComplete();
+                }
+                String accountID = context.getAccountID();
+                //通过 token 验证，保存用户信息
+                exchange.getRequest().mutate().headers(httpHeaders -> {
+                    httpHeaders.add(HtichConstants.HEADER_ACCOUNT_KEY, accountID);
+                });
                 // 认证通过放行
                 return chain.filter(exchange);
             }
-            //非空判断
-            if (StringUtils.isEmpty(sessionToken)) {
-                // 响应未认证！
-                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                // 结束请求
-                return response.setComplete();
-
-            }
-            SessionContext context = redisSessionHelper.getSession(sessionToken);
-            boolean isisValid = redisSessionHelper.isValid(context);
-            //session已经失效
-            if (!isisValid) {
-                // 响应未认证！
-                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                // 结束请求
-                return response.setComplete();
-            }
-            String accountID = context.getAccountID();
-            exchange.getRequest().mutate().headers(httpHeaders -> {
-                httpHeaders.add(HtichConstants.HEADER_ACCOUNT_KEY, accountID);
-            });
-            // 认证通过放行
-            return chain.filter(exchange);
         };
-
     }
 
     public static class PathConfig {
@@ -141,6 +147,4 @@ public class TokenAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<
         }
         return sessionToken;
     }
-
-
 }

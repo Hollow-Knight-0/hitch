@@ -8,13 +8,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 操作会话的基本行为
+ */
 public abstract class SessionTemplate {
     //Session超时时间30分钟
     private int timeOut = 18000;
 
 
     /**
-     * 创建session
+     * 创建一个新的 session
      *
      * @param data
      * @param headerMap
@@ -22,6 +25,7 @@ public abstract class SessionTemplate {
     public SessionContext createSession(Object data, String accountID, String username, String useralias, Map<String, List<String>> headerMap) {
         SessionContext sessionContext = getSessionByAccount(accountID);
         if (null != sessionContext) {
+            //已存在旧 session，会先删除
             deleteSession(sessionContext.getSessionID());
         }
         //创建Session
@@ -53,6 +57,11 @@ public abstract class SessionTemplate {
     }
 
 
+    /**
+     * 判断 session 是否仍然有效
+     * @param sessionContext
+     * @return
+     */
     public boolean isValid(SessionContext sessionContext) {
         if (null == sessionContext) {
             return false;

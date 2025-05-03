@@ -35,7 +35,7 @@ public class Swagger2Config {
                 //页面标题
                 .title("顺风车 - " + appName)
                 //创建人
-                .contact(new Contact("Shawn", null, "wangshouwen@itcast.cn"))
+                .contact(new Contact("scx", null, "2381270664@qq.com"))
                 //版本号
                 .version("1.0")
                 //描述

@@ -93,7 +93,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (IOException var16) {
                 LOG.error("doGet  IO ERROR :{}", var16.getMessage());
@@ -103,15 +103,12 @@ public class HttpClientUtils {
                 if (null != instream) {
                     instream.close();
                 }
-
                 if (null != response) {
                     response.close();
                 }
-
                 if (null != httpclient) {
                     httpclient.close();
                 }
-
                 LOG.info("close  instream response httpClient  connection succ");
             }
 
@@ -209,14 +206,15 @@ public class HttpClientUtils {
 
             try {
                 httpPost.setConfig(requestConfig);
-                httpPost.setEntity(new UrlEncodedFormEntity(pairList, Charset.forName("UTF-8")));
+                httpPost.setEntity(new UrlEncodedFormEntity(pairList, Charset.forName(CHARSET
+                )));
                 response = httpClient.execute(httpPost);
                 int statusCode = response.getStatusLine().getStatusCode();
                 LOG.info("doPost statusCode:{}", statusCode);
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                     LOG.info("doPost Result:{}", result);
                 }
             } catch (IOException var14) {
@@ -262,7 +260,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (IOException var12) {
                 LOG.error("doPost  ERROR :{}", var12.getMessage());
@@ -299,8 +297,8 @@ public class HttpClientUtils {
 
             try {
                 httpPost.setConfig(requestConfig);
-                StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
-                stringEntity.setContentEncoding("UTF-8");
+                StringEntity stringEntity = new StringEntity(json.toString(), CHARSET);
+                stringEntity.setContentEncoding(CHARSET);
                 stringEntity.setContentType("application/json");
                 httpPost.setEntity(stringEntity);
                 response = httpClient.execute(httpPost);
@@ -309,7 +307,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (IOException var13) {
                 LOG.error("doPost BY JSON ERROR :{}", var13.getMessage());
@@ -345,10 +343,10 @@ public class HttpClientUtils {
 
             try {
                 httpPost.setConfig(requestConfig);
-                StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
+                StringEntity stringEntity = new StringEntity(json.toString(), CHARSET);
                 httpPost.setHeader("Content-Type", "application/json;charset=utf-8");
                 httpPost.setHeader("Accept", "application/json");
-                stringEntity.setContentEncoding("UTF-8");
+                stringEntity.setContentEncoding(CHARSET);
                 stringEntity.setContentType("application/json");
                 httpPost.setEntity(stringEntity);
                 response = httpClient.execute(httpPost);
@@ -357,7 +355,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (IOException var13) {
                 LOG.error("doPost BY JSON ERROR :{}", var13.getMessage());
@@ -415,7 +413,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (Exception var14) {
                 LOG.error("doPostSSL ERROR :{}", var14.getMessage());
@@ -453,8 +451,8 @@ public class HttpClientUtils {
             HttpEntity entity;
             try {
                 httpPost.setConfig(requestConfig);
-                StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
-                stringEntity.setContentEncoding("UTF-8");
+                StringEntity stringEntity = new StringEntity(json.toString(), CHARSET);
+                stringEntity.setContentEncoding(CHARSET);
                 stringEntity.setContentType("application/json");
                 httpPost.setEntity(stringEntity);
                 response = httpClient.execute(httpPost);
@@ -463,7 +461,7 @@ public class HttpClientUtils {
                     entity = response.getEntity();
                     if (entity != null) {
                         instream = entity.getContent();
-                        result = IOUtils.toString(instream, "UTF-8");
+                        result = IOUtils.toString(instream, CHARSET);
                     }
 
                     return result;
@@ -537,11 +535,11 @@ public class HttpClientUtils {
 
             try {
                 httpPost.setConfig(requestConfig);
-                StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
+                StringEntity stringEntity = new StringEntity(json.toString(), CHARSET);
                 httpPost.setHeader("Content-Type", "application/json;charset=utf-8");
                 httpPost.setHeader("Accept", "application/json");
                 httpPost.setHeader("Authorization", authorization);
-                stringEntity.setContentEncoding("UTF-8");
+                stringEntity.setContentEncoding(CHARSET);
                 stringEntity.setContentType("application/json");
                 httpPost.setEntity(stringEntity);
                 response = httpClient.execute(httpPost);
@@ -550,7 +548,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (IOException var14) {
                 LOG.error("doPost BY JSON ERROR :{}", var14.getMessage());
@@ -586,11 +584,11 @@ public class HttpClientUtils {
 
             try {
                 httpPost.setConfig(requestConfig);
-                StringEntity stringEntity = new StringEntity(json.toString(), "UTF-8");
+                StringEntity stringEntity = new StringEntity(json.toString(), CHARSET);
                 httpPost.setHeader("Accept", "application/json");
                 httpPost.setHeader("Content-Type", "application/json;charset=utf-8");
                 httpPost.setHeader("Authorization", authorization);
-                stringEntity.setContentEncoding("UTF-8");
+                stringEntity.setContentEncoding(CHARSET);
                 stringEntity.setContentType("application/json");
                 httpPost.setEntity(stringEntity);
                 response = httpClient.execute(httpPost);
@@ -599,7 +597,7 @@ public class HttpClientUtils {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     instream = entity.getContent();
-                    result = IOUtils.toString(instream, "UTF-8");
+                    result = IOUtils.toString(instream, CHARSET);
                 }
             } catch (IOException var14) {
                 LOG.error("新支付接口发送异常:{}", var14.getMessage());
@@ -623,12 +621,12 @@ public class HttpClientUtils {
     }
 
     static {
-        connMgr.setMaxTotal(100);
-        connMgr.setDefaultMaxPerRoute(100);
+        connMgr.setMaxTotal(MAX_TOTAL);
+        connMgr.setDefaultMaxPerRoute(MAX_TOTAL);
         RequestConfig.Builder configBuilder = RequestConfig.custom();
-        configBuilder.setConnectTimeout(10000);
-        configBuilder.setSocketTimeout(40000);
-        configBuilder.setConnectionRequestTimeout(7000);
+        configBuilder.setConnectTimeout(CONNECT_TIMEOUT);
+        configBuilder.setSocketTimeout(SOCKET_TIMEOUT);
+        configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
         configBuilder.setStaleConnectionCheckEnabled(true);
         requestConfig = configBuilder.build();
     }

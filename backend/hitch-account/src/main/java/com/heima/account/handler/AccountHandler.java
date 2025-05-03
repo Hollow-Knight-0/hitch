@@ -8,7 +8,6 @@ import com.heima.commons.entity.SessionContext;
 import com.heima.commons.enums.BusinessErrors;
 import com.heima.commons.exception.BusinessRuntimeException;
 import com.heima.commons.helper.RedisSessionHelper;
-import com.heima.commons.template.SessionTemplate;
 import com.heima.commons.utils.CommonsUtils;
 import com.heima.commons.utils.RequestUtils;
 import com.heima.commons.utils.SnowflakeIdWorker;
@@ -18,16 +17,13 @@ import com.heima.modules.po.VehiclePO;
 import com.heima.modules.vo.AccountVO;
 import com.heima.modules.vo.AuthenticationVO;
 import com.heima.modules.vo.VehicleVO;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 @Component
 public class AccountHandler {
@@ -36,9 +32,6 @@ public class AccountHandler {
 
     @Autowired
     private RedisSessionHelper redisSessionHelper;
-
-    @Autowired
-    private SessionTemplate sessionTemplate;
 
     @Autowired
     private AccountAPIService accountAPIService;
@@ -211,7 +204,7 @@ public class AccountHandler {
         accountPO.setUseralias(authenticationPO.getUseralias());
         accountPO.setStatus(1); //状态改成已认证
         //更新Redis缓存
-        sessionTemplate.updateSessionUseralias(accountPO.getId(), accountPO.getUseralias());
+        redisSessionHelper.updateSessionUseralias(accountPO.getId(), accountPO.getUseralias());
         accountAPIService.update(accountPO);
         authenticationAPIService.update(authenticationPO);
         return ResponseVO.success(authenticationPO);
