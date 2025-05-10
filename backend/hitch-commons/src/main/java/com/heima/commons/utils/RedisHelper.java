@@ -67,6 +67,11 @@ public class RedisHelper {
     }
 
 
+    /**
+     * 根据坐标查询在范围内的20条行程
+     *
+     * @return 以targetId为key，GeoBO为value的map
+     */
     public Map<String, GeoBO> geoNearByXY(String prefix, String key, float lng, float lat) {
         String redisKey = getRedisKey(prefix, key);
         //以当前坐标为中心画圆
@@ -86,24 +91,23 @@ public class RedisHelper {
     }
 
 
-    /**
-     * 根据地址名词进行搜索
-     *
-     * @param prefix   前缀
-     * @param key      key
-     * @param location 地址:行程ID+role
-     * @param isStart  是否时起始行程
-     * @return
-     */
-    public Map<String, GeoBO> geoNearByPlace(String prefix, String key, String location, boolean isStart) {
-        String redisKey = getRedisKey(prefix, key);
-        Distance distance = new Distance(HtichConstants.STROKE_DIAMETER_RANGE, Metrics.KILOMETERS);//params: 距离量, 距离单位
-        RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeDistance().includeCoordinates().sortAscending().limit(20);
-        GeoResults<RedisGeoCommands.GeoLocation<String>> results = redisTemplate.opsForGeo()
-                .radius(redisKey, location, distance, args);//params: key, 地方名称, Circle, GeoRadiusCommandArgs
-        return geoResultPack(results);
-
-    }
+//    /**
+//     * 根据地址名词进行搜索
+//     *
+//     * @param prefix   前缀
+//     * @param key      key
+//     * @param location 地址:行程ID+role
+//     * @param isStart  是否时起始行程
+//     * @return
+//     */
+//    public Map<String, GeoBO> geoNearByPlace(String prefix, String key, String location, boolean isStart) {
+//        String redisKey = getRedisKey(prefix, key);
+//        Distance distance = new Distance(HtichConstants.STROKE_DIAMETER_RANGE, Metrics.KILOMETERS);
+//        RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeDistance().includeCoordinates().sortAscending().limit(20);
+//        GeoResults<RedisGeoCommands.GeoLocation<String>> results = redisTemplate.opsForGeo()
+//                .radius(redisKey, location, distance, args);//params: key, 地方名称, Circle, GeoRadiusCommandArgs
+//        return geoResultPack(results);
+//    }
 
     public void addHash(String prefix, String key, String hkey, String value) {
         String redisKey = getRedisKey(prefix, key);
@@ -133,6 +137,12 @@ public class RedisHelper {
         redisTemplate.opsForZSet().add(redisKey, value, score);
     }
 
+    /**
+     * 获得ZSet中的前20条行程
+     * @param prefix
+     * @param key
+     * @return
+     */
     public List<ZsetResultBO> getZsetSortVaues(String prefix, String key) {
         String redisKey = getRedisKey(prefix, key);
         List<ZsetResultBO> zsetResultBOList = new ArrayList<>();

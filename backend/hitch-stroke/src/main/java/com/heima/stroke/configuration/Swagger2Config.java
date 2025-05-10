@@ -12,7 +12,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
-//访问地址：http://localhost:8888/doc.html
+//访问地址：http://localhost:8002/stroke/doc.html
 @Configuration
 @EnableSwagger2WebMvc
 public class Swagger2Config {
@@ -36,7 +36,7 @@ public class Swagger2Config {
                 //页面标题
                 .title("顺风车 - " + appName)
                 //创建人
-                .contact(new Contact("Shawn", null, "wangshouwen@itcast.cn"))
+                .contact(new Contact("scx", null, "2381270664@qq.com"))
                 //版本号
                 .version("1.0")
                 //描述

@@ -48,8 +48,22 @@ spring:
           uri: lb:ws://hitch-notice-service
           predicates:
             - Path=/ws/**
+
       default-filters:
-        - TokenAuth=/account/api/login;/account/api/register;/payment/api/nofify
+        - TokenAuth=/account/api/login;/account/api/register;/payment/api/nofify;/doc.html;/account/v2/api-docs;/order/v2/api-docs;/stroke/v2/api-docs;/notice/v2/api-docs;/payment/v2/api-docs;/storage/v2/api-docs;/swagger-resources;/webjars/**
+
+#knife4j 自动聚合配置 统一管理 swagger 接口
+#通过 http://localhost:8888/doc.html
+knife4j:
+  gateway:
+    enabled: true
+    strategy: discover  # 聚合策略
+    discover:
+      enabled: true
+      version: swagger2
+      excluded-services:
+        - hitch-gateway-server
+
 
   redis:
     host: 192.168.64.100

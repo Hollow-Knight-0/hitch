@@ -46,9 +46,6 @@ public class StrokeHandler {
     @Autowired
     private MQProducer mqProducer;
 
-//    @Resource
-//    private KafkaTemplate<String, Object> kafkaTemplate;
-
 
     /**
      * 发布行程
@@ -66,12 +63,8 @@ public class StrokeHandler {
         StrokePO strokePO = CommonsUtils.toPO(strokeVO);
         //入mysql库
         StrokePO tmp = strokeAPIService.publish(strokePO);
+        //保存GEO数据
         initGeoData(tmp);
-//        Collection<HitchGeoBO> collection = initGeoData(tmp);
-//        for (HitchGeoBO hitchGeoBO : collection) {
-//            WorldMapBO worldMapBO = new WorldMapBO(hitchGeoBO.getStartGeo(), hitchGeoBO.getTargetId());
-//            sendStartGeo(worldMapBO);
-//        }
         return ResponseVO.success(tmp);
     }
 
@@ -321,7 +314,7 @@ public class StrokeHandler {
             travelStatusChange(inviteeTripId, 0, 1);
             addOrder(inviter, invitee);
 
-            //清理相关缓存，重要！
+            //清理相关缓存，解除绑定关系
             strokeVO.setRole(0);
             unbindStroke(strokeVO);
         }
@@ -451,6 +444,7 @@ public class StrokeHandler {
                 member++;
             }
         }
+        //空余 = 荷载 - 已确认
         return strokePO.getQuantity() - member;
     }
 
@@ -551,17 +545,18 @@ public class StrokeHandler {
 
     /**
      * 初始化GEO数据
+     * 保存用户GEO数据，并保存所有匹配行程的距离和排序
      *
      * @param strokePO
      */
     private Collection<HitchGeoBO> initGeoData(StrokePO strokePO) {
         //添加GEO数据
         publishGeoData(strokePO);
-        //筛选出来对应的数据
+        //筛选出来匹配的数据
         Collection<HitchGeoBO> hitchGeoBOList = geoFilterMatch(strokePO);
         //记录所有行程
         for (HitchGeoBO hitchGeoBO : hitchGeoBOList) {
-            //Zset存储匹配分值，Hash存储距离信息
+            //ZSet存储匹配分值，Hash存储距离信息
             //所有行程记录我
             redisHelper.addZset(HtichConstants.STROKE_GEO_ZSET_PREFIX, hitchGeoBO.getTargetId(), strokePO.getId(), getScore(hitchGeoBO));
             redisHelper.addHash(HtichConstants.STROKE_GEO_DISTANCE_PREFIX, hitchGeoBO.getTargetId(), strokePO.getId(), getDistanceStr(hitchGeoBO));
@@ -670,6 +665,13 @@ public class StrokeHandler {
      * @return
      */
     private float getScore(HitchGeoBO hitchGeoBO) {
+        /*
+         * 使用点对点的匹配方式，出发点距离和终点距离最小的为最优
+         * 实际情况应该是路径插入优化问题
+         * 即 司机出发点->乘客出发点->乘客终点->司机终点 ≈ 司机出发点->司机终点
+         *
+         * 可以使用百度地图 途经点智能路线规划 ：https://lbsyun.baidu.com/faq/api?title=webapi/webservice-direction-aiplan
+         */
         return ((float) (1 - (hitchGeoBO.getStartGeo().getDistance() * 0.5 + hitchGeoBO.getEndGeo().getDistance() * 0.5) / HtichConstants.STROKE_DIAMETER_RANGE)) * 100;
     }
 

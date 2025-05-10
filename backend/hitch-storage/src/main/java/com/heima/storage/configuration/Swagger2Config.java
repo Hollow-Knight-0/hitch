@@ -12,7 +12,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
-//访问地址：http://localhost:8888/swagger-ui/index.html
+//访问地址：http://localhost:8003/storage/doc.html
 @Configuration
 @EnableSwagger2WebMvc
 public class Swagger2Config {
