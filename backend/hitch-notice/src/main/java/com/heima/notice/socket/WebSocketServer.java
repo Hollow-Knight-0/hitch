@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//TODO:任务5.1-完成websocket开发-2day
+//TODO:完成websocket开发
 @Component
 @ServerEndpoint(value = "/ws/socket")
 public class WebSocketServer {

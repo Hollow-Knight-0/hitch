@@ -43,6 +43,12 @@ public class TokenAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<
     }
 
 
+    /**
+     * 验证放行路径
+     * @param requestPath 请求路径
+     * @param pathConfig 放行配置
+     * @return
+     */
     public boolean verifyPassPath(RequestPath requestPath, PathConfig pathConfig) {
         String[] passPathArray = pathConfig.getPathArray();
         if (null == passPathArray) {
@@ -72,45 +78,38 @@ public class TokenAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<
 
     @Override
     public GatewayFilter apply(PathConfig config) {
-        return new GatewayFilter() {
-            @Override
-            public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-                // 获取request和response，注意：不是HttpServletRequest及HttpServletResponse
-                ServerHttpRequest request = exchange.getRequest();
-                ServerHttpResponse response = exchange.getResponse();
+        return (exchange, chain) -> {
+            ServerHttpRequest request = exchange.getRequest();
+            ServerHttpResponse response = exchange.getResponse();
 
-                RequestPath requestPath = request.getPath();
-                String sessionToken = getSessionToken(request);
-                //验证放行路径
-                if (verifyPassPath(requestPath, config)) {
-                    // 认证通过放行
-                    return chain.filter(exchange);
-                }
-                //非空判断
-                if (StringUtils.isEmpty(sessionToken)) {
-                    // 响应未认证！
-                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                    // 结束请求
-                    return response.setComplete();
-
-                }
-                SessionContext context = redisSessionHelper.getSession(sessionToken);
-                boolean isisValid = redisSessionHelper.isValid(context);
-                //session已经失效
-                if (!isisValid) {
-                    // 响应未认证！
-                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                    // 结束请求
-                    return response.setComplete();
-                }
-                String accountID = context.getAccountID();
-                //通过 token 验证，保存用户信息
-                exchange.getRequest().mutate().headers(httpHeaders -> {
-                    httpHeaders.add(HtichConstants.HEADER_ACCOUNT_KEY, accountID);
-                });
-                // 认证通过放行
+            RequestPath requestPath = request.getPath();
+            if (verifyPassPath(requestPath, config)) {
+                // 放行路径
                 return chain.filter(exchange);
             }
+
+            String sessionToken = getSessionToken(request);
+            if (StringUtils.isEmpty(sessionToken)) {
+                // 响应未认证
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return response.setComplete();
+
+            }
+            SessionContext context = redisSessionHelper.getSession(sessionToken);
+            boolean isisValid = redisSessionHelper.isValid(context);
+            //session已经失效
+            if (!isisValid) {
+                // 响应未认证
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return response.setComplete();
+            }
+            String accountID = context.getAccountID();
+            //通过 token 验证，保存用户信息
+            exchange.getRequest().mutate().headers(httpHeaders -> {
+                httpHeaders.add(HtichConstants.HEADER_ACCOUNT_KEY, accountID);
+            });
+            // 认证通过放行
+            return chain.filter(exchange);
         };
     }
 
