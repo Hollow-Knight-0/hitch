@@ -199,6 +199,7 @@ public class AccountHandler {
         //调百度完成身份证识别，将识别信息更新到数据库对应字段
         //文档（身份证识别）：https://cloud.baidu.com/doc/OCR/s/rk3h7xzck
         //文档（h5人脸实名认证接口）：https://ai.baidu.com/ai-doc/FACE/skxie72kp(需要企业身份，个人无法使用)
+        //todo 1 身份证识别
         authenticationPO = aiHelper.getUserLicense(authenticationPO);
 
         accountPO.setUseralias(authenticationPO.getUseralias());
@@ -255,6 +256,7 @@ public class AccountHandler {
         VehiclePO vehiclePO = getVehiclePO(accountPO);
         try {
             //车辆信息验证，返回车牌号
+            //todo 1 车牌识别
             String license = aiHelper.getCarLicense(vehiclePO);
             if(license == null){
                 throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"车牌号识别失败");

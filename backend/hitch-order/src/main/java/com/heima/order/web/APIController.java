@@ -55,6 +55,4 @@ public class APIController {
     public ResponseVO<OrderVO> viewOrder(@PathVariable("tripid") String tripid) {
         return orderHandler.viewOrder(tripid);
     }
-
-
 }
