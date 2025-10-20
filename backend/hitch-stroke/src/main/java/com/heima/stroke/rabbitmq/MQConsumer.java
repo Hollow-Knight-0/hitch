@@ -44,7 +44,7 @@ public class MQConsumer{
 //    @RabbitHandler
     @RabbitListener(queues = RabbitConfig.STROKE_DEAD_QUEUE)
     public void processStroke(Message massage, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
-        //TODO:接收死信队列消息
+        //TODO 3 接收死信队列消息
         StrokeVO strokeVO = JSON.parseObject(massage.getBody(), StrokeVO.class);
         logger.info("get dead msg:{}",massage.getBody());
         if (null == strokeVO) {

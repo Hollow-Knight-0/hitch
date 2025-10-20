@@ -395,7 +395,7 @@ public class StrokeHandler {
         orderPO.setId(CommonsUtils.getWorkerID());//雪花算法主键序列
         orderPO.setStatus(0);//初始状态：新创建
 
-        //TODO:生成订单
+        //TODO 2 生成订单
         //给orderPo设置基本的乘客、车主、行程信息
         orderPO.setDriverId(inviter.getPublisherId());
         orderPO.setDriverStrokeId(inviter.getId());

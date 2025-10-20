@@ -14,6 +14,6 @@ public interface NoticeService {
     //根据用户accountId查询其未读消息，并在查询后，置为已读
     public List<NoticePO> getNoticeByAccountIds(List<String> accountIds);
 
-    //根据noticeVO中的收发人id查询对话清单，最近的20条
+    //根据noticeVO中的收发人id查询对话清单，最近的20条 (用户进入聊天窗口触发)
     List<NoticePO> queryList(NoticeVO noticeVO);
 }

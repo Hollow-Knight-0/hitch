@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO:Rabbitmq配置
+//TODO 3 Rabbitmq配置
 
 /**
  * 消息发送到 STROKE_OVER_QUEUE（超时队列）。
