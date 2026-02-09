@@ -63,7 +63,7 @@ public class StrokeHandler {
         StrokePO strokePO = CommonsUtils.toPO(strokeVO);
         //入mysql库
         StrokePO tmp = strokeAPIService.publish(strokePO);
-        //保存GEO数据
+        //todo 将后续 Redis 操作异步处理，同步操作只保障 DB 写入
         initGeoData(tmp);
         return ResponseVO.success(tmp);
     }
@@ -543,6 +543,7 @@ public class StrokeHandler {
     }
 
 
+
     /**
      * 初始化GEO数据
      * 保存用户GEO数据，并保存所有匹配行程的距离和排序
@@ -554,6 +555,7 @@ public class StrokeHandler {
         publishGeoData(strokePO);
         //筛选出来匹配的数据
         Collection<HitchGeoBO> hitchGeoBOList = geoFilterMatch(strokePO);
+
         //记录所有行程
         for (HitchGeoBO hitchGeoBO : hitchGeoBOList) {
             //ZSet存储匹配分值，Hash存储距离信息
@@ -565,6 +567,22 @@ public class StrokeHandler {
             redisHelper.addHash(HtichConstants.STROKE_GEO_DISTANCE_PREFIX, strokePO.getId(), hitchGeoBO.getTargetId(), getDistanceStr(hitchGeoBO));
         }
         return hitchGeoBOList;
+
+        //TODO 优化匹配逻辑
+        /*
+        加入发车/到达时间的匹配关系
+        如果数据密度不足，为了增加匹配度，会扩大时间范围
+        另外还有信誉等级，乘客加价等会影响匹配
+
+        目前仅对起点和终点的距离初步删选，然后根据举例排序
+         优化： 不同于快车/专车追求最短接驾时间，顺风车追求的是最大顺路度和最小绕行成本。
+         1.计算司机绕路增加的距离和时间的比例
+         2.获取司机和乘客最优路线的方向向量，计算两个向量之间的夹角（路径夹角）。夹角越接近
+         3.计算司机原路线与乘客路线在地图上重叠的距离/时间百分比。重合度越高，顺路度越高
+         4.采用外部API
+
+
+         */
     }
 
 
@@ -584,7 +602,7 @@ public class StrokeHandler {
     }
 
     /**
-     * Geo筛选匹配
+     * Geo筛选匹配，根据起点终点坐标举例进行筛选，取交集
      * 用户 筛选出来对应司机的GEO
      * 司机 筛选出来对应用户的GEO
      *
@@ -670,7 +688,6 @@ public class StrokeHandler {
          * 实际情况应该是路径插入优化问题
          * 即 司机出发点->乘客出发点->乘客终点->司机终点 ≈ 司机出发点->司机终点
          *
-         * 可以使用百度地图 途经点智能路线规划 ：https://lbsyun.baidu.com/faq/api?title=webapi/webservice-direction-aiplan
          */
         return ((float) (1 - (hitchGeoBO.getStartGeo().getDistance() * 0.5 + hitchGeoBO.getEndGeo().getDistance() * 0.5) / HtichConstants.STROKE_DIAMETER_RANGE)) * 100;
     }

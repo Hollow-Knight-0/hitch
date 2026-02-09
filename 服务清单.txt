@@ -1,0 +1,18 @@
+启动虚拟机centos，服务器ip：
+192.168.64.100 ， 用户名： root ， 密码： root
+docker自动启动，输入docker ps查看容器启动情况
+
+前端启动Openresty的nginx.exe，然后访问：http://localhost/web/
+
+端口：
+mysql： 3306 ， 用户名： root ， 密码： root 
+
+redis： 6379
+
+rabbitmq： 5672 ， 管理界面： http://192.168.64.100:15672 ， 用户名： guest ， 密码： guest
+
+minio： 程序连 9005 端口 ， 管理界面： http://192.168.64.100:9006 ， 用户名： minioadmin ， 密码： minioadmin
+
+mongo： 27017
+
+nacos： 8848 ， 管理界面： http://192.168.64.100:8848/nacos ， 用户名： nacos ， 密码： nacos
