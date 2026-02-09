@@ -2,10 +2,11 @@
 <html>
 
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/jquery-1.11.3.min.js"></script>
     <script src="../js/jquery.mobile-1.4.5.min.js"></script>
     <link rel="stylesheet" href="../css/common.css" />
@@ -81,7 +82,7 @@
     <div data-role="page" id="pageone" class="bg-img">
         <div data-role="header">
             <a href="javascript:changeRole()" class="ui-btn ui-btn-inline ui-corner-all">切换</a>
-            <h1>司机端 - 顺风车</h1>
+            <h1>接单模式 - 校园顺路带</h1>
         </div><!-- /header -->
 
         <div style="margin-top:60px;"></div>
@@ -101,8 +102,12 @@
                     <input id="to" name="endGeoLng" type="hidden">
                     <input id="to2" name="endGeoLat" type="hidden">
 
-                    座位数：
-                    <input type="range" name="quantity" id="points" value="1" min="1" max="5" data-highlight="true">
+                    <!-- 座位数字段在接单模式下隐藏 -->
+                    <!-- 座位数： -->
+                    <!-- <input type="range" name="quantity" id="points" value="1" min="1" max="5" data-highlight="true"> -->
+                    
+                    <!-- 默认传入100给后端 -->
+                    <input type="hidden" name="quantity" value="100">
 
                     <input type="hidden" name="role" value="1">
                     <input type="hidden" name="status" value="0">

@@ -2,10 +2,11 @@
 <html>
 
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/jquery-1.11.3.min.js"></script>
     <script src="../js/jquery.mobile-1.4.5.min.js"></script>
     <link rel="stylesheet" href="../css/common.css" />
@@ -72,7 +73,7 @@
                     <p></p>
                     <p><span>实名认证：</span> <span style="color:darkgoldenrod" id="valid">未完成</span></p>
                     <p></p>
-                    <p><span>车主认证：</span> <span style="color:darkgoldenrod" id="driver">已完成</span></p>
+                    <p><span>学生认证：</span> <span style="color:darkgoldenrod" id="driver">已完成</span></p>
                 </a>
             </li>
             <li>
@@ -88,19 +89,27 @@
                 <a data-ajax="false" href="javascript:toUrl('userEdit.html')">完善资料</a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('carInfo.html')">车辆信息</a>
-            </li>
-            <li>
                 <a data-ajax="false" href="javascript:toUrl('userVerify.html')">实名认证</a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('carVerify.html')">车主认证</a>
-            </li>
-            <li>
-                <a data-ajax="false" href="javascript:toUrl('accountInfo.html')">行程统计</a>
+                <a data-ajax="false" href="javascript:toUrl('carVerify.html')">学生认证</a>
             </li>
             <li>
                 <a data-ajax="false" href="javascript:toUrl('userMsg.html')">我的消息</a>
+            </li>
+            <!-- 根据角色显示行程统计 -->
+            <script>
+                $(function() {
+                    var role = localStorage.getItem('current_role');
+                    if (role == '1') { // 接单同学才显示行程统计
+                        $('#statLink').show();
+                    } else {
+                        $('#statLink').hide();
+                    }
+                });
+            </script>
+            <li id="statLink" style="display:none;">
+                <a data-ajax="false" href="javascript:toUrl('accountInfo.html')">行程统计</a>
             </li>
             <li>
                 <a data-ajax="false" href="javascript:logout();">退出登录</a>

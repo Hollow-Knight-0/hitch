@@ -77,7 +77,7 @@ function changeRole() {
     } else {
         //切换成司机
         if (current_user.role == 0 || current_user.status == 0) {
-            showMsg('您需要先实名认证，并申请为车主！');
+            showMsg('您需要先实名认证，并完成学生认证！');
             return;
         }
         href = href.replace('/user/', '/driver/');
@@ -328,6 +328,10 @@ function random(minNum, maxNum) {
     }
 }
 
-var tripStatus = { 0: '邀请中', 1: '已确认同行', 2: '已上车', 3: '已下车', 4: '已取消' };
-var driverStatus = { 0: '邀请中', 1: '已发车', 3: '已送达' };
-var orderStatus = { 0: '临时订单', 1: '未支付', 2: '已支付' };
+// var tripStatus = { 0: '邀请中', 1: '已确认同行', 2: '已上车', 3: '已下车', 4: '已取消' };
+// var driverStatus = { 0: '邀请中', 1: '已发车', 3: '已送达' };
+// var orderStatus = { 0: '临时订单', 1: '未支付', 2: '已支付' };
+
+var tripStatus = { 0: '邀请中', 1: '已确认接单', 2: '已开始任务', 3: '已完成任务', 4: '已取消' };
+var driverStatus = { 0: '邀请中', 1: '已开始任务', 3: '已完成任务' };
+var orderStatus = { 0: '临时任务', 1: '未付款', 2: '已付款' };

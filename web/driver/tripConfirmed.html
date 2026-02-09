@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
@@ -30,7 +30,7 @@
                     $('#to').text(d.endAddr);
                 }
             });
-            //同行乘客
+            //同行求助同学
             $.ajax({
                 type : "POST",
                 url  : "/order/api/fellows",
@@ -75,23 +75,23 @@
 <div data-role="page" id="pageone" class="bg-img">
     <div data-role="header" data-position="fixed" data-tap-toggle="false">
         <a href="#" data-rel="back" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext ui-corner-all">使用圆圈（默认）</a>
-        <h1>司机端 - 行程详情</h1>
+        <h1>接单模式 - 跑腿详情</h1>
     </div>
     <div style="margin-top:120px;"></div>
 
     <div id="trapDetail" class="ui-content2" style="padding:15px;">
         <input id="tripId" type="hidden" />
-        <h2 style="color:green;text-align: center;">已发车</h2>
+        <h2 style="color:green;text-align: center;">已出发</h2>
         <h3 id="time"></h3>
         <p id="from"></p>
         <p id="to"></p>
-        <button id="confirm">确认送达</button>
+        <button id="confirm">确认完成任务</button>
     </div>
 
     <div id="driverDetail" class="ui-content2" style="padding:15px;line-height: 25px;">
         <ul data-role="listview" data-inset="true"  id="defaultpanel">
             <li style="text-align:center">
-                <h2>同行乘客</h2>
+                <h2>同行求助同学</h2>
             </li>
         </ul>
     </div>

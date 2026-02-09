@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
@@ -53,14 +53,14 @@
                 }
             });
 
-            //顺路的乘客
+            //顺路的求助同学
             $.ajax({
                 type: "POST",
                 url: "/stroke/api/itinerary/list",
                 cache: false,
                 data: JSON.stringify({ id: getParam('id') }),
                 success: function (d) {
-                    $('#defaultpanel').append('<li style="color:darkgoldenrod">顺路的乘客：</li>')
+                    $('#defaultpanel').append('<li style="color:darkgoldenrod">顺路的求助同学：</li>')
                     for (var i in d.data) {
                         var item = d.data[i];
                         item.tags='';
@@ -120,7 +120,7 @@
         <div data-role="header" data-position="fixed" data-tap-toggle="false">
             <a href="#" data-rel="back"
                 class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext ui-corner-all">使用圆圈（默认）</a>
-            <h1>司机端 - 行程详情</h1>
+            <h1>接单模式 - 跑腿详情</h1>
         </div>
         <div style="margin-top:120px;"></div>
 

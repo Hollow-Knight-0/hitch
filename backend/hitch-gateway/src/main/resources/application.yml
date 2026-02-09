@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: hitch-gateway-server
+  redis:
+    host: 192.168.64.100
+    port: 6379
+    timeout: 1000
   cloud:
     nacos:
       server-addr: 192.168.64.100:8848
@@ -65,7 +69,3 @@ knife4j:
         - hitch-gateway-server
 
 
-  redis:
-    host: 192.168.64.100
-    port: 6379
-    timeout: 1000

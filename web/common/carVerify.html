@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
@@ -68,7 +68,7 @@
         function validBtn() {
             if (!($('.carFrontPhoto').attr('src').startsWith('http'))
                 || !($('.carBackPhoto').attr('src').startsWith('http'))) {
-                showMsg('您必须先上传车辆信息');
+                showMsg('您必须先上传学生认证信息');
                 return;
             }
             $.post('/account/api/vehicleAuth', '{}', function (data) {
@@ -93,14 +93,14 @@
         <br>
         <h2>认证通过！</h2>
         <br>
-        <p><b>车牌号：</b><span id="carNumber">{carNumber}</span></p>
+        <p><b>学号：</b><span id="carNumber">{carNumber}</span></p>
     </div>
     <div id="topDiv"></div>
     <div data-role="page" id="pageone">
         <div data-role="header" data-position="fixed" data-tap-toggle="false">
             <a href="#" data-rel="back"
                 class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext ui-corner-all">使用圆圈（默认）</a>
-            <h1>车主认证</h1>
+            <h1>学生认证</h1>
         </div>
 
         <ul data-role="listview" data-inset="true" id="defaultpanel" style="margin:15px;">
@@ -112,7 +112,7 @@
                     <p></p>
                     <p><span>实名认证：</span> <span style="color:darkgoldenrod" id="valid">未完成</span></p>
                     <p></p>
-                    <p><span>车主认证：</span> <span style="color:darkgoldenrod" id="driver">已完成</span></p>
+                    <p><span>学生认证：</span> <span style="color:darkgoldenrod" id="driver">已完成</span></p>
                 </a>
             </li>
             <li>
@@ -123,8 +123,8 @@
                 </form>
                 <table style="width:100%">
                     <tr>
-                        <td class="h">车辆正面：</td>
-                        <td class="h">行驶证：</td>
+                        <td class="h">学生证/一卡通正面：</td>
+                        <td class="h">学生证/一卡通背面：</td>
                     </tr>
                     <tr>
                         <td>

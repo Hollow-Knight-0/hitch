@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
@@ -12,7 +12,7 @@
     <script type="text/javascript" src="../js/common.js"></script>
 
     <script>
-        var statusName = { 0: '邀请中', 1: '已发车', 3: '已送达', 4: '已取消' };
+        var statusName = { 0: '邀请中', 1: '已出发', 3: '已送达', 4: '已取消' };
         var statusColor = {1:'goldenrod',3:'green',4:'red'}
 
         $.ajax({
@@ -73,7 +73,7 @@
     <div data-role="page" id="pageone" class="bg-img">
         <div data-role="header" data-position="fixed" data-tap-toggle="false">
             <a href="javascript:changeRole()" class="ui-btn ui-btn-inline ui-corner-all">切换</a>
-            <h1>司机端 - 我的行程</h1>
+            <h1>接单模式 - 我的跑腿路线</h1>
         </div>
         <div style="margin-top:120px;" id="trips"></div>
 

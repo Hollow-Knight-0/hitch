@@ -18,7 +18,7 @@ h1,h2,h3,h4,h5,p{
     margin-bottom: 10px;
 }
 .bg-img{
-        background-image:url('../img/bg.png');
+        background-image:url('../img/background/Gemini__Image_1.png');
         background-repeat:no-repeat;
         background-size:100% 150px;
         -moz-background-size:100% 100%;
@@ -33,3 +33,18 @@ html, body {
     border-radius:50%;
 }
 
+/* 缩小header标题字体 - 多重选择器确保生效 */
+.ui-header h1,
+h1.ui-title,
+.ui-header .ui-title,
+div[data-role="header"] h1,
+*[data-role="header"] h1,
+.ui-header h1.ui-title {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 70% !important;
+    margin: 0 auto !important;
+}

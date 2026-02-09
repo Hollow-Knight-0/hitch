@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>顺风车</title>
+    <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
@@ -44,19 +44,19 @@
                     // console.log(e);
                     e.createdTime = transDate(e.createdTime);
                     if (e.passengerId == current_user.id) {
-                        //我乘坐的
+                        //我求助的
                         a++;
 
-                        e.role = '乘客'
+                        e.role = '求助同学'
                         e.cost = '￥-' + e.cost
                     } else {
-                        //乘坐我的
+                        //接单的
                         if(e.status == 2){
                             c += e.cost;
                         }
                         b++;
 
-                        e.role = '车主';
+                        e.role = '接单同学';
                         e.cost = '￥+' + e.cost
                     }
                     e.status = (e.status == 1 ? '【未支付】':'');
@@ -81,8 +81,6 @@
 
 
         })
-
-
     </script>
 </head>
 
@@ -100,8 +98,8 @@
                     style="border-top-left-radius: 5px; border-top-right-radius: 5px; background-color:#ddd;">
                     <img class="person-img" src="" style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
                     <h2 id="driverName">王小猫</h2>
-                    <p><span>打车次数：</span><span style="color:darkgoldenrod" id="a"></span></p>
-                    <p><span>载客次数：</span><span style="color:darkgoldenrod" id="b"></span></p>
+                    <p><span>求助次数：</span><span style="color:darkgoldenrod" id="a"></span></p>
+                    <p><span>接单次数：</span><span style="color:darkgoldenrod" id="b"></span></p>
                     <p><span>收支统计：</span> <span style="color:darkgoldenrod" id="c"></span></p>
                 </a>
             </li>
