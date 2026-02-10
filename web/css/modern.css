@@ -33,6 +33,9 @@ html, body {
 
 /* 页面容器优化 */
 .ui-page {
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+}
     background-color: transparent !important;
     min-height: auto !important;
     height: auto !important;
@@ -76,8 +79,17 @@ html, body {
     position: relative !important;
 }
 
-/* 切换按钮现代化样式 */
+/* 切换按钮现代化样式 - 与首页一致 */
 .ui-btn.ui-btn-inline.ui-corner-all {
+    background-color: #f5f7fa !important;
+    border: 1px solid #e1e5ea !important;
+    color: #6c757d !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
     background-color: #f0f2f5 !important;
     border: 1px solid #e1e5ea !important;
     color: #5a677d !important;
@@ -234,6 +246,42 @@ label {
 
 /* 底部导航栏优化 */
 .ui-footer {
+    padding: 0 !important;
+}
+
+.ui-navbar ul {
+    display: flex !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ui-navbar ul li {
+    flex: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+}
+
+.ui-navbar ul li a {
+    display: block !important;
+    padding: 12px 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #6b7280 !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.ui-navbar ul li a.ui-btn-active {
+    color: #3498db !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
     background-color: #ffffff !important;
     border-top: 1px solid #eaeaea !important;
     box-shadow: 0 -2px 15px rgba(0,0,0,0.08) !important;
@@ -271,20 +319,34 @@ label {
     font-size: 20px !important;
 }
 
-/* 卡片式布局优化 */
-.card {
-    background-color: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 16px !important;
-    margin: 10px 0 !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05) !important;
-    border: none !important;
+/* 卡片式布局优化 - 增强层次感版本 */
+.card,
+.ui-content2 {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 250, 0.95)) !important;
+    border-radius: 16px !important;
+    padding: 25px !important;
+    margin: 15px auto !important;
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.12),
+        0 4px 10px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
     transition: all 0.3s ease;
+    max-width: 360px !important;
+    width: calc(100% - 30px) !important;
+    position: relative;
+    backdrop-filter: blur(15px);
+    /* 强制覆盖common.css的样式 */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 250, 0.95)) !important;
 }
 
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+.card:hover,
+.ui-content2:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.15),
+        0 6px 15px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
 /* 列表项卡片样式 - 强力覆盖JQM默认样式 */
@@ -327,8 +389,17 @@ label {
     margin-bottom: 8px !important;
 }
 
-/* 图标样式优化 */
+/* 图标样式优化 - 与首页一致 */
 i.fas, i.far, i.fal, i.fad {
+    margin-right: 8px !important;
+    color: #3498db !important;
+    font-size: 16px !important;
+}
+
+/* 统一标题图标颜色为蓝色 - 与首页一致 */
+.ui-header h1 i.fas {
+    color: #3498db !important;
+}
     margin-right: 8px !important;
     color: #3498db !important;
     font-size: 16px !important;
@@ -455,6 +526,77 @@ i.fas, i.far, i.fal, i.fad {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* 全屏空状态提示样式 */
+.fullscreen-empty-state {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    z-index: 1;
+    /* 确保在JQM content容器内正确显示 */
+    width: 100% !important;
+    height: 100% !important;
+}
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    z-index: 1;
+}
+
+/* 空状态提示样式 */
+.empty-state {
+    text-align: center !important;
+    padding: 32px 24px !important;
+    margin: 16px auto !important;
+    max-width: 340px !important;
+    width: 100% !important;
+    /* 与首页卡片样式一致 */
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    border: none !important;
+    transition: all 0.3s ease;
+}
+
+.empty-state i.fas {
+    font-size: 40px !important;
+    color: #bdc3c7 !important;
+    margin-bottom: 16px !important;
+}
+
+.empty-state h3 {
+    color: #6c757d !important;
+    margin: 0 0 8px 0 !important;
+    font-size: 18px !important;
+}
+
+.empty-state p {
+    color: #6c757d !important;
+    font-size: 14px !important;
+    margin: 0 !important;
 }
 
 /* 成功/错误提示样式 */

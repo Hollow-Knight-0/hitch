@@ -249,7 +249,8 @@ $.postForm = function (url, id, callback) {
 
 //格式化日期的显示
 function transDate(date) {
-    return date.replace('T', ' ').replace('/-/g', '.').substring(0, 16);
+    // 修复时间格式化：去除'T'字符，截取到分钟
+    return date.replace('T', ' ').substring(0, 16);
 }
 
 //date参数为字符串：2021-07-07T03:38:57.000+0000
