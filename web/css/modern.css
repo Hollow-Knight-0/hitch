@@ -55,16 +55,25 @@ html, body {
     box-shadow: 0 2px 15px rgba(0,0,0,0.08) !important;
     border-bottom: 1px solid #eaeaea !important;
     padding: 0 15px !important;
+    min-height: 40px !important;
 }
 
 .ui-header h1 {
     font-weight: 600 !important;
     color: #2c3e50 !important;
-    font-size: 18px !important;
+    font-size: 27px !important;
     text-align: center !important;
-    padding: 0 !important;
+    padding: 6px 0 !important;
     margin: 0 !important;
-    line-height: 44px !important;
+    line-height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 标题区域图标特殊样式 */
+.ui-header h1 i.fas {
+    font-size: 24px !important;
 }
 
 /* 返回按钮优化 */
