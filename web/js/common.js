@@ -4,10 +4,11 @@ $(function () {
     //普通气泡消息
     $('body').append(
         '       <a id="_msg_btn" data-role="button" class="ui-content2"' +
-        '           style="width:200px;position: absolute;padding:20px;color:white;' +
+        '           style="width:200px;position: absolute;padding:20px;color:#3498db;' +
         '            margin-left:' + (www - 240) / 2 + 'px;margin-top:' + (hhh / 2 - 100) + 'px;' +
-        '          background-color: #5a5a5a;text-align: center;z-index: 9999;display: none">' +
-        '        </a>'
+        '          background-color: white;text-align: center;z-index: 9999;display: none;' +
+        '          border: 2px solid #3498db;border-radius: 8px;box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);"' +
+        '        ></a>'
     );
     $('body').append('<div id="mask" style="width:' + www + 'px;height:' + hhh + 'px;position: absolute;z-index: 99999;background:url(../img/ajax-loader.gif) no-repeat center 50%;background-color: #ccc;opacity: 0.6;display:none"></div>');
     //确认弹窗，方式一
@@ -77,7 +78,7 @@ function changeRole() {
     } else {
         //切换成司机
         if (current_user.role == 0 || current_user.status == 0) {
-            showMsg('您需要先实名认证，并完成学生认证！');
+            showMsg('完成学生认证，即可开始接单！');
             return;
         }
         href = href.replace('/user/', '/driver/');
