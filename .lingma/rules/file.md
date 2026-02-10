@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+trigger: manual
 ---
 
 1.任何情况下不要直接修改我的本地文件，除非我明确说明，否则不要修改本地文件

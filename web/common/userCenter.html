@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="../css/modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/jquery-1.11.3.min.js"></script>
     <script src="../js/jquery.mobile-1.4.5.min.js"></script>
@@ -61,67 +62,115 @@
 
     <div data-role="page" id="pageone">
         <div data-role="header" data-position="fixed" data-tap-toggle="false">
-            <h1>个人中心</h1>
+            <h1>
+                <i class="fas fa-user-circle"></i> 个人中心
+            </h1>
         </div>
-        <ul data-role="listview" data-inset="true" id="defaultpanel" style="margin:15px;">
+        <div data-role="main" class="ui-content">
+            <!-- 用户信息卡片 -->
+            <div class="ui-content2" style="text-align: center; margin-bottom: 20px;">
+                <div style="padding: 20px;">
+                    <img class="person-img" src="" style="width: 80px; height: 80px; margin: 0 auto 15px; display: block; border: 3px solid #3498db; border-radius: 50%;">
+                    <h2 id="driverName" style="margin: 10px 0; color: #2c3e50;"></h2>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 14px; color: #7f8c8d;">实名认证</div>
+                            <div id="valid" style="color: #3498db; font-weight: bold; margin-top: 5px;"></div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 14px; color: #7f8c8d;">学生认证</div>
+                            <div id="driver" style="color: #3498db; font-weight: bold; margin-top: 5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 功能菜单 -->
+            <div class="ui-content2">
+                <ul data-role="listview" data-inset="false" style="margin: 0;">
             <li>
-                <a href="#" class="ui-btn"
-                    style="border-top-left-radius: 5px; border-top-right-radius: 5px; background-color:#ddd;">
-                    <img class="person-img" src=""
-                        style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
-                    <h2 id="driverName" id="useralias"></h2>
-                    <p></p>
-                    <p><span>实名认证：</span> <span style="color:darkgoldenrod" id="valid">未完成</span></p>
-                    <p></p>
-                    <p><span>学生认证：</span> <span style="color:darkgoldenrod" id="driver">已完成</span></p>
+                <a data-ajax="false" href="javascript:toUrl('userMsg.html')" class="btn-icon">
+                    <i class="fas fa-envelope icon-info"></i>
+                    <span>我的消息</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
                 </a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('alterPwd.html')">修改密码</a>
+                <a data-ajax="false" href="javascript:toUrl('userEdit.html')" class="btn-icon">
+                    <i class="fas fa-user-edit icon-info"></i>
+                    <span>完善资料</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('alterPhoto.html')">修改头像</a>
+                <a data-ajax="false" href="javascript:toUrl('alterPhoto.html')" class="btn-icon">
+                    <i class="fas fa-camera icon-info"></i>
+                    <span>修改头像</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('alterPaycode.html')">收款码</a>
+                <a data-ajax="false" href="javascript:toUrl('alterPwd.html')" class="btn-icon">
+                    <i class="fas fa-key icon-warning"></i>
+                    <span>修改密码</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('userEdit.html')">完善资料</a>
+                <a data-ajax="false" href="javascript:toUrl('alterPaycode.html')" class="btn-icon">
+                    <i class="fas fa-qrcode icon-success"></i>
+                    <span>收款码</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
+            </li>
+            <li style="border-top: 1px solid #ecf0f1; margin-top: 5px; padding-top: 5px;">
+                <a data-ajax="false" href="javascript:toUrl('userVerify.html')" class="btn-icon">
+                    <i class="fas fa-id-card icon-warning"></i>
+                    <span>实名认证</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
             </li>
             <li>
-                <a data-ajax="false" href="javascript:toUrl('userVerify.html')">实名认证</a>
+                <a data-ajax="false" href="javascript:toUrl('carVerify.html')" class="btn-icon">
+                    <i class="fas fa-graduation-cap icon-success"></i>
+                    <span>学生认证</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
             </li>
-            <li>
-                <a data-ajax="false" href="javascript:toUrl('carVerify.html')">学生认证</a>
+            <li style="border-top: 1px solid #ecf0f1; margin-top: 5px; padding-top: 5px;">
+                <a data-ajax="false" href="javascript:logout();" class="btn-icon" style="color: #e74c3c;">
+                    <i class="fas fa-sign-out-alt icon-danger"></i>
+                    <span>退出登录</span>
+                    <i class="fas fa-chevron-right" style="float: right; color: #bdc3c7;"></i>
+                </a>
             </li>
-            <li>
-                <a data-ajax="false" href="javascript:toUrl('userMsg.html')">我的消息</a>
-            </li>
-            <!-- 根据角色显示行程统计 -->
-            <script>
-                $(function() {
-                    var role = localStorage.getItem('current_role');
-                    if (role == '1') { // 接单同学才显示行程统计
-                        $('#statLink').show();
-                    } else {
-                        $('#statLink').hide();
-                    }
-                });
-            </script>
-            <li id="statLink" style="display:none;">
-                <a data-ajax="false" href="javascript:toUrl('accountInfo.html')">行程统计</a>
-            </li>
-            <li>
-                <a data-ajax="false" href="javascript:logout();">退出登录</a>
-            </li>
-        </ul>
+        </div>
+        
+        <!-- 底部提示 -->
+        <div style="text-align: center; margin-top: 25px; color: #95a5a6; font-size: 12px;">
+            <p><i class="fas fa-shield-alt"></i> 校园顺路带 v1.0</p>
+            <p>让出行更便捷，让校园更温暖</p>
+        </div>
+    </div>
         <div data-role="footer" data-position="fixed" data-tap-toggle="false">
             <div data-role="navbar" style="margin: 0;" id="footerLink">
                 <ul>
-                    <li><a href="user.html" data-ajax="false" data-icon="home" class="role">首页</a></li>
-                    <li><a href="trip.html" data-ajax="false" data-icon="grid" class="role">我的行程</a></li>
-                    <li><a href="order.html" data-ajax="false" data-icon="bullets" class="role">我的订单</a></li>
-                    <li><a href="userCenter.html" data-ajax="false" data-icon="user" class="ui-btn-active">个人中心</a></li>
+                    <li><a href="user.html" data-ajax="false" class="role">
+                        <i class="fas fa-home"></i>
+                        <span>首页</span>
+                    </a></li>
+                    <li><a href="trip.html" data-ajax="false" class="role">
+                        <i class="fas fa-route"></i>
+                        <span>我的行程</span>
+                    </a></li>
+                    <li><a href="order.html" data-ajax="false" class="role">
+                        <i class="fas fa-list"></i>
+                        <span>我的订单</span>
+                    </a></li>
+                    <li><a href="userCenter.html" data-ajax="false" class="ui-btn-active">
+                        <i class="fas fa-user"></i>
+                        <span>个人中心</span>
+                    </a></li>
                 </ul>
             </div>
         </div>

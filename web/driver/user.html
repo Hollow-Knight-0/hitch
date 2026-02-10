@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css">
+    <link rel="stylesheet" href="../css/modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/jquery-1.11.3.min.js"></script>
     <script src="../js/jquery.mobile-1.4.5.min.js"></script>
@@ -14,6 +15,20 @@
 
     <script>
         $(function () {
+            // 强制设置时间输入框样式，防止jQuery Mobile覆盖
+            setTimeout(function() {
+                $('#time').css({
+                    'padding-left': '52px',
+                    'position': 'relative'
+                });
+                
+                // 如果jQuery Mobile已经包装了输入框，则同时设置包装元素
+                var timeInputWrapper = $('#time').closest('.ui-input-text, .ui-input-search');
+                if (timeInputWrapper.length > 0) {
+                    timeInputWrapper.find('input[type="datetime-local"]').css('padding-left', '52px');
+                }
+            }, 100);
+            
             var f = localStorage.getItem('from');
             var t = localStorage.getItem('to');
             var time = localStorage.getItem('time');
@@ -79,62 +94,93 @@
 </head>
 
 <body>
-    <div data-role="page" id="pageone" class="bg-img">
-        <div data-role="header">
-            <a href="javascript:changeRole()" class="ui-btn ui-btn-inline ui-corner-all">切换</a>
-            <h1>接单模式 - 校园顺路带</h1>
-        </div><!-- /header -->
+    <div data-role="page" id="pageone">
+        <div data-role="header" data-position="fixed" data-tap-toggle="false">
+            <a href="javascript:changeRole()" class="ui-btn ui-btn-inline ui-corner-all" style="background-color: #e8ecef !important; color: #6c757d !important;">
+                <i class="fas fa-exchange-alt" style="color: #6c757d !important;"></i> 切换角色
+            </a>
+            <h1 style="line-height: 1.6; padding: 8px 0; margin: 0;">
+                <i class="fas fa-bicycle" style="color: #5dade2;"></i> 校园顺路带
+            </h1>
+        </div>
 
-        <div style="margin-top:60px;"></div>
-        <div data-role="main" class="ui-content ui-content2 ui-shadow-inset" style="background-color:#fff">
-            <form id="tripForm">
-                <div data-role="content ">
-                    出发时间：
-                    <input type="datetime-local" name="departureTime" id="time" />
+        <div style="margin-top:8px;"></div>
+        <div data-role="main" class="ui-content">
+            <div class="ui-content2">
+                <div style="text-align: center; margin-bottom: 18px; padding: 12px; width: 95%; margin: 0 auto; background: linear-gradient(135deg, #5dade2 0%, #3498db 100%); border-radius: 10px; color: white;">
+                    <i class="fas fa-bicycle" style="font-size: 28px; margin-bottom: 10px; color: #ffffff;"></i>
+                    <h2 style="margin: 0; font-size: 20px;">接单模式</h2>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9;">提供顺路服务给求助同学</p>
+                </div>
+                
+                <form id="tripForm">
+                    <div class="input-group">
+                        <label for="time" class="required">出发时间</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-clock" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffffff; z-index: 2;"></i>
+                            <input type="datetime-local" name="departureTime" id="time" class="time-input">
+                        </div>
+                    </div>
 
-                    出发地：
-                    <input id="from-txt" name="startAddr" readonly="true" />
-                    <input id="from" name="startGeoLng" type="hidden">
-                    <input id="from2" name="startGeoLat" type="hidden">
+                    <div class="input-group">
+                        <label for="from-txt" class="required">出发地</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-map-marker-alt" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffffff;"></i>
+                            <input id="from-txt" name="startAddr" readonly="true" placeholder="请选择出发地点" style="padding-left: 40px; cursor: pointer;">
+                            <input id="from" name="startGeoLng" type="hidden">
+                            <input id="from2" name="startGeoLat" type="hidden">
+                        </div>
+                    </div>
 
-                    目的地：
-                    <input id="to-txt" name="endAddr" readonly="true" />
-                    <input id="to" name="endGeoLng" type="hidden">
-                    <input id="to2" name="endGeoLat" type="hidden">
+                    <div class="input-group">
+                        <label for="to-txt" class="required">目的地</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-flag" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #ffffff;"></i>
+                            <input id="to-txt" name="endAddr" readonly="true" placeholder="请选择目的地点" style="padding-left: 40px; cursor: pointer;">
+                            <input id="to" name="endGeoLng" type="hidden">
+                            <input id="to2" name="endGeoLat" type="hidden">
+                        </div>
+                    </div>
 
                     <!-- 座位数字段在接单模式下隐藏 -->
-                    <!-- 座位数： -->
-                    <!-- <input type="range" name="quantity" id="points" value="1" min="1" max="5" data-highlight="true"> -->
-                    
                     <!-- 默认传入100给后端 -->
                     <input type="hidden" name="quantity" value="100">
-
                     <input type="hidden" name="role" value="1">
                     <input type="hidden" name="status" value="0">
-                    <br><br>
-                    <button type="submit" class="ui-btn-active" id="go">发布行程</button>
-
-                </div>
-            </form>
-
-
-
+                    
+                    <button type="submit" class="ui-btn-active" id="go" style="width: 100%; margin-top: 15px; padding: 15px; font-size: 16px;">
+                        <i class="fas fa-paper-plane"></i> 发布接单行程
+                    </button>
+                </form>
+            </div>
         </div>
 
 
 
-        <div style="margin-bottom:75px;"></div>
+        <div style="margin-bottom:4px;"></div>
         <div data-role="footer" data-position="fixed" data-tap-toggle="false">
             <div data-role="navbar" style="margin: 0;">
                 <ul>
-                    <li><a href="javascript:location.href='user.html'" data-icon="home" class="ui-btn-active">首页</a>
-                    </li>
-                    <li><a href="javascript:location.href='trip.html'" data-icon="grid">我的行程</a></li>
-                    <li><a href="javascript:location.href='order.html'" data-icon="bullets">我的订单</a></li>
-                    <li><a href="javascript:location.href='../common/userCenter.html'" data-icon="user">个人中心</a></li>
+                    <li><a href="javascript:location.href='user.html'" class="ui-btn-active">
+                        <i class="fas fa-home"></i>
+                        <span>首页</span>
+                    </a></li>
+                    <li><a href="javascript:location.href='trip.html'">
+                        <i class="fas fa-route"></i>
+                        <span>我的行程</span>
+                    </a></li>
+                    <li><a href="javascript:location.href='order.html'">
+                        <i class="fas fa-list"></i>
+                        <span>我的订单</span>
+                    </a></li>
+                    <li><a href="javascript:location.href='../common/userCenter.html'">
+                        <i class="fas fa-user"></i>
+                        <span>个人中心</span>
+                    </a></li>
                 </ul>
             </div>
         </div>
+    </div>
 
 </body>
 

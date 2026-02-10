@@ -1,0 +1,570 @@
+/* 现代化扁平化设计样式 - 校园顺路带 */
+/* 采用校园蓝色调 #3498db 和简洁扁平风格 */
+/* 版本：2.0 - 增强版现代化改造 */
+
+/* 全局基础样式 */
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 页面容器优化 */
+.ui-page {
+    background-color: transparent !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+/* 内容区域优化 */
+.ui-content {
+    padding: 15px !important;
+}
+
+/* 头部导航栏现代化改造 */
+.ui-header {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08) !important;
+    border-bottom: 1px solid #eaeaea !important;
+    padding: 0 15px !important;
+}
+
+.ui-header h1 {
+    font-weight: 600 !important;
+    color: #2c3e50 !important;
+    font-size: 18px !important;
+    text-align: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 44px !important;
+}
+
+/* 返回按钮优化 */
+.ui-header .ui-btn {
+    margin: 8px 0 !important;
+    z-index: 100 !important;
+}
+
+/* 时间输入框优化 - 解决遮挡问题 */
+#time {
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* 切换按钮现代化样式 */
+.ui-btn.ui-btn-inline.ui-corner-all {
+    background-color: #f0f2f5 !important;
+    border: 1px solid #e1e5ea !important;
+    color: #5a677d !important;
+    font-weight: 500 !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+.ui-btn.ui-btn-inline.ui-corner-all:hover {
+    background-color: #e9edf2 !important;
+    border-color: #cbd5e1 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* 表单元素扁平化设计 */
+.ui-content2 {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    margin: 20px 15px !important;
+    padding: 20px !important;
+    border: none !important;
+    position: relative;
+}
+
+/* 卡片悬停效果 */
+.ui-content2:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12) !important;
+    transition: all 0.3s ease;
+}
+
+/* 输入框现代化样式 */
+input[type="datetime-local"],
+input[type="text"],
+input[type="number"],
+input[type="password"],
+select,
+textarea {
+    position: relative !important;
+}
+    position: relative !important;
+}
+    width: 100% !important;
+    padding: 12px 16px !important;
+    border: 1px solid #e1e5ea !important;
+    border-radius: 8px !important;
+    background-color: #fafbfd !important;
+    font-size: 16px !important;
+    color: #2c3e50 !important;
+    transition: all 0.3s ease !important;
+    height: 44px !important;
+    box-sizing: border-box !important;
+}
+
+/* 特殊处理时间输入框，避免图标遮挡 */
+input[type="datetime-local"] {
+    padding-left: 52px !important;
+}
+
+/* 针对带有time-input类的时间输入框 */
+.time-input {
+    padding-left: 52px !important;
+}
+
+/* jQuery Mobile 时间输入框特殊处理 */
+.ui-input-text input[type="datetime-local"],
+.ui-input-search input[type="datetime-local"] {
+    padding-left: 52px !important;
+}
+
+/* 直接针对时间输入框容器 */
+div:has(> input[type="datetime-local"]) {
+    position: relative !important;
+}
+
+div:has(> input[type="datetime-local"]) input[type="datetime-local"] {
+    padding-left: 52px !important;
+}
+}
+
+input[type="datetime-local"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #3498db !important;
+    background-color: #ffffff !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2) !important;
+}
+
+/* 文本域特殊处理 */
+textarea {
+    height: auto !important;
+    min-height: 100px !important;
+    resize: vertical !important;
+}
+
+/* 标签样式优化 */
+label {
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-weight: 500 !important;
+    color: #4a5568 !important;
+    font-size: 14px !important;
+}
+
+/* 必填字段标识 */
+.required::after {
+    content: " *";
+    color: #e74c3c;
+}
+
+/* 主要按钮现代化设计 */
+.ui-btn-active {
+    background-color: #3498db !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2) !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ui-btn-active:hover {
+    background-color: #2980b9 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3) !important;
+}
+
+/* 次要按钮样式 */
+.ui-btn {
+    background-color: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    color: #495057 !important;
+    font-weight: 500 !important;
+    padding: 10px 20px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.ui-btn:hover {
+    background-color: #e9ecef !important;
+    border-color: #ced4da !important;
+}
+
+/* 底部导航栏优化 */
+.ui-footer {
+    background-color: #ffffff !important;
+    border-top: 1px solid #eaeaea !important;
+    box-shadow: 0 -2px 15px rgba(0,0,0,0.08) !important;
+}
+
+.ui-navbar ul {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ui-navbar ul li {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ui-navbar ul li a {
+    color: #6b7280 !important;
+    font-weight: 500 !important;
+    padding: 12px 0 !important;
+    transition: all 0.2s ease !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.ui-navbar ul li a.ui-btn-active {
+    color: #3498db !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 导航图标优化 */
+.ui-navbar .ui-icon {
+    font-size: 20px !important;
+}
+
+/* 卡片式布局优化 */
+.card {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    margin: 10px 0 !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05) !important;
+    border: none !important;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+}
+
+/* 列表项卡片样式 */
+.ui-listview > li {
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    margin: 8px 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    border: 1px solid #f0f0f0 !important;
+}
+
+.ui-listview > li:hover {
+    background: #f8f9fa !important;
+}
+
+/* 图标样式优化 */
+i.fas, i.far, i.fal, i.fad {
+    margin-right: 8px !important;
+    color: #3498db !important;
+    font-size: 16px !important;
+}
+
+/* 不同场景的图标颜色 */
+.icon-success { color: #27ae60 !important; }
+.icon-warning { color: #f39c12 !important; }
+.icon-danger { color: #e74c3c !important; }
+.icon-info { color: #3498db !important; }
+
+/* 图标按钮样式 */
+.btn-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .ui-header h1 {
+        font-size: 16px !important;
+    }
+    
+    .ui-btn-active {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+    
+    .ui-content2 {
+        margin: 10px 10px !important;
+        padding: 15px !important;
+    }
+    
+    input[type="datetime-local"],
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    select,
+    textarea {
+        padding: 10px 12px !important;
+        font-size: 15px !important;
+    }
+}
+
+/* Flipswitch 样式强制 - 确保显示为滑块而非下拉框 */
+.ui-flipswitch {
+    display: block !important;
+    height: 32px !important;
+    border-radius: 16px !important;
+    background-color: #e9ecef !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.ui-flipswitch .ui-slider-track {
+    height: 32px !important;
+    border-radius: 16px !important;
+    background-color: #e9ecef !important;
+    width: 100% !important;
+    position: relative !important;
+}
+
+.ui-flipswitch .ui-btn {
+    width: 50% !important;
+    height: 32px !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    line-height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 1 !important;
+    transition: all 0.3s ease !important;
+    background-color: #3498db !important;
+}
+
+.ui-flipswitch .ui-btn.ui-flipswitch-off {
+    background-color: #e9ecef !important;
+    transform: translateX(0) !important;
+}
+
+.ui-flipswitch .ui-btn.ui-flipswitch-on {
+    background-color: #3498db !important;
+    transform: translateX(100%) !important;
+}
+
+/* 隐藏原生select元素 */
+#myswitch {
+    display: none !important;
+}
+
+/* 加载动画 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 成功/错误提示样式 */
+.alert-success {
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+    color: #155724 !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    margin: 10px 0 !important;
+}
+
+.alert-error {
+    background-color: #f8d7da !important;
+    border-color: #f5c6cb !important;
+    color: #721c24 !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    margin: 10px 0 !important;
+}
+
+/* 自定义CSS滑块组件 */
+.custom-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.custom-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* 强制确保滑块按钮显示 */
+.custom-switch .switch-slider:before {
+    display: block !important;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e9ecef;
+    border: 2px solid #ced4da;
+    border-radius: 25px;
+    transition: .3s;
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+input:checked + .switch-slider {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+input:checked + .switch-slider:before {
+    transform: translateX(30px);
+}
+
+/* 滑块标签样式 */
+.switch-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.switch-label span {
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* 简单开关按钮 - 与页面风格一致 */
+.simple-switch {
+    display: inline-block;
+    padding: 6px 16px;
+    background-color: #e9ecef;
+    border-radius: 20px;
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.simple-switch.active {
+    background-color: #3498db;
+    color: white;
+}
+
+/* 终极滑块解决方案 - 完全独立于jQuery Mobile */
+.custom-switch-2 {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.custom-switch-2 input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider-2 {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e9ecef;
+    border: 2px solid #ced4da;
+    border-radius: 25px;
+    transition: .3s;
+    overflow: hidden;
+}
+
+.switch-slider-2::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    background-color: white !important;
+    border-radius: 50% !important;
+    transition: .3s !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+    display: block !important;
+}
+
+input:checked + .switch-slider-2 {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+input:checked + .switch-slider-2::before {
+    transform: translateX(30px);
+}

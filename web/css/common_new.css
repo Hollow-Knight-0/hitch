@@ -18,7 +18,7 @@ h1,h2,h3,h4,h5,p{
     margin-bottom: 10px;
 }
 .bg-img{
-        /* background-image:url('../img/background/Gemini__Image_1.png'); */
+        background-image:url('../img/bg.png');
         background-repeat:no-repeat;
         background-size:100% 150px;
         -moz-background-size:100% 100%;
