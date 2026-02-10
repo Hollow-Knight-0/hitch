@@ -405,6 +405,11 @@ i.fas, i.far, i.fal, i.fad {
     font-size: 16px !important;
 }
 
+/* 底部菜单未选中状态图标样式 */
+.ui-navbar ul li a:not(.ui-btn-active) i.fas {
+    color: #6b7280 !important;
+}
+
 /* 统一标题图标颜色为蓝色 - 与首页一致 */
 .ui-header h1 i.fas {
     color: #3498db !important;
