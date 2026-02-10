@@ -38,9 +38,12 @@ html, body {
     height: auto !important;
 }
 
-/* 内容区域优化 */
+/* 内容区域优化 - 移除左右内边距，确保居中 */
 .ui-content {
-    padding: 15px !important;
+    padding: 15px 0 !important; /* 只保留上下内边距，移除左右内边距 */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 360px !important;
 }
 
 /* 头部导航栏现代化改造 */
@@ -284,17 +287,44 @@ label {
     box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
 }
 
-/* 列表项卡片样式 */
-.ui-listview > li {
+/* 列表项卡片样式 - 强力覆盖JQM默认样式 */
+.ui-content2 .ui-listview > li,
+.ui-content2 > ul > li {
     background: #ffffff !important;
     border-radius: 8px !important;
     margin: 8px 0 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-    border: 1px solid #f0f0f0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    /* 移除JQM默认边框和阴影 */
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
 }
 
-.ui-listview > li:hover {
-    background: #f8f9fa !important;
+.ui-content2 .ui-listview > li a,
+.ui-content2 > ul > li a {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* 确保菜单项横向铺满 */
+.ui-content2 .ui-listview > li a.btn-icon,
+.ui-content2 > ul > li a.btn-icon {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 12px 15px !important;
+    border-radius: 8px !important;
+    background: white !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    margin-bottom: 8px !important;
 }
 
 /* 图标样式优化 */
@@ -315,6 +345,21 @@ i.fas, i.far, i.fal, i.fad {
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
+    /* 移除jQuery Mobile默认右箭头 */
+    position: relative !important;
+}
+
+/* 移除jQuery Mobile的右箭头图标 */
+.btn-icon.ui-btn-icon-right:after,
+.ui-btn-icon-right .ui-btn-inner:after,
+.ui-btn-icon-right:after {
+    display: none !important;
+}
+
+/* 确保自定义箭头显示 */
+.btn-icon i.fas.fa-chevron-right {
+    margin-left: auto !important;
+    color: #bdc3c7 !important;
 }
 
 /* 响应式优化 */
