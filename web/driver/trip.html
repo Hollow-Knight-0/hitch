@@ -15,6 +15,22 @@
     <script type="text/javascript" src="../js/common.js"></script>
 
     <script>
+        // 导航栏状态管理
+        $(function(){
+            // 设置当前页面对应的导航项为选中状态
+            var currentPage = window.location.pathname.split('/').pop();
+            var navItems = {
+                'user.html': 0,
+                'trip.html': 1,
+                'order.html': 2,
+                'userCenter.html': 3
+            };
+            
+            if(navItems[currentPage] !== undefined) {
+                $('div[data-role="navbar"] ul li').eq(navItems[currentPage]).find('a').addClass('ui-btn-active');
+            }
+        });
+        
         var statusName = { 0: '邀请中', 1: '已出发', 3: '已送达', 4: '已取消' };
         var statusColor = {1:'goldenrod',3:'green',4:'red'}
 
@@ -93,11 +109,11 @@
         <div data-role="footer" data-position="fixed" data-tap-toggle="false">
             <div data-role="navbar" style="margin: 0;">
                 <ul>
-                    <li><a href="javascript:location.href='user.html'" class="ui-btn-active">
+                    <li><a href="javascript:location.href='user.html'">
                         <i class="fas fa-home"></i>
                         <span>首页</span>
                     </a></li>
-                    <li><a href="javascript:location.href='trip.html'">
+                    <li><a href="javascript:location.href='trip.html'" class="ui-btn-active">
                         <i class="fas fa-route"></i>
                         <span>我的行程</span>
                     </a></li>

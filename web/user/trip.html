@@ -15,6 +15,22 @@
     <script type="text/javascript" src="../js/common.js"></script>
 
     <script>
+        // 导航栏状态管理
+        $(function(){
+            // 设置当前页面对应的导航项为选中状态
+            var currentPage = window.location.pathname.split('/').pop();
+            var navItems = {
+                'user.html': 0,
+                'trip.html': 1,
+                'order.html': 2,
+                'userCenter.html': 3
+            };
+            
+            if(navItems[currentPage] !== undefined) {
+                $('div[data-role="navbar"] ul li').eq(navItems[currentPage]).find('a').addClass('ui-btn-active');
+            }
+        });
+        
         var statusColor = { 1: 'dodgerblue', 2:'goldenrod', 3: 'green', 4: 'red' }
         var statusTo = {0: 'tripDetail', 1: 'tripConfirmed', 2:'tripConfirmed', 3: 'tripInfo', 4: 'tripInfo'}
 
@@ -90,7 +106,7 @@
         <div data-role="footer" data-position="fixed" data-tap-toggle="false">
             <div data-role="navbar" style="margin: 0;">
                 <ul>
-                    <li><a href="javascript:location.href='user.html'" class="ui-btn-active">
+                    <li><a href="javascript:location.href='user.html'">
                         <i class="fas fa-home"></i>
                         <span>首页</span>
                     </a></li>
