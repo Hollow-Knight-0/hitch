@@ -117,6 +117,18 @@
             success: function (d) {
                 $('#defaultpanel').empty();
                 if (d.data && d.data.length > 0) {
+                    // 按支付状态分组排序：未支付(1) > 已支付(2)
+                    // 同组内按时间倒序排列
+                    d.data.sort(function(a, b) {
+                        // 先按支付状态排序（未支付优先）
+                        if (a.status !== b.status) {
+                            return a.status - b.status; // 1(未支付)在前，2(已支付)在后
+                        }
+                        
+                        // 同状态内按时间倒序排序
+                        return new Date(b.passengerStartDate) - new Date(a.passengerStartDate);
+                    });
+                    
                     for (var i in d.data) {
                         var dd = d.data[i];
                         dd.statusName = orderStatus[dd.status];

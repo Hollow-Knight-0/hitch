@@ -79,6 +79,23 @@
             success: function (d) {
                 $('#defaultpanel').empty();
                 if (d.data && d.data.length > 0) {
+                    // 按状态分组排序：配送中(2) > 已确认(1) > 求助中(0) > 已完成(3,4)
+                    // 同组内按时间倒序排列
+                    d.data.sort(function(a, b) {
+                        // 使用数组索引确定优先级顺序：索引越小优先级越高
+                        var priorityOrder = [2, 1, 0, 3, 4];
+                        
+                        var indexA = priorityOrder.indexOf(a.status);
+                        var indexB = priorityOrder.indexOf(b.status);
+                        
+                        if (indexA !== indexB) {
+                            return indexA - indexB; // 索引小的在前
+                        }
+                        
+                        // 同优先级内按时间倒序排序
+                        return new Date(b.departureTime) - new Date(a.departureTime);
+                    });
+                    
                     for (var i = 0; i < d.data.length; i++) {
                         var item = d.data[i];
                         item.departureTime = transDate(item.departureTime);
