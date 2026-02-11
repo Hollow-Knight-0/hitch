@@ -12,6 +12,19 @@
     <script src="../js/jquery.mobile-1.4.5.min.js"></script>
     <link rel="stylesheet" href="../css/common.css" />
     <script type="text/javascript" src="../js/common.js"></script>
+    
+    <style>
+        /* 时间输入框样式调整 */
+        .time-input {
+            padding-left: 52px !important;
+        }
+        
+        /* 输入框焦点样式 */
+        input:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+    </style>
 
     <script>
         $(function () {
@@ -19,7 +32,18 @@
             var t = localStorage.getItem('to');
             var time = localStorage.getItem('time');
             
-            // 强制设置时间输入框样式，防止jQuery Mobile覆盖
+            // ✅ 设置最小时间为当前时间
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            var day = String(now.getDate()).padStart(2, '0');
+            var hours = String(now.getHours()).padStart(2, '0');
+            var minutes = String(Math.ceil(now.getMinutes() / 5) * 5).padStart(2, '0');
+            
+            var minDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+            $('#time').attr('min', minDateTime);
+            
+            // 强制设置时间输入框样式
             setTimeout(function() {
                 $('#time').css({
                     'padding-left': '52px',
@@ -66,16 +90,40 @@
             }
             $('#time').blur(function () {
                 localStorage.setItem('time', $(this).val());
+                
+                // ✅ 实时时间验证
+                var selectedTime = new Date($(this).val());
+                var now = new Date();
+                if (selectedTime < now) {
+                    showMsg('出发时间不能是过去时间，请选择当前时间或之后的时间');
+                    $(this).val(''); // 清空无效时间
+                    localStorage.removeItem('time');
+                }
             });
-            $('#from-txt').on('tap', function () {
+            
+            // ✅ 完善的地址选择功能
+            $(document).on('click', '#from-txt', function(e) {
+                e.preventDefault();
+                localStorage.setItem('address_type', 'from');
                 window.location.href = "../map.html?type=f";
             });
-            $('#to-txt').on('tap', function () {
+            $(document).on('click', '#to-txt', function(e) {
+                e.preventDefault();
+                localStorage.setItem('address_type', 'to');
                 window.location.href = '../map.html?type=t';
             });
-            $('#go').click(function () {
-
-                //pop提示
+            
+            // 监听页面显示事件，更新地址显示
+            $(document).on('pageshow', '#pageone', function() {
+                updateAddressDisplay();
+            });
+            
+            // 页面加载时也更新一次
+            updateAddressDisplay();
+            
+            // ✅ 完善的提交按钮事件
+            $('#go').off('click').on('click', function () {
+                // 基础验证
                 if ($('#from-txt').val() == '') {
                     showMsg('请选择出发地');
                     return;
@@ -83,30 +131,128 @@
                     showMsg('请选择目的地');
                     return;
                 } else if ($('#time').val() == '') {
-                    showMsg('请选择出行时间');
+                    showMsg('请选择出发时间');
+                    return;
+                }
+                
+                // ✅ 双重时间验证
+                var selectedTime = new Date($('#time').val());
+                var now = new Date();
+                if (selectedTime < now) {
+                    showMsg('出发时间不能是过去时间，请选择当前时间或之后的时间');
+                    return;
+                }
+                
+                // 验证坐标是否完整
+                if (!$('#from').val() || !$('#from2').val()) {
+                    showMsg('出发地坐标信息不完整，请重新选择出发地');
+                    return;
+                }
+                
+                if (!$('#to').val() || !$('#to2').val()) {
+                    showMsg('目的地坐标信息不完整，请重新选择目的地');
                     return;
                 }
 
-                //ajax提交行程
-                $.postForm("/stroke/api/publish", '#tripForm', function (d) {
+                // 显示加载状态
+                var $btn = $(this);
+                var originalText = $btn.html();
+                $btn.html('<i class="fas fa-spinner fa-spin"></i> 发布中...').prop('disabled', true);
 
+                // ajax提交行程
+                $.postForm("/stroke/api/publish", '#tripForm', function (d) {
+                    $btn.html(originalText).prop('disabled', false);
                     if (d.code == 200) {
-                        //清除本地缓存，跳到行程页
                         showMsg('发布成功');
-                        // localStorage.removeItem('from');
-                        // localStorage.removeItem('to');
-                        // localStorage.removeItem('time');
-                        window.location.href = 'trip.html';
+                        // 重置表单
+                        $('#tripForm')[0].reset();
+                        // 清除相关输入框的值
+                        $('#from-txt').val('');
+                        $('#to-txt').val('');
+                        $('#time').val('');
+                        // 清除隐藏字段
+                        $('#from').val('');
+                        $('#from2').val('');
+                        $('#to').val('');
+                        $('#to2').val('');
+                        // 清除本地存储
+                        localStorage.removeItem('from');
+                        localStorage.removeItem('to');
+                        localStorage.removeItem('time');
+                        localStorage.removeItem('address_type');
+                        // 延迟跳转，确保状态清理完成
+                        setTimeout(function() {
+                            window.location.href = 'trip.html';
+                        }, 500);
                     } else {
                         showMsg(d.message);
                     }
-                })
-
-
+                }).fail(function() {
+                    $btn.html(originalText).prop('disabled', false);
+                    showMsg('网络请求失败，请稍后重试');
+                });
             });
+        });
+        
+        // 更新地址显示的函数
+        function updateAddressDisplay() {
+            var f = localStorage.getItem('from');
+            var t = localStorage.getItem('to');
+            
+            // 出发地
+            if (f && f.includes('#')) {
+                try {
+                    var parts = f.split("#");
+                    if (parts.length >= 2) {
+                        $('#from-txt').val(parts[0]);
+                        var coords = parts[1].split(',');
+                        if (coords.length >= 2) {
+                            // 确保坐标是有效的数字
+                            var lng = parseFloat(coords[0]);
+                            var lat = parseFloat(coords[1]);
+                            if (!isNaN(lng) && !isNaN(lat)) {
+                                $('#from').val(lng); // 经度
+                                $('#from2').val(lat); // 纬度
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.log('解析出发地坐标失败:', e);
+                    // 清除无效数据
+                    $('#from-txt').val('');
+                    $('#from').val('');
+                    $('#from2').val('');
+                }
+            }
+            
+            // 目的地
+            if (t && t.includes('#')) {
+                try {
+                    var parts = t.split("#");
+                    if (parts.length >= 2) {
+                        $('#to-txt').val(parts[0]);
+                        var coords = parts[1].split(',');
+                        if (coords.length >= 2) {
+                            // 确保坐标是有效的数字
+                            var lng = parseFloat(coords[0]);
+                            var lat = parseFloat(coords[1]);
+                            if (!isNaN(lng) && !isNaN(lat)) {
+                                $('#to').val(lng); // 经度
+                                $('#to2').val(lat); // 纬度
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.log('解析目的地坐标失败:', e);
+                    // 清除无效数据
+                    $('#to-txt').val('');
+                    $('#to').val('');
+                    $('#to2').val('');
+                }
+            }
+        }
 
-            $('#myPopupDialog').popup();
-        })
+        $('#myPopupDialog').popup();
     </script>
 </head>
 

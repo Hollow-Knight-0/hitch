@@ -48,13 +48,13 @@
             if($('#tripStatus').val() == 1){
                 //上车
                 $.post('/stroke/api/hitchhiker/'+$('#tripId').val(),"",function(d){
-                    showMsg('成功！到站后请点击下车结束行程！');
+                    showMsg('确认配送同学已取货，送达后请点击确认送达！');
                     toUrl('tripConfirmed.html?id='+$('#tripId').val(),1000);
                 })
             }else if($('#tripStatus').val() == 2){
                 //下车
                 $.post('/stroke/api/freeride/'+$('#tripId').val(),"",function(d){
-                    showMsg('成功！已为您生成订单，请及时支付！');
+                    showMsg('确认成功！已为您生成订单，请及时支付！');
                     toUrl('order.html',1000);
                 })
             }
@@ -77,7 +77,7 @@
         </a>
     </li> 
     <li>
-        <button data-inline="true" id="go" onclick="letsGo()" style="float:right;">开始任务</button>
+        <button data-inline="true" id="go" onclick="letsGo()" style="float:right;">确认已取货</button>
     </li>
 </div>
 
@@ -91,7 +91,7 @@
     <div id="trapDetail" class="ui-content2" style="padding:15px;">
         <input id="tripId" type="hidden" />
         <input id="tripStatus" type="hidden" />
-        <h2 style="color:green;text-align: center;">已确认同行</h2>
+        <h2 style="color:green;text-align: center;">确认已取货</h2>
         <h3 id="time"></h3>
         <p id="from"></p>
         <p id="to"></p>

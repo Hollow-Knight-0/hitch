@@ -61,8 +61,8 @@
             style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
         <h2 id="driverName">{passengerUseralias}</h2>
         <p><span>位于：</span> <span style="color:darkgoldenrod" id="tripRatio">{passengerStartAddr}</span></p>
-        <p><span>要去：</span> <span style="color:darkgoldenrod" id="cost">{passengerEndAddr}</span></p>
-        <p><span>状态：</span> <span style="color:darkgoldenrod" id="cost">{status}</span></p>
+        <p><span>要去：</span> <span style="color:darkgoldenrod" id="endAddr">{passengerEndAddr}</span></p>
+        <p><span>状态：</span> <span style="color:darkgoldenrod" id="status">{status}</span></p>
         </a>
     </li>
 </div>
@@ -76,11 +76,11 @@
 
     <div id="trapDetail" class="ui-content2" style="padding:15px;">
         <input id="tripId" type="hidden" />
-        <h2 style="color:green;text-align: center;">已出发</h2>
+        <h2 style="color:green;text-align: center;">配送中</h2>
         <h3 id="time"></h3>
         <p id="from"></p>
         <p id="to"></p>
-        <button id="confirm">确认完成任务</button>
+        <button id="confirm">确认行程</button>
     </div>
 
     <div id="driverDetail" class="ui-content2" style="padding:15px;line-height: 25px;">
