@@ -19,7 +19,7 @@
             var t = localStorage.getItem('to');
             var time = localStorage.getItem('time');
             
-            // 强制设置时间输入框样式，防止jQuery Mobile覆盖
+            // 强制设置时间输入框样式
             setTimeout(function() {
                 $('#time').css({
                     'padding-left': '52px',
@@ -67,46 +67,83 @@
             $('#time').blur(function () {
                 localStorage.setItem('time', $(this).val());
             });
-            $('#from-txt').on('tap', function () {
+            
+            // ✅ 终极修复：使用click事件替代tap事件
+            $(document).on('click', '#from-txt', function(e) {
+                e.preventDefault();
                 window.location.href = "../map.html?type=f";
             });
-            $('#to-txt').on('tap', function () {
+            $(document).on('click', '#to-txt', function(e) {
+                e.preventDefault();
                 window.location.href = '../map.html?type=t';
             });
-            $('#go').click(function () {
-
-                //pop提示
-                if ($('#from-txt').val() == '') {
-                    showMsg('请选择出发地');
-                    return;
-                } else if ($('#to-txt').val() == '') {
-                    showMsg('请选择目的地');
-                    return;
-                } else if ($('#time').val() == '') {
-                    showMsg('请选择出行时间');
-                    return;
-                }
-
-                //ajax提交行程
-                $.postForm("/stroke/api/publish", '#tripForm', function (d) {
-
-                    if (d.code == 200) {
-                        //清除本地缓存，跳到行程页
-                        showMsg('发布成功');
-                        // localStorage.removeItem('from');
-                        // localStorage.removeItem('to');
-                        // localStorage.removeItem('time');
-                        window.location.href = 'trip.html';
-                    } else {
-                        showMsg(d.message);
-                    }
-                })
-
-
+            
+            // 监听页面显示事件，更新地址显示
+            $(document).on('pageshow', '#pageone', function() {
+                updateAddressDisplay();
             });
+            
+            // 页面加载时也更新一次
+            updateAddressDisplay();
+        });
+        
+        // 更新地址显示的函数
+        function updateAddressDisplay() {
+            var f = localStorage.getItem('from');
+            var t = localStorage.getItem('to');
+            
+            //出发地
+            if (f) {
+                f = f.split("#");
+                $('#from-txt').val(f[0]);
+                f = f[1].split(',')
+                $('#from').val(f[0]);//经度
+                $('#from2').val(f[1]);//纬度
+            }
+            //目的地
+            if (t) {
+                t = t.split("#");
+                $('#to-txt').val(t[0]);
+                t = t[1].split(',')
+                $('#to').val(t[0]);//经度
+                $('#to2').val(t[1]);//纬度
+            }
+        }
+        
+        // ✅ 修复提交按钮事件
+        $('#go').off('click').on('click', function () {
+            //pop提示
+            if ($('#from-txt').val() == '') {
+                showMsg('请选择出发地');
+                return;
+            } else if ($('#to-txt').val() == '') {
+                showMsg('请选择目的地');
+                return;
+            } else if ($('#time').val() == '') {
+                showMsg('请选择出发时间');
+                return;
+            }
+            
+            // ✅ 时间验证（双重保障）
+            var selectedTime = new Date($('#time').val());
+            var now = new Date();
+            if (selectedTime < now) {
+                showMsg('出发时间不能是过去时间，请选择当前时间或之后的时间');
+                return;
+            }
 
-            $('#myPopupDialog').popup();
-        })
+            //ajax提交行程
+            $.postForm("/stroke/api/publish", '#tripForm', function (d) {
+                if (d.code == 200) {
+                    showMsg('发布成功');
+                    window.location.href = 'trip.html';
+                } else {
+                    showMsg(d.message);
+                }
+            });
+        });
+
+        $('#myPopupDialog').popup();
     </script>
 </head>
 
