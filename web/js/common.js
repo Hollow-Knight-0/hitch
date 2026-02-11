@@ -327,6 +327,21 @@ function hideMask() {
     $("#mask").hide();
 }
 
+// 图片点击触发文件选择
+function triggerFileInput(imgClass) {
+    // 找到对应class的图片元素
+    var imgElement = $('.' + imgClass);
+    if (imgElement.length > 0) {
+        // 获取图片对应的input file元素（通过class名匹配）
+        var inputId = imgClass;
+        var inputFile = $('#' + inputId);
+        if (inputFile.length > 0) {
+            // 触发文件选择对话框
+            inputFile.click();
+        }
+    }
+}
+
 
 
 function random(minNum, maxNum) {

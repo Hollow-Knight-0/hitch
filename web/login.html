@@ -54,7 +54,13 @@
                             showMsg('注册成功！');
                             toUrl('login.html', 1000);
                         } else {
-                            showMsg(d.message);
+                            var msg = d.message || '注册失败，请重试';
+                            // 如果后端返回的是通用错误，但实际是手机号重复，特殊处理
+                            // 根据业务逻辑，手机号重复是最常见的注册失败原因
+                            if (d.message && d.message === '数据重复') {
+                                msg = '手机号已被注册！';
+                            }
+                            showMsg(msg);
                         }
                     }
                 });

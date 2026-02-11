@@ -75,17 +75,17 @@
             <table>
                 <tr>
                     <td>
-                        <img src="../img/default-card.png" style="width:150px;height:150px;" class="avatar">
+                        <img src="../img/default-card.png" style="width:150px;height:150px;cursor:pointer;" class="avatar" onclick="triggerFileInput('avatar')">
                     </td>
                     <td valign="bottom">
-                        <img src="../img/default-card.png" style="width:70px;height:70px;" class="avatar">
+                        <img src="../img/default-card.png" style="width:70px;height:70px;cursor:pointer;" class="avatar" onclick="triggerFileInput('avatar')">
                     </td>
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
                     <td>
-                        <input type="file" name="file" id="avatar" />
+                        <input type="file" name="file" id="avatar" style="display:none;" />
                     </td>
                     <td align="right" ><button class="ui-btn-active" onclick="photoBtn()" style="width:100px;">提交</button></td>
                 </tr>

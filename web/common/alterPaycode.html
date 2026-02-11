@@ -74,14 +74,14 @@
             <table>
                 <tr>
                     <td colspan="2" style="height: fit-content">
-                        <img style="width:100%;height:100%;" class="paycode">
+                        <img src="../img/default-card.png" style="width:100%;height:100%;cursor:pointer;" class="paycode" onclick="triggerFileInput('paycode')">
                     </td>
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
                     <td>
-                        <input type="file" name="file" id="paycode" />
+                        <input type="file" name="file" id="paycode" style="display:none;">
                     </td>
                     <td align="right" ><button class="ui-btn-active" onclick="photoBtn()" style="width:100px;">提交</button></td>
                 </tr>
