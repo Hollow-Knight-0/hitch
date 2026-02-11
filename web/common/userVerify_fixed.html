@@ -38,28 +38,53 @@
             $('#valid').text((current_user.status == 1) ? '已完成' : '未完成');
             $('#driver').text((current_user.role == 1) ? '已完成' : '未完成');
 
-            $.post('/account/api/getAuthenticationInfo', '{}', function (data) {
-                if (data.code == -1002) {
-                    //未认证过
-                    data.data = [{}];
-                }
-                var defImg = '../img/default-card.png';
-                var d = data.data[0];
-                $('table').find('img').each(function () {
-                    $(this).attr('src', d[$(this).attr('class')] || defImg);
-                    $('input[name="'+$(this).attr('class')+'"]').val(d[$(this).attr('class')]);
-                })
-            });
-
             $('li').eq(0).removeClass('ui-first-child');
             var roleName = (localStorage.getItem('current_role') == '0' ? 'user' : 'driver');
             $('.role').each(function () {
                 $(this).attr('href', '../' + roleName + '/' + $(this).attr('href'));
             });
+
+            // 加载已上传的身份证照片
+            $.post('/account/api/getAuthenticationInfo', '{}', function (data) {
+                if (data.code != -1002) { // 如果已有认证信息
+                    var d = data.data[0];
+                    var defImg = '../img/default-card.png';
+                    $('.cardIdFrontPhoto').attr('src', d.cardIdFrontPhoto || defImg);
+                    $('.cardIdBackPhoto').attr('src', d.cardIdBackPhoto || defImg);
+                    // 设置隐藏表单字段的值
+                    $('input[name="cardIdFrontPhoto"]').val(d.cardIdFrontPhoto || '');
+                    $('input[name="cardIdBackPhoto"]').val(d.cardIdBackPhoto || '');
+                }
+            });
+            
         })
 
         function validBtn() {
-            $.postForm('/account/api/modifyAuthentication', '#validForm', function (data) {
+            // 先保存上传的照片信息
+            $.postForm('/account/api/modifyAuthentication', '#authForm', function (saveData) {
+                if (saveData.code == 200) {
+                    // 保存成功后再进行认证
+                    if(!($('.cardIdFrontPhoto').attr('src').startsWith('http'))
+                        || !($('.cardIdBackPhoto').attr('src').startsWith('http'))){
+                        showMsg('您必须先上传身份证');
+                        return;
+                    }
+                    $.post('/account/api/identityAuth', '{}', function (authData) {
+                        console.log(authData);
+                        renderByTemplate('#authDiv','#template',authData.data[0]);
+                        showMsg(authData.message);
+                        topDiv.scrollIntoView();
+                        toUrl('userCenter.html',1500);
+                    });
+                } else {
+                    showMsg(saveData.message);
+                }
+            });
+        }
+
+        // 单独的保存功能
+        function saveBtn() {
+            $.postForm('/account/api/modifyAuthentication', '#authForm', function (data) {
                 showMsg(data.message);
                 topDiv.scrollIntoView();
             });
@@ -69,13 +94,22 @@
 </head>
 
 <body>
-
+    <div id="template" style="display: none;">
+        <br>
+        <h2>认证通过！</h2>
+        <br>
+        <p><b>真实姓名：</b><span>{useralias}</span></p>
+        <br>
+        <p><b>身份证号：</b><span>{cardId}</span></p>
+        <br>
+        <p><b>出生日期：</b><span>{birth}</span></p>
+    </div>
     <div id="topDiv"></div>
     <div data-role="page" id="pageone">
         <div data-role="header" data-position="fixed" data-tap-toggle="false">
             <a href="#" data-rel="back"
                 class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext ui-corner-all">使用圆圈（默认）</a>
-            <h1>完善资料</h1>
+            <h1>实名认证</h1>
         </div>
 
         <ul data-role="listview" data-inset="true" id="defaultpanel" style="margin:15px;">
@@ -83,62 +117,46 @@
                 <a href="#" class="ui-btn"
                     style="border-top-left-radius: 5px; border-top-right-radius: 5px; background-color:#ddd;">
                     <img class="person-img" src="" style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
-                    <h2 id="driverName" id="useralias"></h2>
+                    <h2 id="driverName">{useralias}</h2>
                     <p></p>
-                    <p><span>实名认证：</span> <span style="color:darkgoldenrod" id="valid">未完成</span></p>
+                    <p><span>实名认证：</span> <span style="color:darkgoldenrod" id="valid"></span></p>
                     <p></p>
-                    <p><span>接单认证：</span> <span style="color:darkgoldenrod" id="driver">已完成</span></p>
+                    <p><span>学生认证：</span> <span style="color:darkgoldenrod" id="driver"></span></p>
                 </a>
             </li>
             <li>
-                <form id="validForm">
-                    <input name="personalPhoto" type="hidden">
+                <form id="authForm">
                     <input name="cardIdFrontPhoto" type="hidden">
                     <input name="cardIdBackPhoto" type="hidden">
                 </form>
-                <table>
+                <table style="width:100%">
                     <tr>
-                        <td class="h">个人照片：</td>
+                        <td class="h">身份证（正面）：</td>
+                        <td class="h">身份证（反面）：</td>
                     </tr>
                     <tr>
                         <td>
-                            <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
-                            <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="personalPhoto" />
-                            <input type="file" name="file" id="personalPhoto" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="h">身份证（人像面）：</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
-                            <!-- file的name必须是file，固定的 -->
                             <img src="../img/default-card.png" class="cardIdFrontPhoto" />
                             <input type="file" name="file" id="cardIdFrontPhoto" />
                         </td>
-                    </tr>
-                    <tr>
-                        <td class="h">身份证（国徽面）：</td>
-                    </tr>
-                    <tr>
                         <td>
-                            <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
-                            <!-- file的name必须是file，固定的 -->
                             <img src="../img/default-card.png" class="cardIdBackPhoto" />
                             <input type="file" name="file" id="cardIdBackPhoto" />
                         </td>
                     </tr>
-
+                    <tr>
+                        <td colspan="2">
+                            <div class="ui-content2" style="margin: 0px;" id="authDiv">
+                                <h2 style="text-align: center;">认证信息</h2>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
             </li>
             <li>
                 <p>
-                    <button class="ui-btn-active" onclick="validBtn()" style="width:80px;float:right;">保存</button>
+                    <button class="ui-btn" onclick="saveBtn()" style="width:80px;float:left;margin-right:10px;">保存</button>
+                    <button class="ui-btn-active" id="authBtn" onclick="validBtn()" style="width:80px;float:right;">认证</button>
                 </p>
             </li>
         </ul>

@@ -32,8 +32,12 @@
     <script>
         $(function () {
             $.post('/account/api/userinfo','{}',function(d){
-                $('.paycode').attr('src',d.data[0].paycode);
-                $('#photoUrl').val(d.data[0].paycode);
+                var paycodeUrl = d.data[0].paycode;
+                if (!paycodeUrl || paycodeUrl.trim() === '' || paycodeUrl === 'null' || paycodeUrl === 'undefined') {
+                    paycodeUrl = '../img/default-card.png';
+                }
+                $('.paycode').attr('src', paycodeUrl);
+                $('#photoUrl').val(paycodeUrl);
             });
 
             var roleName = (localStorage.getItem('current_role') == '0' ? 'user' : 'driver');

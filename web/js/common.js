@@ -51,7 +51,7 @@ function showMsg(txt) {
         function () {
             $('#_msg_btn').fadeOut(500);
         },
-        1500
+        3000
     );
     _msg_btn.scrollIntoView(); //确保弹窗可见，防止页面太长跑到顶部
 }
@@ -210,6 +210,19 @@ $(function () {
     getUser();
     // console.log(getUser());
 })
+
+// 设置用户头像的通用函数，包含默认头像处理
+function setUserAvatar(selector) {
+    var defaultAvatar = '../img/morentouxiang.png';
+    var userAvatar = current_user && current_user.avatar ? current_user.avatar : defaultAvatar;
+    
+    // 验证头像URL是否有效
+    if (!userAvatar || userAvatar.trim() === '' || userAvatar === 'null' || userAvatar === 'undefined') {
+        userAvatar = defaultAvatar;
+    }
+    
+    $(selector).attr('src', userAvatar);
+}
 
 //将id对应的form转成json，直接作为ajax的data属性，可用
 function formToJson(id) {

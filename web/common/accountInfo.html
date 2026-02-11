@@ -68,7 +68,7 @@
                 // $("#defaultpanel").listview('refresh');
             });
 
-            $('.person-img').attr('src', current_user.avatar);
+            setUserAvatar('.person-img');
             $('#driverName').text((current_user.useralias == '') ? current_user.username : current_user.useralias);
 
             $('li').removeClass('ui-first-child');

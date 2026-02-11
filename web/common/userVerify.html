@@ -18,12 +18,8 @@
             margin: 0;
         }
 
-        table {
-            table-layout: fixed;
-        }
-
         table .h {
-            width: 50%;
+            /*width: 100px;*/
             height: 50px;
             font-weight: bold;
         }
@@ -31,34 +27,16 @@
         img {
             width: 100%;
             height: 100%;
-            max-height: 100px;
+            max-height: 180px;
         }
     </style>
     <script>
         $(function () {
 
-            $('.person-img').attr('src', current_user.avatar);
+            setUserAvatar('.person-img');
             $('#driverName').text((current_user.useralias == '') ? current_user.username : current_user.useralias);
             $('#valid').text((current_user.status == 1) ? '已完成' : '未完成');
             $('#driver').text((current_user.role == 1) ? '已完成' : '未完成');
-
-            $.post('/account/api/getAuthenticationInfo', '{}', function (data) {
-                if (data.code == -1002) {
-                    //未认证过
-                    data.data = [{}];
-                }
-                var defImg = '../img/default-card.png';
-                var d = data.data[0];
-                $('table').find('img').each(function () {
-                    $(this).attr('src', d[$(this).attr('class')] || defImg);
-                    $('input[name="' + $(this).attr('class') + '"]').val(d[$(this).attr('class')]);
-                })
-
-                if (current_user.status == 1) {
-                    renderByTemplate('#authDiv', '#template', d);
-                    $('#authBtn').remove();
-                }
-            });
 
             $('li').eq(0).removeClass('ui-first-child');
             var roleName = (localStorage.getItem('current_role') == '0' ? 'user' : 'driver');
@@ -66,22 +44,66 @@
                 $(this).attr('href', '../' + roleName + '/' + $(this).attr('href'));
             });
 
+            // 加载已上传的身份证照片
+            $.post('/account/api/getAuthenticationInfo', '{}', function (data) {
+                if (data.code != -1002) { // 如果已有认证信息
+                    var d = data.data[0];
+                    var defImg = '../img/default-card.png';
+                    $('.cardIdFrontPhoto').attr('src', d.cardIdFrontPhoto || defImg);
+                    $('.cardIdBackPhoto').attr('src', d.cardIdBackPhoto || defImg);
+                    // 设置隐藏表单字段的值
+                    $('input[name="cardIdFrontPhoto"]').val(d.cardIdFrontPhoto || '');
+                    $('input[name="cardIdBackPhoto"]').val(d.cardIdBackPhoto || '');
+                    
+                    // 显示认证信息
+                    showAuthInfo(d);
+                }
+            });
             
         })
 
         function validBtn() {
-            if(!($('.cardIdFrontPhoto').attr('src').startsWith('http'))
-                || !($('.cardIdBackPhoto').attr('src').startsWith('http'))){
-                showMsg('您必须先上传身份证');
-                return;
-            }
-            $.post('/account/api/identityAuth', '{}', function (data) {
-                console.log(data);
-                renderByTemplate('#authDiv','#template',data.data[0]);
+            // 先保存上传的照片信息
+            $.postForm('/account/api/modifyAuthentication', '#authForm', function (saveData) {
+                if (saveData.code == 200) {
+                    // 保存成功后再进行认证
+                    if(!($('.cardIdFrontPhoto').attr('src').startsWith('http'))
+                        || !($('.cardIdBackPhoto').attr('src').startsWith('http'))){
+                        showMsg('您必须先上传身份证');
+                        return;
+                    }
+                    $.post('/account/api/identityAuth', '{}', function (authData) {
+                        console.log(authData);
+                        renderByTemplate('#authDiv','#template',authData.data[0]);
+                        showMsg(authData.message);
+                        topDiv.scrollIntoView();
+                        toUrl('userCenter.html',1500);
+                    });
+                } else {
+                    showMsg(saveData.message);
+                }
+            });
+        }
+
+        // 单独的保存功能
+        function saveBtn() {
+            $.postForm('/account/api/modifyAuthentication', '#authForm', function (data) {
                 showMsg(data.message);
                 topDiv.scrollIntoView();
-                toUrl('userCenter.html',1500);
             });
+        }
+
+        // 显示认证信息
+        function showAuthInfo(data) {
+            if (data && data.useralias) {
+                $('#authDiv').html(
+                    '<br><h2>认证通过！</h2>' +
+                    '<br><p><b>真实姓名：</b><span>' + data.useralias + '</span></p>' +
+                    '<br><p><b>身份证号：</b><span>' + (data.cardId || '') + '</span></p>' +
+                    '<br><p><b>出生日期：</b><span>' + (data.birth || '') + '</span></p>'
+                );
+                $('#valid').text('已完成');
+            }
         }
 
     </script>
@@ -92,11 +114,11 @@
         <br>
         <h2>认证通过！</h2>
         <br>
-        <p><b>真实姓名：</b><span id="">{useralias}</span></p>
+        <p><b>真实姓名：</b><span>{useralias}</span></p>
         <br>
-        <p><b>身份证号：</b><span id="">{cardId}</span></p>
+        <p><b>身份证号：</b><span>{cardId}</span></p>
         <br>
-        <p><b>出生日期：</b><span id="">{birth}</span></p>
+        <p><b>出生日期：</b><span>{birth}</span></p>
     </div>
     <div id="topDiv"></div>
     <div data-role="page" id="pageone">
@@ -111,14 +133,18 @@
                 <a href="#" class="ui-btn"
                     style="border-top-left-radius: 5px; border-top-right-radius: 5px; background-color:#ddd;">
                     <img class="person-img" src="" style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
-                    <h2 id="driverName" id="useralias"></h2>
+                    <h2 id="driverName">{useralias}</h2>
                     <p></p>
                     <p><span>实名认证：</span> <span style="color:darkgoldenrod" id="valid"></span></p>
                     <p></p>
-                    <p><span>接单认证：</span> <span style="color:darkgoldenrod" id="driver"></span></p>
+                    <p><span>学生认证：</span> <span style="color:darkgoldenrod" id="driver"></span></p>
                 </a>
             </li>
             <li>
+                <form id="authForm">
+                    <input name="cardIdFrontPhoto" type="hidden">
+                    <input name="cardIdBackPhoto" type="hidden">
+                </form>
                 <table style="width:100%">
                     <tr>
                         <td class="h">身份证（正面）：</td>
@@ -145,6 +171,7 @@
             </li>
             <li>
                 <p>
+                    <button class="ui-btn" onclick="saveBtn()" style="width:80px;float:left;margin-right:10px;">保存</button>
                     <button class="ui-btn-active" id="authBtn" onclick="validBtn()" style="width:80px;float:right;">认证</button>
                 </p>
             </li>

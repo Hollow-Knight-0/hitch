@@ -36,12 +36,10 @@
     </style>
     <script>
         $(function () {
-            $('.person-img').attr('src', current_user.avatar);
+            setUserAvatar('.person-img');
             $('#driverName').text((current_user.useralias == '') ? current_user.username : current_user.useralias);
             $('#valid').text((current_user.status == 1) ? '已完成' : '未完成');
             $('#driver').text((current_user.role == 1) ? '已完成' : '未完成');
-
-            $('.person-img').attr('src', current_user.avatar);
             $('#driverName').text((current_user.useralias == '') ? current_user.username : current_user.useralias);
 
             var e = JSON.parse(localStorage.getItem('_msg'));

@@ -57,7 +57,7 @@ public class AccountHandler {
         }
         AccountPO accountPO = accountAPIService.checkLogin(CommonsUtils.toPO(accountVO));
         if (null != accountPO) {
-            throw new BusinessRuntimeException(BusinessErrors.DATA_DUPLICATION);
+            throw new BusinessRuntimeException(BusinessErrors.DATA_DUPLICATION, "手机号已被注册！");
         }
         accountVO.setPassword(CommonsUtils.encodeMD5(accountVO.getPassword()));
         accountVO.setId(String.valueOf(idWorker.nextId()));

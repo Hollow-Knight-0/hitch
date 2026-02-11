@@ -33,8 +33,12 @@
     <script>
         $(function () {
             $.post('/account/api/userinfo','{}',function(d){
-                $('.avatar').attr('src',d.data[0].avatar);
-                $('#photoUrl').val(d.data[0].avatar);
+                var avatarUrl = d.data[0].avatar;
+                if (!avatarUrl || avatarUrl.trim() === '' || avatarUrl === 'null' || avatarUrl === 'undefined') {
+                    avatarUrl = '../img/default-card.png';
+                }
+                $('.avatar').attr('src', avatarUrl);
+                $('#photoUrl').val(avatarUrl);
             });
 
             var roleName = (localStorage.getItem('current_role') == '0' ? 'user' : 'driver');
@@ -71,10 +75,10 @@
             <table>
                 <tr>
                     <td>
-                        <img style="width:150px;height:150px;" class="avatar">
+                        <img src="../img/default-card.png" style="width:150px;height:150px;" class="avatar">
                     </td>
                     <td valign="bottom">
-                        <img style="width:70px;height:70px;" class="avatar">
+                        <img src="../img/default-card.png" style="width:70px;height:70px;" class="avatar">
                     </td>
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
