@@ -2,6 +2,12 @@
 <html>
 
 <head>
+    <div id="template" style="display: none;">
+        <br>
+        <h2>认证通过！</h2>
+        <br>
+        <p><b>学号：</b><span>{studentId}</span></p>
+    </div>
     <title>校园顺路带</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,6 +35,38 @@
             height: 100%;
             max-height: 180px;
         }
+        
+        .carFrontPhoto {
+            width: 280px !important;
+            height: 180px !important;
+            object-fit: cover;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        #authDiv {
+            text-align: center;
+            margin-top: 15px;
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+        
+        #authDiv h2 {
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+        
+        #authDiv p {
+            margin: 3px 0;
+            font-size: 13px;
+            line-height: 1.2;
+        }
     </style>
     <script>
         $(function () {
@@ -48,7 +86,18 @@
                 $('table').find('img').each(function () {
                     $(this).attr('src', d[$(this).attr('class')] || defImg);
                     $('input[name="'+$(this).attr('class')+'"]').val(d[$(this).attr('class')]);
-                })
+                });
+                
+                // 持久化显示认证信息（学号）
+                if (d && d.carNumber) {
+                    $('#authDiv').html(
+                        '<br><h2>认证通过！</h2>' +
+                        '<br><p><b>学号：</b><span>' + d.carNumber + '</span></p>'
+                    );
+                    $('#driver').text('已完成');
+                } else {
+                    $('#authDiv').html('<h2 style="text-align: center;">认证信息</h2>');
+                }
             });
 
             $('li').eq(0).removeClass('ui-first-child');
@@ -57,6 +106,18 @@
                 $(this).attr('href', '../' + roleName + '/' + $(this).attr('href'));
             });
         })
+
+        function showStudentAuthInfo(data) {
+            if (data && data.carNumber) {
+                $('#authDiv').html(
+                    '<h2>认证通过！</h2>' +
+                    '<p><b>学号：</b><span>' + data.carNumber + '</span></p>'
+                );
+                $('#driver').text('已完成');
+            } else {
+                $('#authDiv').html('<h2 style="font-size: 14px;">认证信息</h2>');
+            }
+        }
 
         function validBtn() {
             // 先保存数据
@@ -70,8 +131,8 @@
                         showMsg(authData.message);
                         topDiv.scrollIntoView();
                         if(authData.message === "成功"){
-                            // 认证成功后跳转到个人中心
-                            toUrl('userCenter.html', 1500);
+                            // 认证成功后显示学号信息
+                            showStudentAuthInfo(authData.data[0]);
                         }
                     });
                 } else {
@@ -80,8 +141,8 @@
                         showMsg(authData.message);
                         topDiv.scrollIntoView();
                         if(authData.message === "成功"){
-                            // 认证成功后跳转到个人中心
-                            toUrl('userCenter.html', 1500);
+                            // 认证成功后显示学号信息
+                            showStudentAuthInfo(authData.data[0]);
                         }
                     });
                 }
@@ -127,36 +188,20 @@
                         <td>
                             <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
                             <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="carFrontPhoto" onclick="triggerFileInput('carFrontPhoto')" style="cursor:pointer;" />
-                            <input type="file" name="file" id="carFrontPhoto" style="display:none;" />
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <img src="../img/default-card.png" class="carFrontPhoto" onclick="triggerFileInput('carFrontPhoto')" 
+                                     style="cursor:pointer; width: 280px; height: 180px; object-fit: fill; display: inline-block;" />
+                                <input type="file" name="file" id="carFrontPhoto" style="display:none;" />
+                            </div>
                         </td>
                     </tr>
-                    <tr style="display: none;">
-                        <td></td>
-                    </tr>
-                    <tr style="display: none;">
-                        <td class="h">手持学生证：</td>
-                    </tr>
-                    <tr style="display: none;">
-                        <td>
-                            <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
-                            <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="carSidePhoto" />
-                            <input type="file" name="file" id="carSidePhoto" />
+                    <tr>
+                        <td colspan="2">
+                            <div class="ui-content2" style="margin: 0px; text-align: center;" id="authDiv">
+                                <h2 style="text-align: center; font-size: 16px;">认证信息</h2>
+                            </div>
                         </td>
                     </tr>
-                    <tr style="display: none;">
-                        <td class="h">一卡通/校园卡：</td>
-                    </tr>
-                    <tr style="display: none;">
-                        <td>
-                            <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
-                            <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="carBackPhoto" />
-                            <input type="file" name="file" id="carBackPhoto" />
-                        </td>
-                    </tr>
-
                 </table>
             </li>
             <li>
