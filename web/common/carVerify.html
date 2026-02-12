@@ -19,7 +19,7 @@
         }
 
         table .h {
-            width: 50%;
+            /*width: 100px;*/
             height: 50px;
             font-weight: bold;
         }
@@ -27,7 +27,7 @@
         img {
             width: 100%;
             height: 100%;
-            max-height: 100px;
+            max-height: 180px;
         }
     </style>
     <script>
@@ -38,8 +38,6 @@
             $('#valid').text((current_user.status == 1) ? '已完成' : '未完成');
             $('#driver').text((current_user.role == 1) ? '已完成' : '未完成');
 
-
-
             $.post('/account/api/getVehicleInfo', '{}', function (data) {
                 if (data.code == -1002) {
                     //未认证过
@@ -49,13 +47,8 @@
                 var d = data.data[0];
                 $('table').find('img').each(function () {
                     $(this).attr('src', d[$(this).attr('class')] || defImg);
-                    $('input[name="' + $(this).attr('class') + '"]').val(d[$(this).attr('class')]);
+                    $('input[name="'+$(this).attr('class')+'"]').val(d[$(this).attr('class')]);
                 })
-
-                if (current_user.role == 1) {
-                    renderByTemplate('#authDiv', '#template', d);
-                    $('#authBtn').remove();
-                }
             });
 
             $('li').eq(0).removeClass('ui-first-child');
@@ -66,22 +59,13 @@
         })
 
         function validBtn() {
-            if (!($('.carFrontPhoto').attr('src').startsWith('http'))
-                || !($('.carBackPhoto').attr('src').startsWith('http'))) {
-                showMsg('您必须先上传学生认证信息');
-                return;
-            }
-            $.post('/account/api/vehicleAuth', '{}', function (data) {
-                console.log(data);
-                if(data.code == -1){
-                    showMsg('认证失败！');
-                }else{
-                    renderByTemplate('#authDiv', '#template', data.data[0]);
-                    showMsg(data.message);
-                    topDiv.scrollIntoView();
+            $.postForm('/account/api/vehicleAuth', '#validForm', function (data) {
+                showMsg(data.message);
+                topDiv.scrollIntoView();
+                if(data.code == 0){
+                    // 认证成功后跳转到个人中心
                     toUrl('userCenter.html', 1500);
                 }
-
             });
         }
 
@@ -89,12 +73,7 @@
 </head>
 
 <body>
-    <div id="template" style="display: none;">
-        <br>
-        <h2>认证通过！</h2>
-        <br>
-        <p><b>学号：</b><span id="carNumber">{carNumber}</span></p>
-    </div>
+
     <div id="topDiv"></div>
     <div data-role="page" id="pageone">
         <div data-role="header" data-position="fixed" data-tap-toggle="false">
@@ -121,7 +100,7 @@
                     <input name="carSidePhoto" type="hidden">
                     <input name="carBackPhoto" type="hidden">
                 </form>
-                <table style="width:100%">
+                <table>
                     <tr>
                         <td class="h">学生证正面：</td>
                     </tr>
@@ -129,8 +108,8 @@
                         <td>
                             <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
                             <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="carFrontPhoto" onclick="triggerFileInput('carFrontPhoto')" style="cursor:pointer;">
-                            <input type="file" name="file" id="carFrontPhoto" style="display:none;">
+                            <img src="../img/default-card.png" class="carFrontPhoto" />
+                            <input type="file" name="file" id="carFrontPhoto" />
                         </td>
                     </tr>
                     <tr>
@@ -143,8 +122,8 @@
                         <td>
                             <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
                             <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="carSidePhoto" onclick="triggerFileInput('carSidePhoto')" style="cursor:pointer;">
-                            <input type="file" name="file" id="carSidePhoto" style="display:none;">
+                            <img src="../img/default-card.png" class="carSidePhoto" />
+                            <input type="file" name="file" id="carSidePhoto" />
                         </td>
                     </tr>
                     <tr>
@@ -154,18 +133,8 @@
                         <td>
                             <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
                             <!-- file的name必须是file，固定的 -->
-                            <img src="../img/default-card.png" class="carBackPhoto" onclick="triggerFileInput('carBackPhoto')" style="cursor:pointer;">
-                            <input type="file" name="file" id="carBackPhoto" style="display:none;">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div class="ui-content2" style="margin: 0px;" id="authDiv">
-                                <h2 id="authInfo" style="text-align: center;">认证信息</h2>
-                            </div>
+                            <img src="../img/default-card.png" class="carBackPhoto" />
+                            <input type="file" name="file" id="carBackPhoto" />
                         </td>
                     </tr>
 
@@ -173,7 +142,7 @@
             </li>
             <li>
                 <p>
-                    <button id="authBtn" class="ui-btn-active" onclick="validBtn()" style="width:80px;float:right;">认证</button>
+                    <button class="ui-btn-active" onclick="validBtn()" style="width:120px;float:right;">保存并认证</button>
                 </p>
             </li>
         </ul>
