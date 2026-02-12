@@ -59,12 +59,31 @@
         })
 
         function validBtn() {
-            $.postForm('/account/api/vehicleAuth', '#validForm', function (data) {
-                showMsg(data.message);
-                topDiv.scrollIntoView();
-                if(data.code == 0){
-                    // 认证成功后跳转到个人中心
-                    toUrl('userCenter.html', 1500);
+            // 先保存数据
+            $.postForm('/account/api/modifyVehicle', '#validForm', function (saveData) {
+                // showMsg(saveData.message); // 移除保存成功的提示
+                // topDiv.scrollIntoView(); // 移除保存成功的滚动
+                
+                // 保存成功后再进行认证（根据后端实际返回，使用message判断）
+                if(saveData.message === "成功"){
+                    $.postForm('/account/api/vehicleAuth', '#validForm', function (authData) {
+                        showMsg(authData.message);
+                        topDiv.scrollIntoView();
+                        if(authData.message === "成功"){
+                            // 认证成功后跳转到个人中心
+                            toUrl('userCenter.html', 1500);
+                        }
+                    });
+                } else {
+                    // 保存失败，但仍然尝试认证（因为认证需要最新图片数据）
+                    $.postForm('/account/api/vehicleAuth', '#validForm', function (authData) {
+                        showMsg(authData.message);
+                        topDiv.scrollIntoView();
+                        if(authData.message === "成功"){
+                            // 认证成功后跳转到个人中心
+                            toUrl('userCenter.html', 1500);
+                        }
+                    });
                 }
             });
         }
