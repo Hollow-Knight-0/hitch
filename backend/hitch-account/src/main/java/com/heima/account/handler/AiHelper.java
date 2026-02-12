@@ -50,14 +50,16 @@ public class AiHelper {
     public String getCarLicense(VehiclePO vehiclePO) throws IOException {
         //获取token
         String accessToken = getAccessToken();
+        logger.info("getCarFrontPhoto:" + vehiclePO.getCarFrontPhoto());
+        logger.info("getCarBackPhoto:" + vehiclePO.getCarBackPhoto());
         //根据车辆照片获得车牌号
         String numberByCarFront = getNumberByCarFront(accessToken, vehiclePO.getCarFrontPhoto());
-        //根据行驶证获得车牌号
-        String numberByCarBack = getNumberByCarBack(accessToken, vehiclePO.getCarBackPhoto());
-        //判断是否一致
-        if (!numberByCarFront.equals(numberByCarBack) || StringUtils.isAnyEmpty(numberByCarFront, numberByCarBack)) {
-            return null;
-        }
+//        //根据行驶证获得车牌号
+//        String numberByCarBack = getNumberByCarBack(accessToken, vehiclePO.getCarBackPhoto());
+//        //判断是否一致
+//        if (!numberByCarFront.equals(numberByCarBack) || StringUtils.isAnyEmpty(numberByCarFront, numberByCarBack)) {
+//            return null;
+//        }
         return numberByCarFront;
     }
 
@@ -175,6 +177,11 @@ public class AiHelper {
      * @return Base64编码的字符串
      */
     public static String imageUrlToBase64(String imageUrl) throws IOException {
+        // 空值检查
+        if (StringUtils.isBlank(imageUrl)) {
+            throw new IllegalArgumentException("图片URL不能为空");
+        }
+
         // 发送GET请求下载图片
         Request request = new Request.Builder()
                 .url(imageUrl)

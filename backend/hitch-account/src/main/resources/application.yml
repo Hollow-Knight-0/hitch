@@ -11,5 +11,7 @@ spring:
         min-idle: 0
 
 baidu:
-  apikey: tT4qxuFc5JKSVgePkmyHunok
-  secretkey: gHDLacrqfKW6vezM6bM6XE1RURqELO3I
+#  apikey: tT4qxuFc5JKSVgePkmyHunok
+#  secretkey: gHDLacrqfKW6vezM6bM6XE1RURqELO3I
+  apikey: gTDm4Ul3vlNIxeFROHLKPNIF
+  secretkey: vLmRM8fOUbUyVpdKmBw1Jl3HGACt17cK
