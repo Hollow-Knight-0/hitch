@@ -237,7 +237,7 @@ public class AccountHandler {
         AccountPO accountPO = getCurrentAccountPO();
         VehiclePO vehiclePO = getVehiclePO(accountPO);
         if (null == vehiclePO) {
-            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "车辆认证信息不存在");
+            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "学生认证信息不存在");
         }
         VehiclePO updatePo = CommonsUtils.toPO(vehicleVO);
         updatePo.setId(vehiclePO.getId());
@@ -257,9 +257,13 @@ public class AccountHandler {
         try {
             //车辆信息验证，返回车牌号
             //todo 1 车牌识别
-            String license = aiHelper.getCarLicense(vehiclePO);
+//            String license = aiHelper.getCarLicense(vehiclePO);
+
+            // 改为学生认证
+            String license = aiHelper.getStudentNum(vehiclePO);
+
             if(license == null){
-                throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"车牌号识别失败");
+                throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"学号识别失败");
             }
             String userId = RequestUtils.getCurrentUserId();
             accountPO.setRole(1);

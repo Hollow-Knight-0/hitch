@@ -54,13 +54,64 @@ public class AiHelper {
         logger.info("getCarBackPhoto:" + vehiclePO.getCarBackPhoto());
         //根据车辆照片获得车牌号
         String numberByCarFront = getNumberByCarFront(accessToken, vehiclePO.getCarFrontPhoto());
-//        //根据行驶证获得车牌号
-//        String numberByCarBack = getNumberByCarBack(accessToken, vehiclePO.getCarBackPhoto());
-//        //判断是否一致
-//        if (!numberByCarFront.equals(numberByCarBack) || StringUtils.isAnyEmpty(numberByCarFront, numberByCarBack)) {
-//            return null;
-//        }
+        //根据行驶证获得车牌号
+        String numberByCarBack = getNumberByCarBack(accessToken, vehiclePO.getCarBackPhoto());
+        //判断是否一致
+        if (!numberByCarFront.equals(numberByCarBack) || StringUtils.isAnyEmpty(numberByCarFront, numberByCarBack)) {
+            return null;
+        }
         return numberByCarFront;
+    }
+
+    /**
+     * 学生证照片识别并解析学号
+     * @param vehiclePO
+     * @return
+     * @throws IOException
+     */
+    public String getStudentNum (VehiclePO vehiclePO) throws IOException {
+        //获取token
+        String accessToken = getAccessToken();
+        logger.info("getCarFrontPhoto:" + vehiclePO.getCarFrontPhoto());
+
+        //根据学生证获取学号
+        String carFrontPhoto = vehiclePO.getCarFrontPhoto();
+        //请求url
+        String url = "https://aip.baidubce.com/rest/2.0/solution/v1/iocr/recognise?access_token=" + accessToken;
+        //请求参数（base64数据）,templateSign指定自定义OCR
+        FormBody formBody = new FormBody.Builder()
+                .add("image", imageUrlToBase64(carFrontPhoto))
+                .add("templateSign", "b6ed32599d8a0b9875af6dc21f4baf2e")
+                .build();
+        //构造请求
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+        //解析数据
+        Response response = HTTP_CLIENT.newCall(request).execute();
+        JsonNode jsonNode = OBJECT_MAPPER.readTree(response.body().string());
+        logger.info("学生证百度AI识别结果：" + jsonNode.toString());
+        
+        // 解析新的JSON格式
+        String studentNum = "";
+        JsonNode retNode = jsonNode.path("data").path("ret");
+        if (retNode.isArray() && retNode.size() > 0) {
+            // 遍历ret数组找到word_name为"编号"的对象
+            for (JsonNode item : retNode) {
+                String wordName = item.path("word_name").asText();
+                if ("编号".equals(wordName)) {
+                    studentNum = item.path("word").asText();
+                    break;
+                }
+            }
+        }
+
+        if (StringUtils.isBlank(studentNum) || studentNum.length() < 5) {
+            return null;
+        }
+        return studentNum;
     }
 
     /**

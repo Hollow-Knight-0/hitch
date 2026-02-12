@@ -105,7 +105,7 @@ public class APIController {
         return accountHandler.identityAuth();
     }
 
-    @ApiOperation(value = "车辆认证接口", tags = {"账户管理"})
+    @ApiOperation(value = "学生认证接口", tags = {"账户管理"})
     @PostMapping("/vehicleAuth")
     public ResponseVO<VehicleVO> vehicleAuth() {
         return accountHandler.vehicleAuth();
