@@ -123,8 +123,7 @@
                 </form>
                 <table style="width:100%">
                     <tr>
-                        <td class="h">学生证/一卡通正面：</td>
-                        <td class="h">学生证/一卡通背面：</td>
+                        <td class="h">学生证正面：</td>
                     </tr>
                     <tr>
                         <td>
@@ -133,6 +132,25 @@
                             <img src="../img/default-card.png" class="carFrontPhoto" onclick="triggerFileInput('carFrontPhoto')" style="cursor:pointer;">
                             <input type="file" name="file" id="carFrontPhoto" style="display:none;">
                         </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="h">手持学生证：</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
+                            <!-- file的name必须是file，固定的 -->
+                            <img src="../img/default-card.png" class="carSidePhoto" onclick="triggerFileInput('carSidePhoto')" style="cursor:pointer;">
+                            <input type="file" name="file" id="carSidePhoto" style="display:none;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="h">一卡通/校园卡：</td>
+                    </tr>
+                    <tr>
                         <td>
                             <!-- ajax文件上传案例，命名规范：file的id = input的name = img的class -->
                             <!-- file的name必须是file，固定的 -->
