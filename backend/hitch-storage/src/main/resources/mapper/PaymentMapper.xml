@@ -23,13 +23,13 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_payment
+        from tb_payment_stu
         where id = #{id,jdbcType=VARCHAR}
     </select>
     <select id="selectByOrderId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_payment
+        from tb_payment_stu
         where order_id = #{id,jdbcType=VARCHAR}
     </select>
 
@@ -37,7 +37,7 @@
     <select id="selectList" parameterType="com.heima.modules.po.PaymentPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_payment
+        from tb_payment_stu
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -65,11 +65,11 @@
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_payment
+    delete from tb_payment_stu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.PaymentPO">
-        insert into t_payment (id,order_id,prepay_id,pay_info,amount, channel,
+        insert into tb_payment_stu (id,order_id,prepay_id,pay_info,amount, channel,
         transaction_order_num, status, REVISION,
         CREATED_BY, CREATED_TIME, UPDATED_BY,
         UPDATED_TIME)
@@ -80,7 +80,7 @@
         #{updatedTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.PaymentPO">
-        insert into t_payment
+        insert into tb_payment_stu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="orderId != null">
@@ -162,7 +162,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.PaymentPO">
-        update t_payment
+        update tb_payment_stu
         <set>
             <if test="orderId != null">
                 order_id = #{orderId,jdbcType=VARCHAR},
@@ -204,7 +204,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.PaymentPO">
-    update t_payment
+    update tb_payment_stu
     set order_id = #{orderId,jdbcType=VARCHAR},
       prepay_id =  #{prepayId,jdbcType=VARCHAR},
       pay_info = #{payInfo,jdbcType=VARCHAR},

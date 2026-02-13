@@ -24,24 +24,24 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_authentication
+        from tb_authentication_stu
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_authentication
+        from tb_authentication_stu
         where phone = #{phone,jdbcType=VARCHAR}
     </select>
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_authentication
+    delete from tb_authentication_stu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.AuthenticationPO">
-        insert into t_authentication (id,useralias, phone, birth,
+        insert into tb_authentication_stu (id,useralias, phone, birth,
         personal_photo, card_id, card_id_front_photo,
         card_id_back_photo, status, REVISION,
         CREATED_BY, CREATED_TIME, UPDATED_BY,
@@ -53,7 +53,7 @@
         #{updatedTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.AuthenticationPO">
-        insert into t_authentication
+        insert into tb_authentication_stu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="useralias != null">
@@ -140,7 +140,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.AuthenticationPO">
-        update t_authentication
+        update tb_authentication_stu
         <set>
             <if test="useralias != null">
                 useralias = #{useralias,jdbcType=VARCHAR},
@@ -185,7 +185,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.AuthenticationPO">
-    update t_authentication
+    update tb_authentication_stu
     set useralias = #{useralias,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       birth = #{birth,jdbcType=VARCHAR},

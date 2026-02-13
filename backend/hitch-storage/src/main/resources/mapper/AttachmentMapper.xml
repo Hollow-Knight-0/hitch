@@ -22,14 +22,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_attachment
+        from tb_attachment_stu
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByMd5" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_attachment
+        from tb_attachment_stu
         where md5 = #{md5,jdbcType=VARCHAR}
     </select>
 
@@ -37,18 +37,24 @@
     <select id="selectList" parameterType="com.heima.modules.po.AttachmentPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_attachment
+        from tb_attachment_stu
         <where>
-            <if test="id!=null and id!=''">
+            <if test="id != null">
                 and id = #{id,jdbcType=VARCHAR}
             </if>
-            <if test="name!=null and name!=''">
+            <if test="name != null">
                 and name = #{name,jdbcType=VARCHAR}
             </if>
-            <if test="ext!=null and ext!=''">
+            <if test="url != null">
+                and url = #{url,jdbcType=VARCHAR}
+            </if>
+            <if test="lenght != null">
+                and lenght = #{lenght,jdbcType=INTEGER}
+            </if>
+            <if test="ext != null">
                 and ext = #{ext,jdbcType=VARCHAR}
             </if>
-            <if test="md5!=null and md5!=''">
+            <if test="md5 != null">
                 and md5 = #{md5,jdbcType=VARCHAR}
             </if>
             <if test="status != null">
@@ -59,22 +65,21 @@
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_attachment
+    delete from tb_attachment_stu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.AttachmentPO">
-        insert IGNORE into t_attachment (id,`name`, url, lenght,
-        ext, md5, status, REVISION,
-        CREATED_BY, CREATED_TIME, UPDATED_BY,
-        UPDATED_TIME)
-        values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{lenght,jdbcType=INTEGER},
-        #{ext,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR},  #{status,jdbcType=TINYINT}, #{revision,jdbcType=INTEGER},
-        #{createdBy,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR},
-        #{updatedTime,jdbcType=TIMESTAMP})
-    </insert>
+    insert into tb_attachment_stu (id,`name`, url, lenght,
+      ext, md5, status, REVISION,
+      CREATED_BY, CREATED_TIME, UPDATED_BY, 
+      UPDATED_TIME)
+    values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{lenght,jdbcType=INTEGER},
+      #{ext,jdbcType=VARCHAR}, #{md5,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{revision,jdbcType=INTEGER},
+      #{createdBy,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP})
+  </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.AttachmentPO">
-        insert IGNORE into t_attachment
-
+        insert IGNORE into tb_attachment_stu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="name != null">
@@ -149,7 +154,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.AttachmentPO">
-        update t_attachment
+        update tb_attachment_stu
         <set>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
@@ -188,7 +193,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.AttachmentPO">
-    update t_attachment
+    update tb_attachment_stu
     set name = #{name,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
       lenght = #{lenght,jdbcType=INTEGER},

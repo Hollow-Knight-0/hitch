@@ -28,14 +28,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_stroke
+        from tb_stroke_stu
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectList" parameterType="com.heima.modules.po.StrokePO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_stroke
+        from tb_stroke_stu
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -63,11 +63,11 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_stroke
+    delete from tb_stroke_stu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.StrokePO">
-    insert into t_stroke (id,publisher_id, role,
+    insert into tb_stroke_stu (id,publisher_id, role,
       start_geo_lng,start_geo_lat,start_addr, end_geo_lng,end_geo_lat, end_addr,
       quantity, departure_time, quick_confirm, 
       status, REVISION, CREATED_BY, 
@@ -81,7 +81,7 @@
       )
   </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.StrokePO">
-        insert into t_stroke
+        insert into tb_stroke_stu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="publisherId != null">
@@ -192,7 +192,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.StrokePO">
-        update t_stroke
+        update tb_stroke_stu
         <set>
             <if test="publisherId != null">
                 publisher_id = #{publisherId,jdbcType=VARCHAR},
@@ -251,7 +251,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.StrokePO">
-    update t_stroke
+    update tb_stroke_stu
     set publisher_id = #{publisherId,jdbcType=VARCHAR},
       role = #{role,jdbcType=TINYINT},
       start_geo_lng = #{startGeoLng,jdbcType=VARCHAR},

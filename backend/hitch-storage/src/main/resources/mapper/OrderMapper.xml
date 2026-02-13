@@ -24,13 +24,13 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from tb_order_stu
         where id = #{id,jdbcType=VARCHAR}
     </select>
     <select id="selectPaidList" parameterType="com.heima.modules.po.OrderPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from tb_order_stu
         <where>
             and status in(1,2)
             and ( passenger_id = #{passengerId,jdbcType=VARCHAR} or driver_id = #{driverId,jdbcType=VARCHAR})
@@ -42,7 +42,7 @@
     <select id="selectList" parameterType="com.heima.modules.po.OrderPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from tb_order_stu
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -79,7 +79,7 @@
     <select id="selectAvailableList" parameterType="com.heima.modules.po.OrderPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from tb_order_stu
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -111,11 +111,11 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_order
+    delete from tb_order_stu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.OrderPO">
-    insert into t_order (id,passenger_id, passenger_stroke_id, driver_id,
+    insert into tb_order_stu (id,passenger_id, passenger_stroke_id, driver_id,
       driver_stroke_id,distance,estimated_time, cost, status,
       REVISION, CREATED_BY, CREATED_TIME, 
       UPDATED_BY, UPDATED_TIME)
@@ -125,7 +125,7 @@
       #{updatedBy,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.OrderPO">
-        insert into t_order
+        insert into tb_order_stu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="passengerId != null">
@@ -212,7 +212,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.OrderPO">
-        update t_order
+        update tb_order_stu
         <set>
             <if test="passengerId != null">
                 passenger_id = #{passengerId,jdbcType=VARCHAR},
@@ -257,7 +257,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.OrderPO">
-    update t_order
+    update tb_order_stu
     set passenger_id = #{passengerId,jdbcType=VARCHAR},
       passenger_stroke_id = #{passengerStrokeId,jdbcType=VARCHAR},
       driver_id = #{driverId,jdbcType=VARCHAR},
