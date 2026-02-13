@@ -42,6 +42,13 @@
                         e.status = tripStatus[e.passengerStrokeStatus];
                         renderByTemplate('#defaultpanel','#template',e);
                     });
+                    
+                    // 添加默认头像处理（仿照身份认证页面）
+                    setTimeout(function() {
+                        setUserAvatar('.person-img');
+                    }, 100);
+                    
+
                     $("#defaultpanel").append('<li>&nbsp;</li>').listview('refresh')                  
                 },
                 error : function(){

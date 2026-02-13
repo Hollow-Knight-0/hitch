@@ -362,6 +362,6 @@ function random(minNum, maxNum) {
 // var driverStatus = { 0: '邀请中', 1: '已发车', 3: '已送达' };
 // var orderStatus = { 0: '临时订单', 1: '未支付', 2: '已支付' };
 
-var tripStatus = { 0: '求助中', 1: '已确认接单', 2: '已开始任务', 3: '已完成任务', 4: '已取消' };
+var tripStatus = { 0: '求助中', 1: '已找到接单人', 2: '正在配送中', 3: '已完成任务', 4: '已取消' };
 var driverStatus = { 0: '未出行', 1: '配送中', 3: '已完成任务' };
 var orderStatus = { 0: '临时任务', 1: '未付款', 2: '已付款' };

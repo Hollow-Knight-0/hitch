@@ -30,8 +30,9 @@
                         var t = template.format(c);
                         $('#defaultpanel').append(t);
                         
-                        // 添加默认头像处理
+                        // 添加默认头像处理（针对每个邀请同学）
                         setTimeout(function() {
+                            // 针对每个邀请同学的头像进行处理
                             $('.person-img[src="' + c.avatar + '"]').each(function() {
                                 var $img = $(this);
                                 var avatar = $img.attr('src');

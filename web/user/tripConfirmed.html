@@ -25,6 +25,17 @@
                     $('#time').text(transDate(d.departureTime));                      
                     $('#from').text(d.startAddr);                      
                     $('#to').text(d.endAddr);
+                    
+                    // 根据状态动态设置文案
+                    if(d.status == 1){
+                        // 状态1：已确认接单
+                        $('#statusTitle').text('确认接单同学已取货');
+                        $('#confirmBtn').text('确认已取货');
+                    } else if(d.status == 2){
+                        // 状态2：已开始任务
+                        $('#statusTitle').text('确认已收到货');
+                        $('#confirmBtn').text('确认收货');
+                    }
                 }
             });
             //接单同学详情
@@ -38,15 +49,9 @@
                     d.time = (d.estimatedTime/60).toFixed(0)
                     renderByTemplate('#defaultpanel','#template',d);
                             
-                    // 添加默认头像处理
+                    // 添加默认头像处理（使用统一函数）
                     setTimeout(function() {
-                        $('.person-img').each(function() {
-                            var $img = $(this);
-                            var avatar = $img.attr('src');
-                            if (!avatar || avatar.trim() === '' || avatar === 'null' || avatar === 'undefined') {
-                                $img.attr('src', '../img/morentouxiang.png');
-                            }
-                        });
+                        setUserAvatar('.person-img');
                     }, 100);
                             
                     $("#defaultpanel").listview('refresh')                  
@@ -89,7 +94,7 @@
         </a>
     </li> 
     <li>
-        <button data-inline="true" id="go" onclick="letsGo()" style="float:right;">确认收货</button>
+        <button data-inline="true" id="confirmBtn" onclick="letsGo()" style="float:right;">确认收货</button>
     </li>
 </div>
 
@@ -103,7 +108,7 @@
     <div id="trapDetail" class="ui-content2" style="padding:15px;">
         <input id="tripId" type="hidden" />
         <input id="tripStatus" type="hidden" />
-        <h2 style="color:green;text-align: center;">确认已收到货</h2>
+        <h2 style="color:green;text-align: center;" id="statusTitle">确认已收到货</h2>
         <h3 id="time"></h3>
         <p id="from"></p>
         <p id="to"></p>

@@ -49,8 +49,9 @@
                             $('#defaultpanel li p').last().html('<p style="text-align:right;">已满员</p>');
                         }
                         
-                        // 添加默认头像处理
+                        // 添加默认头像处理（针对每个邀请同学）
                         setTimeout(function() {
+                            // 针对每个邀请同学的头像进行处理
                             $('.person-img[src="' + c.avatar + '"]').each(function() {
                                 var $img = $(this);
                                 var avatar = $img.attr('src');
@@ -160,7 +161,7 @@
             <a href="#myPopupDialog" data-rel="popup" data-position-to="window" data-mini="true"
                 data-inline="true" data-transition="fade"
                 class="popup-btn ui-btn ui-corner-all ui-shadow ui-btn-inline ui-mini ui-btn-active"
-                onclick="confirmInfo('{id},1','愉快接受邀请？')" id="acceptTrip" style="width:80px;float:right;">同意</a>
+                onclick="confirmInfo('{id},1','同意该同学接单？')" id="acceptTrip" style="width:80px;float:right;">同意</a>
         </p>
     </li>    
 

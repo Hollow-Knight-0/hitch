@@ -11,6 +11,8 @@
     <script type="text/javascript" src="../js/common.js"></script>
     <script>
         $(function(){
+            setUserAvatar('.person-img');
+            
             //本行程详情
             $.ajax({
                 type : "POST",
@@ -39,15 +41,9 @@
                         renderByTemplate('#defaultpanel','#template',e);
                     });
                     
-                    // 添加默认头像处理
+                    // 添加默认头像处理（使用统一函数）
                     setTimeout(function() {
-                        $('.person-img').each(function() {
-                            var $img = $(this);
-                            var avatar = $img.attr('src');
-                            if (!avatar || avatar.trim() === '' || avatar === 'null' || avatar === 'undefined') {
-                                $img.attr('src', '../img/morentouxiang.png');
-                            }
-                        });
+                        setUserAvatar('.person-img');
                     }, 100);
                     
                     $("#defaultpanel").append('<li>&nbsp;</li>').listview('refresh')                  
