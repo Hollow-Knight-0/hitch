@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.storage.mapper.AttachmentMapper">
+    <!-- 定义表名变量 -->
+    <sql id="table_name">${table_prefix}t_attachment</sql>
+
     <resultMap id="BaseResultMap" type="com.heima.modules.po.AttachmentPO">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -22,14 +25,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_attachment
+        from <include refid="table_name"/>
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByMd5" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_attachment
+        from <include refid="table_name"/>
         where md5 = #{md5,jdbcType=VARCHAR}
     </select>
 
@@ -37,7 +40,7 @@
     <select id="selectList" parameterType="com.heima.modules.po.AttachmentPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_attachment
+        from <include refid="table_name"/>
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -59,11 +62,11 @@
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_attachment
+    delete from <include refid="table_name"/>
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.AttachmentPO">
-        insert IGNORE into t_attachment (id,`name`, url, lenght,
+        insert IGNORE into <include refid="table_name"/> (id,`name`, url, lenght,
         ext, md5, status, REVISION,
         CREATED_BY, CREATED_TIME, UPDATED_BY,
         UPDATED_TIME)
@@ -73,7 +76,7 @@
         #{updatedTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.AttachmentPO">
-        insert IGNORE into t_attachment
+        insert IGNORE into <include refid="table_name"/>
 
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
@@ -149,7 +152,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.AttachmentPO">
-        update t_attachment
+        update <include refid="table_name"/>
         <set>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
@@ -188,7 +191,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.AttachmentPO">
-    update t_attachment
+    update <include refid="table_name"/>
     set name = #{name,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
       lenght = #{lenght,jdbcType=INTEGER},

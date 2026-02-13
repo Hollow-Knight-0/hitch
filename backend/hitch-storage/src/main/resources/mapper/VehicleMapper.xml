@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.storage.mapper.VehicleMapper">
+    <!-- 定义表名变量 -->
+    <sql id="table_name">${table_prefix}t_vehicle</sql>
+
     <resultMap id="BaseResultMap" type="com.heima.modules.po.VehiclePO">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="car_number" jdbcType="VARCHAR" property="carNumber"/>
@@ -23,14 +26,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_vehicle
+        from <include refid="table_name"/>
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_vehicle
+        from <include refid="table_name"/>
         where phone = #{phone,jdbcType=VARCHAR}
     </select>
 
@@ -40,7 +43,7 @@
     <select id="selectList" parameterType="com.heima.modules.po.VehiclePO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_vehicle
+        from <include refid="table_name"/>
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -68,11 +71,11 @@
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_vehicle
+    delete from <include refid="table_name"/>
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.VehiclePO">
-        insert into t_vehicle (id,car_number, car_front_photo, car_back_photo,
+        insert into <include refid="table_name"/> (id,car_number, car_front_photo, car_back_photo,
         car_side_photo, purchase_date, phone,
         status, REVISION, CREATED_BY,
         CREATED_TIME, UPDATED_BY, UPDATED_TIME
@@ -84,7 +87,7 @@
         )
     </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.VehiclePO">
-        insert into t_vehicle
+        insert into <include refid="table_name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="carNumber != null">
@@ -165,7 +168,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.VehiclePO">
-        update t_vehicle
+        update <include refid="table_name"/>
         <set>
             <if test="carNumber != null">
                 car_number = #{carNumber,jdbcType=VARCHAR},
@@ -207,7 +210,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.VehiclePO">
-    update t_vehicle
+    update <include refid="table_name"/>
     set car_number = #{carNumber,jdbcType=VARCHAR},
       car_front_photo = #{carFrontPhoto,jdbcType=VARCHAR},
       car_back_photo = #{carBackPhoto,jdbcType=VARCHAR},

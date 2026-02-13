@@ -78,23 +78,23 @@ public class AccountHandler {
      */
     public ResponseVO<AccountVO> modifyPassword(AccountVO accountVO) {
         //校验用户输入
-        if(StringUtils.isAnyEmpty(accountVO.getPassword(), accountVO.getNewPassword())){
-            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST,"旧密码或新密码为空");
+        if (StringUtils.isAnyEmpty(accountVO.getPassword(), accountVO.getNewPassword())) {
+            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "旧密码或新密码为空");
         }
         //获取当前用户在数据库里的信息
         String userId = accountVO.getCurrentUserId();
         AccountPO accountPO = accountAPIService.getAccountByID(userId);
-        if(null == accountPO){
-            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST,"用户不存在");
+        if (null == accountPO) {
+            throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "用户不存在");
         }
         String oldPassword = accountPO.getPassword();
         //旧密码加密，对比数据库，防止输入错误
-        if(!oldPassword.equals(CommonsUtils.encodeMD5(accountVO.getPassword()))){
-            throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"旧密码错误");
+        if (!oldPassword.equals(CommonsUtils.encodeMD5(accountVO.getPassword()))) {
+            throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR, "旧密码错误");
         }
         //新密码加密，对比旧密码，不允许相同
-        if(oldPassword.equals(CommonsUtils.encodeMD5(accountVO.getNewPassword()))){
-            throw new BusinessRuntimeException(BusinessErrors.DATA_DUPLICATION,"新密码不能与旧密码相同");
+        if (oldPassword.equals(CommonsUtils.encodeMD5(accountVO.getNewPassword()))) {
+            throw new BusinessRuntimeException(BusinessErrors.DATA_DUPLICATION, "新密码不能与旧密码相同");
         }
         //校验通过，将新密码写入数据库，修改成功
         accountPO.setPassword(CommonsUtils.encodeMD5(accountVO.getNewPassword()));
@@ -183,7 +183,7 @@ public class AccountHandler {
      *
      * @return
      */
-    public ResponseVO<AuthenticationVO> identityAuth() throws IOException {
+    public ResponseVO<AuthenticationVO> identityAuth() {
         AccountPO accountPO = getCurrentAccountPO();
         AuthenticationPO authenticationPO = getAuthenticationPO(accountPO);
         if (null == authenticationPO) {
@@ -200,15 +200,23 @@ public class AccountHandler {
         //文档（身份证识别）：https://cloud.baidu.com/doc/OCR/s/rk3h7xzck
         //文档（h5人脸实名认证接口）：https://ai.baidu.com/ai-doc/FACE/skxie72kp(需要企业身份，个人无法使用)
         //todo 1 身份证识别
-        authenticationPO = aiHelper.getUserLicense(authenticationPO);
+        try {
+            authenticationPO = aiHelper.getUserLicense(authenticationPO);
+            if (authenticationPO == null) {
+                throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR, "身份认证识别失败，请上传真实清晰的身份证照片！");
+            }
 
-        accountPO.setUseralias(authenticationPO.getUseralias());
-        accountPO.setStatus(1); //状态改成已认证
-        //更新Redis缓存
-        redisSessionHelper.updateSessionUseralias(accountPO.getId(), accountPO.getUseralias());
-        accountAPIService.update(accountPO);
-        authenticationAPIService.update(authenticationPO);
-        return ResponseVO.success(authenticationPO);
+            accountPO.setUseralias(authenticationPO.getUseralias());
+            accountPO.setStatus(1); //状态改成已认证
+            //更新Redis缓存
+            redisSessionHelper.updateSessionUseralias(accountPO.getId(), accountPO.getUseralias());
+            accountAPIService.update(accountPO);
+            authenticationAPIService.update(authenticationPO);
+            return ResponseVO.success(authenticationPO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseVO.error(e.getMessage());
+        }
     }
 
 
@@ -262,8 +270,8 @@ public class AccountHandler {
             // 改为学生认证
             String license = aiHelper.getStudentNum(vehiclePO);
 
-            if(license == null){
-                throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR,"学号识别失败");
+            if (license == null) {
+                throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR, "学号识别失败，请上传真实清晰的校园卡正面照片！");
             }
             String userId = RequestUtils.getCurrentUserId();
             accountPO.setRole(1);
@@ -339,7 +347,7 @@ public class AccountHandler {
         }
         //验证密码
         if (!CommonsUtils.encodeMD5(accountVO.getPassword()).equals(accountPO.getPassword())) {
-            logger.warn("password error! account="+accountPO.getUseralias());
+            logger.warn("password error! account=" + accountPO.getUseralias());
             throw new BusinessRuntimeException(BusinessErrors.PARAM_CANNOT_EMPTY, "用户名或者密码错误");
         }
         return (AccountVO) CommonsUtils.toVO(accountPO);

@@ -128,24 +128,53 @@
                 // 保存成功后再进行认证（根据后端实际返回，使用message判断）
                 if(saveData.message === "成功"){
                     $.postForm('/account/api/vehicleAuth', '#validForm', function (authData) {
-                        showMsg(authData.message);
+                        // 确保显示认证结果消息
+                        if (authData.code === -1) {
+                            // 认证失败，显示错误消息
+                            showMsg(authData.message || '学生认证失败，请重试！');
+                        } else {
+                            // 认证成功
+                            showMsg(authData.message || '认证成功！');
+                        }
                         topDiv.scrollIntoView();
                         if(authData.message === "成功"){
                             // 认证成功后显示学号信息
                             showStudentAuthInfo(authData.data[0]);
                         }
+                    }).fail(function(xhr, textStatus, errorThrown) {
+                        // 网络请求失败时的兜底处理
+                        var errorMsg = xhr.responseJSON && xhr.responseJSON.message ? 
+                            xhr.responseJSON.message : '网络请求失败，请稍后重试';
+                        showMsg(errorMsg);
                     });
                 } else {
                     // 保存失败，但仍然尝试认证（因为认证需要最新图片数据）
                     $.postForm('/account/api/vehicleAuth', '#validForm', function (authData) {
-                        showMsg(authData.message);
+                        // 确保显示认证结果消息
+                        if (authData.code === -1) {
+                            // 认证失败，显示错误消息
+                            showMsg(authData.message || '学生认证失败，请重试！');
+                        } else {
+                            // 认证成功
+                            showMsg(authData.message || '认证成功！');
+                        }
                         topDiv.scrollIntoView();
                         if(authData.message === "成功"){
                             // 认证成功后显示学号信息
                             showStudentAuthInfo(authData.data[0]);
                         }
+                    }).fail(function(xhr, textStatus, errorThrown) {
+                        // 网络请求失败时的兜底处理
+                        var errorMsg = xhr.responseJSON && xhr.responseJSON.message ? 
+                            xhr.responseJSON.message : '网络请求失败，请稍后重试';
+                        showMsg(errorMsg);
                     });
                 }
+            }).fail(function(xhr, textStatus, errorThrown) {
+                // 保存失败时的兜底处理
+                var errorMsg = xhr.responseJSON && xhr.responseJSON.message ? 
+                    xhr.responseJSON.message : '保存失败，请稍后重试';
+                showMsg(errorMsg);
             });
         }
 

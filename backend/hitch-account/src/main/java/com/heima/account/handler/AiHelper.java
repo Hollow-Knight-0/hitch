@@ -145,12 +145,19 @@ public class AiHelper {
 
         //用户信息
         JsonNode wordsResult = jsonNode.path("words_result");
+
+        if(StringUtils.isAnyBlank(wordsResult.path("姓名").path("words").asText(), wordsResult.path("公民身份号码").path("words").asText(), wordsResult.path("出生").path("words").asText())){
+            return null;
+        }
+
         authenticationPO.setUseralias(wordsResult.path("姓名").path("words").asText());
         authenticationPO.setCardId(wordsResult.path("公民身份号码").path("words").asText());
         authenticationPO.setBirth(wordsResult.path("出生").path("words").asText());
         authenticationPO.setStatus("1");
         authenticationPO.setCreatedBy(RequestUtils.getCurrentUserId());
         authenticationPO.setUpdatedBy(RequestUtils.getCurrentUserId());
+
+
 
         return authenticationPO;
     }

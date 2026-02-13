@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.storage.mapper.AccountMapper">
+    <!-- 定义表名变量 -->
+    <sql id="table_name">${table_prefix}t_account</sql>
+    
     <resultMap id="BaseResultMap" type="com.heima.modules.po.AccountPO">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
@@ -26,14 +29,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_account
+        from <include refid="table_name"/>
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="checkLogin" parameterType="com.heima.modules.po.AccountPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_account
+        from <include refid="table_name"/>
         <where>
             <if test="username != null">
                 or username = #{username,jdbcType=VARCHAR}
@@ -46,11 +49,11 @@
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_account
+    delete from <include refid="table_name"/>
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.AccountPO">
-        insert IGNORE into t_account (id,username, useralias, password,
+        insert IGNORE into <include refid="table_name"/> (id,username, useralias, password,
         phone, role, avatar,paycode,
         status, REVISION,
         CREATED_BY, CREATED_TIME, UPDATED_BY,
@@ -62,7 +65,7 @@
         #{updatedTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.AccountPO">
-        insert IGNORE into t_account
+        insert IGNORE into <include refid="table_name"/>
 
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
@@ -150,7 +153,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.AccountPO">
-        update t_account
+        update <include refid="table_name"/>
         <set>
             <if test="username != null">
                 username = #{username,jdbcType=VARCHAR},
@@ -195,7 +198,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.AccountPO">
-    update t_account
+    update <include refid="table_name"/>
     set username = #{username,jdbcType=VARCHAR},
       useralias = #{useralias,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},

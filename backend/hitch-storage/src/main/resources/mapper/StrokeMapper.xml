@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.storage.mapper.StrokeMapper">
+    <!-- 定义表名变量 -->
+    <sql id="table_name">${table_prefix}t_stroke</sql>
+
     <resultMap id="BaseResultMap" type="com.heima.modules.po.StrokePO">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="publisher_id" jdbcType="VARCHAR" property="publisherId"/>
@@ -28,14 +31,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_stroke
+        from <include refid="table_name"/>
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectList" parameterType="com.heima.modules.po.StrokePO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_stroke
+        from <include refid="table_name"/>
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -63,11 +66,11 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_stroke
+    delete from <include refid="table_name"/>
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.StrokePO">
-    insert into t_stroke (id,publisher_id, role,
+    insert into <include refid="table_name"/> (id,publisher_id, role,
       start_geo_lng,start_geo_lat,start_addr, end_geo_lng,end_geo_lat, end_addr,
       quantity, departure_time, quick_confirm, 
       status, REVISION, CREATED_BY, 
@@ -81,7 +84,7 @@
       )
   </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.StrokePO">
-        insert into t_stroke
+        insert into <include refid="table_name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="publisherId != null">
@@ -192,7 +195,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.StrokePO">
-        update t_stroke
+        update <include refid="table_name"/>
         <set>
             <if test="publisherId != null">
                 publisher_id = #{publisherId,jdbcType=VARCHAR},
@@ -251,7 +254,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.StrokePO">
-    update t_stroke
+    update <include refid="table_name"/>
     set publisher_id = #{publisherId,jdbcType=VARCHAR},
       role = #{role,jdbcType=TINYINT},
       start_geo_lng = #{startGeoLng,jdbcType=VARCHAR},

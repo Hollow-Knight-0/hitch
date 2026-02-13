@@ -101,7 +101,7 @@ public class APIController {
 
     @ApiOperation(value = "身份认证接口", tags = {"账户管理"})
     @PostMapping("/identityAuth")
-    public ResponseVO<AuthenticationVO> identityAuth() throws IOException {
+    public ResponseVO<AuthenticationVO> identityAuth() {
         return accountHandler.identityAuth();
     }
 

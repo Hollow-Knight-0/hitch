@@ -73,15 +73,37 @@
                         return;
                     }
                     $.post('/account/api/identityAuth', '{}', function (authData) {
-                        console.log(authData);
-                        renderByTemplate('#authDiv','#template',authData.data[0]);
-                        showMsg(authData.message);
-                        topDiv.scrollIntoView();
-                        toUrl('userCenter.html',1500);
+                        console.log('认证响应:', authData);
+                        
+                        // 修复 data 为 null 的问题，避免崩溃
+                        if (authData.data && authData.data.length > 0) {
+                            try {
+                                renderByTemplate('#authDiv','#template',authData.data[0]);
+                            } catch(e) {
+                                console.error('模板渲染失败:', e);
+                            }
+                        }
+                        
+                        // 完全复用学生认证的 showMsg 函数
+                        if (authData.code === -1) {
+                            // 认证失败，使用现有的 showMsg
+                            showMsg(authData.message || '身份认证失败，请重试！');
+                        } else {
+                            // 认证成功
+                            showMsg(authData.message || '认证成功！');
+                        }
+                        // 移除跳转，留在当前页面
+                        // toUrl('userCenter.html',1500);
+                    }).fail(function(xhr, textStatus, errorThrown) {
+                        console.error('认证请求失败:', xhr, textStatus, errorThrown);
+                        showMsg('网络请求失败，请稍后重试');
                     });
                 } else {
-                    showMsg(saveData.message);
+                    showMsg(saveData.message || '保存失败，请重试！');
                 }
+            }).fail(function(xhr, textStatus, errorThrown) {
+                console.error('保存请求失败:', xhr, textStatus, errorThrown);
+                showMsg('保存失败，请稍后重试');
             });
         }
 

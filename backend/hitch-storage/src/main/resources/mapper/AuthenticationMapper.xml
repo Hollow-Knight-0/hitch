@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.storage.mapper.AuthenticationMapper">
+    <!-- 定义表名变量 -->
+    <sql id="table_name">${table_prefix}t_authentication</sql>
+
     <resultMap id="BaseResultMap" type="com.heima.modules.po.AuthenticationPO">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="useralias" jdbcType="VARCHAR" property="useralias"/>
@@ -24,24 +27,24 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_authentication
+        from <include refid="table_name"/>
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_authentication
+        from <include refid="table_name"/>
         where phone = #{phone,jdbcType=VARCHAR}
     </select>
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_authentication
+    delete from <include refid="table_name"/>
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.AuthenticationPO">
-        insert into t_authentication (id,useralias, phone, birth,
+        insert into <include refid="table_name"/> (id,useralias, phone, birth,
         personal_photo, card_id, card_id_front_photo,
         card_id_back_photo, status, REVISION,
         CREATED_BY, CREATED_TIME, UPDATED_BY,
@@ -53,7 +56,7 @@
         #{updatedTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.AuthenticationPO">
-        insert into t_authentication
+        insert into <include refid="table_name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="useralias != null">
@@ -140,7 +143,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.AuthenticationPO">
-        update t_authentication
+        update <include refid="table_name"/>
         <set>
             <if test="useralias != null">
                 useralias = #{useralias,jdbcType=VARCHAR},
@@ -185,7 +188,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.AuthenticationPO">
-    update t_authentication
+    update <include refid="table_name"/>
     set useralias = #{useralias,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       birth = #{birth,jdbcType=VARCHAR},

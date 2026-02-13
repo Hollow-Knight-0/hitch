@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heima.storage.mapper.OrderMapper">
+    <!-- 定义表名变量 -->
+    <sql id="table_name">${table_prefix}t_order</sql>
+
     <resultMap id="BaseResultMap" type="com.heima.modules.po.OrderPO">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="passenger_id" jdbcType="VARCHAR" property="passengerId"/>
@@ -24,13 +27,13 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from <include refid="table_name"/>
         where id = #{id,jdbcType=VARCHAR}
     </select>
     <select id="selectPaidList" parameterType="com.heima.modules.po.OrderPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from <include refid="table_name"/>
         <where>
             and status in(1,2)
             and ( passenger_id = #{passengerId,jdbcType=VARCHAR} or driver_id = #{driverId,jdbcType=VARCHAR})
@@ -42,7 +45,7 @@
     <select id="selectList" parameterType="com.heima.modules.po.OrderPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from <include refid="table_name"/>
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -79,7 +82,7 @@
     <select id="selectAvailableList" parameterType="com.heima.modules.po.OrderPO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_order
+        from <include refid="table_name"/>
         <where>
             <if test="id!=null and id!=''">
                 and id = #{id,jdbcType=VARCHAR}
@@ -111,11 +114,11 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_order
+    delete from <include refid="table_name"/>
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.heima.modules.po.OrderPO">
-    insert into t_order (id,passenger_id, passenger_stroke_id, driver_id,
+    insert into <include refid="table_name"/> (id,passenger_id, passenger_stroke_id, driver_id,
       driver_stroke_id,distance,estimated_time, cost, status,
       REVISION, CREATED_BY, CREATED_TIME, 
       UPDATED_BY, UPDATED_TIME)
@@ -125,7 +128,7 @@
       #{updatedBy,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.heima.modules.po.OrderPO">
-        insert into t_order
+        insert into <include refid="table_name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
             <if test="passengerId != null">
@@ -212,7 +215,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.heima.modules.po.OrderPO">
-        update t_order
+        update <include refid="table_name"/>
         <set>
             <if test="passengerId != null">
                 passenger_id = #{passengerId,jdbcType=VARCHAR},
@@ -257,7 +260,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.heima.modules.po.OrderPO">
-    update t_order
+    update <include refid="table_name"/>
     set passenger_id = #{passengerId,jdbcType=VARCHAR},
       passenger_stroke_id = #{passengerStrokeId,jdbcType=VARCHAR},
       driver_id = #{driverId,jdbcType=VARCHAR},
