@@ -75,20 +75,43 @@
         function confirmCallBack(id) {
             console.log([currentTrip,id]);
             var i = id.split(',');
-            $.post('/stroke/api/invite/accept',
-            JSON.stringify({inviterTripId:i[0],inviteeTripId:currentTrip,status:i[1]}),
-            function(d){
-                showMsg(d.message);
-                if(i[1] == '1'){ //接受邀请，进确认同行页
-                    if(d.code == '-5002'){ //如果已经发车
+            
+            if(i[1] == '1'){ //接受邀请，执行一键完成逻辑
+                // 第一步：接受邀请
+                $.post('/stroke/api/invite/accept',
+                JSON.stringify({inviterTripId:i[0],inviteeTripId:currentTrip,status:i[1]}),
+                function(d){
+                    if(d.code == 200){
+                        // 接受邀请成功，立即触发状态1的确认功能
+                        setTimeout(function(){
+                            // 第二步：自动触发hitchhiker接口（状态1->2）
+                            $.post('/stroke/api/hitchhiker/'+currentTrip, "", function(hitchData){
+                                if(hitchData.code == 200){
+                                    showMsg('接单成功！配送同学已取货，送达后请点击确认送达！');
+                                    // 直接跳转到状态2的页面
+                                    toUrl('tripConfirmed.html?id='+currentTrip,1500);
+                                } else {
+                                    showMsg(hitchData.message || '状态更新失败');
+                                    toUrl('tripConfirmed.html?id='+currentTrip,1500);
+                                }
+                            });
+                        }, 500); // 延迟500ms确保第一个请求完成
+                    } else if(d.code == '-5002'){ //如果已经发车
+                        showMsg(d.message);
                         toUrl('tripReq.html?id='+currentTrip,1000);
-                    }else{ //正常情况进确认页
-                        toUrl('tripConfirmed.html?id='+currentTrip,1000);
+                    } else {
+                        showMsg(d.message);
+                        toUrl('tripReq.html?id='+currentTrip,1000);
                     }
-                }else{ //拒绝，进详情页
+                });
+            } else { //拒绝邀请
+                $.post('/stroke/api/invite/accept',
+                JSON.stringify({inviterTripId:i[0],inviteeTripId:currentTrip,status:i[1]}),
+                function(d){
+                    showMsg(d.message);
                     toUrl('tripDetail.html?id='+currentTrip,1000);
-                }
-            });
+                });
+            }
         }
     </script>
 </head>
