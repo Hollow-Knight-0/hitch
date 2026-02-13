@@ -62,9 +62,15 @@ public class GeoBO implements Serializable {
                 '}';
     }
 
+    /**
+     * 将米级精度距离转换为千米（保持原有功能兼容性）
+     * @return 距离（千米单位）
+     */
     public Float toKilometre() {
-        return Float.parseFloat(CommonsUtils.floatToStr(distance));
+        return Float.parseFloat(CommonsUtils.floatToStr(distance / 1000));
     }
+    
+
 
     public static void main(String[] args) {
         System.out.println(Float.parseFloat(CommonsUtils.floatToStr(0.1f)));

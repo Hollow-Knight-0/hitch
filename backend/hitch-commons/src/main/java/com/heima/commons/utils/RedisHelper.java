@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.heima.commons.constant.HtichConstants;
 import com.heima.commons.domin.bo.GeoBO;
 import com.heima.commons.domin.bo.ZsetResultBO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.*;
 import org.springframework.data.redis.connection.RedisGeoCommands;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import java.util.*;
 
 public class RedisHelper {
+    private static final Logger log = LoggerFactory.getLogger(RedisHelper.class);
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -187,10 +190,16 @@ public class RedisHelper {
         for (GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
             RedisGeoCommands.GeoLocation<String> content = result.getContent();
             String name = content.getName();
-            // 距离中心点的距离
+            // Redis GEO返回高精度距离值（千米单位）
             Distance dis = result.getDistance();
             Point pos = content.getPoint();
-            geoBOMap.put(name, new GeoBO(name, ((float) dis.getValue()), String.valueOf(pos.getX()), String.valueOf(pos.getY())));
+
+//            log.info("GEO结果name:{},dis.getValue:{}", name,dis);
+
+            // 将千米距离转换为米级精度存储
+            float distanceInMeters = (float) (dis.getValue() * 1000);
+//            float distanceInMeters = (float) (dis.getValue());
+            geoBOMap.put(name, new GeoBO(name, distanceInMeters, String.valueOf(pos.getX()), String.valueOf(pos.getY())));
         }
         return geoBOMap;
     }

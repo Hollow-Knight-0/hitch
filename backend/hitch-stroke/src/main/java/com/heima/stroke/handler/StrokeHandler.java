@@ -519,18 +519,19 @@ public class StrokeHandler {
 
     /**
      * 行程数据渲染
-     * 填充行程对象 StrokeVO 的额外数据，主要包括 起点/终点的距离信息 和 发布者的用户信息
+     * 填充行程对象 StrokeVO 的额外数据，主要包括 起点/终点的距离信息（米级精度） 和 发布者的用户信息
      *
      * @param strokeVO
      */
     private StrokeVO renderStrokeVO(StrokeVO strokeVO) {
-        //渲染距离数据
+        //渲染距离数据（现在存储的是米级精度）
         String distanceStr = redisHelper.getHash(HtichConstants.STROKE_GEO_DISTANCE_PREFIX, strokeVO.getInviterTripId(), strokeVO.getInviteeTripId());
-        //设置起点距离
+        //设置起点距离（直接使用米级精度数据）
         if (StringUtils.isNotEmpty(distanceStr) && distanceStr.contains(":")) {
             String[] distances = distanceStr.split(":");
-            strokeVO.setStartDistance(Float.parseFloat(distances[0]));
-            strokeVO.setEndDistance(Float.parseFloat(distances[1]));
+            // 直接使用米级精度数据
+            strokeVO.setStartDistance(Float.parseFloat(distances[0]));  // 米
+            strokeVO.setEndDistance(Float.parseFloat(distances[1]));    // 米
         }
 
         //获取用户对象
@@ -541,6 +542,8 @@ public class StrokeHandler {
         }
         return strokeVO;
     }
+    
+
 
 
 
@@ -580,8 +583,6 @@ public class StrokeHandler {
          2.获取司机和乘客最优路线的方向向量，计算两个向量之间的夹角（路径夹角）。夹角越接近
          3.计算司机原路线与乘客路线在地图上重叠的距离/时间百分比。重合度越高，顺路度越高
          4.采用外部API
-
-
          */
     }
 
@@ -694,12 +695,12 @@ public class StrokeHandler {
 
 
     /**
-     * 获取距离数据
+     * 获取距离数据（米级精度）
      *
      * @param hitchGeoBO
-     * @return "起点距离":"终点距离"
+     * @return "起点距离":"终点距离" (单位：米)
      */
     private String getDistanceStr(HitchGeoBO hitchGeoBO) {
-        return hitchGeoBO.getStartGeo().toKilometre() + ":" + hitchGeoBO.getEndGeo().toKilometre().toString();
+        return hitchGeoBO.getStartGeo().getDistance() + ":" + hitchGeoBO.getEndGeo().getDistance();
     }
 }

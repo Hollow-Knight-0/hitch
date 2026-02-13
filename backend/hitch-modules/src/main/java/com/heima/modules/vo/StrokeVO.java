@@ -91,6 +91,16 @@ public class StrokeVO implements VO {
      * 终点距离
      */
     private Float endDistance;
+    
+    /**
+     * 起点距离格式化显示（智能格式化：米/公里）
+     */
+    private String startDistanceFormatted;
+    
+    /**
+     * 终点距离格式化显示（智能格式化：米/公里）
+     */
+    private String endDistanceFormatted;
 
     /**
      * 匹配度
@@ -252,6 +262,8 @@ public class StrokeVO implements VO {
     public void setEndDistance(Float endDistance) {
         this.endDistance = endDistance;
     }
+    
+
 
 
     public String getSuitability() {
