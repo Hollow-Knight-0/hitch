@@ -29,41 +29,36 @@
                     tripTime = d.departureTime;                     
                     $('#from').text('从：'+d.startAddr);                      
                     $('#to').text('到：'+d.endAddr);
-                    // $('#myswitch').val(d.quickConfirm).flipswitch("refresh");     
-                    // $('#myswitch').bind('change',function(){
-                        //切换闪电确认方式
-                        // $.postForm('/stroke/api/update','#trapForm',function(d){
-                        //     showMsg(d.message);
-                        // })
-                    // });                 
                 },
                 error : function(){
                     
                 }
             });
             
-
             //顺路的接单同学列表
-            $.post("/stroke/api/itinerary/list",JSON.stringify({id:getParam('id')}),
-                function(d){
-                    $('#defaultpanel').append('<li style="color:darkgoldenrod">顺路的接单同学：</li>')
-                    for(var i in d.data){
-                        var item = d.data[i];
-                        item.diffDate = diffDate(tripTime,item.departureTime);
-                        item.suitability = parseFloat(item.suitability).toFixed(2);
-                        renderByTemplate('#defaultpanel','#template',item);
-                    }
-                    $("#defaultpanel").listview('refresh')
-                    .find('li').removeClass('ui-first-child').removeClass('ui-last-child'); //不删掉这个class最后一个的头像圆角有问题
-                    // $('.trip-content').on("tap",function(){
-                    //     window.location.href='tripDetail.html?id='+$(this).attr('id');
-                    // });
+            $.post("/stroke/api/itinerary/list",JSON.stringify({id:getParam('id')}), function(d){
+                $('#defaultpanel').append('<li style="color:darkgoldenrod">顺路的接单同学：</li>')
+                for(var i in d.data){
+                    var item = d.data[i];
+                    item.diffDate = diffDate(tripTime,item.departureTime);
+                    item.suitability = parseFloat(item.suitability).toFixed(2);
+                    renderByTemplate('#defaultpanel','#template',item);
+                    
+                    // 修复头像默认显示
+                    setTimeout(function() {
+                        $('.person-img[src="' + item.avatar + '"]').each(function() {
+                            var $img = $(this);
+                            var avatar = $img.attr('src');
+                            if (!avatar || avatar.trim() === '' || avatar === 'null' || avatar === 'undefined') {
+                                $img.attr('src', '../img/morentouxiang.png');
+                            }
+                        });
+                    }, 100);
                 }
-            );
-
-            
-
-        })
+                $("#defaultpanel").listview('refresh')
+                .find('li').removeClass('ui-first-child').removeClass('ui-last-child');
+            });
+        });
     </script>
 </head>
 <body>

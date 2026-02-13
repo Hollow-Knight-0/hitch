@@ -38,6 +38,18 @@
                         e.status = tripStatus[e.passengerStrokeStatus];
                         renderByTemplate('#defaultpanel','#template',e);
                     });
+                    
+                    // 添加默认头像处理
+                    setTimeout(function() {
+                        $('.person-img').each(function() {
+                            var $img = $(this);
+                            var avatar = $img.attr('src');
+                            if (!avatar || avatar.trim() === '' || avatar === 'null' || avatar === 'undefined') {
+                                $img.attr('src', '../img/morentouxiang.png');
+                            }
+                        });
+                    }, 100);
+                    
                     $("#defaultpanel").append('<li>&nbsp;</li>').listview('refresh')                  
                 },
                 error : function(){

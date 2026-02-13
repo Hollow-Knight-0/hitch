@@ -29,6 +29,17 @@
                         c.statusName = sn[c.status];
                         var t = template.format(c);
                         $('#defaultpanel').append(t);
+                        
+                        // 添加默认头像处理
+                        setTimeout(function() {
+                            $('.person-img[src="' + c.avatar + '"]').each(function() {
+                                var $img = $(this);
+                                var avatar = $img.attr('src');
+                                if (!avatar || avatar.trim() === '' || avatar === 'null' || avatar === 'undefined') {
+                                    $img.attr('src', '../img/morentouxiang.png');
+                                }
+                            });
+                        }, 100);
                     }
                     $('#defaultpanel').listview('refresh')
                     .find('li').removeClass('ui-first-child').removeClass('ui-last-child');

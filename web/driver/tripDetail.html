@@ -37,23 +37,8 @@
 
                 }
             });
-            //我邀请的
-            $.ajax({
-                type: "POST",
-                cache: false,
-                data: null,
-                async: false,
-                url:"/stroke/api/invite/list/" + getParam('id'),
-                success:function (d) {
-                    console.log(d);
-                    for (i in d.data) {
-                        var dd = d.data[i];
-                        reqList.push(dd.id);
-                    }
-                }
-            });
-
-            //顺路的求助同学
+            
+            // 顺路的求助同学
             $.ajax({
                 type: "POST",
                 url: "/stroke/api/itinerary/list",
@@ -63,7 +48,7 @@
                     $('#defaultpanel').append('<li style="color:darkgoldenrod">顺路的求助同学：</li>')
                     for (var i in d.data) {
                         var item = d.data[i];
-                        item.tags='';
+                        item.tags = '';
                         if(reqList.includes(item.id)){
                             item.tags += '【邀请过】';
                         }
@@ -72,36 +57,26 @@
                         }
                         item.diffDate = diffDate(tripTime, item.departureTime);
                         item.suitability = parseFloat(item.suitability).toFixed(2);
-                        renderByTemplate("#defaultpanel",'#template',item);
+                        renderByTemplate("#defaultpanel", '#template', item);
+                        
+                        // 修复头像默认显示
+                        setTimeout(function() {
+                            $('.person-img[src="' + item.avatar + '"]').each(function() {
+                                var $img = $(this);
+                                var avatar = $img.attr('src');
+                                if (!avatar || avatar.trim() === '' || avatar === 'null' || avatar === 'undefined') {
+                                    $img.attr('src', '../img/morentouxiang.png');
+                                }
+                            });
+                        }, 100);
                     }
                     $("#defaultpanel").listview('refresh')
-                        .find('li').removeClass('ui-first-child').removeClass('ui-last-child'); //不删掉这个class最后一个的头像圆角有问题
+                        .find('li').removeClass('ui-first-child').removeClass('ui-last-child');
                 }
             });
-
-
-        })
-        function confirmCallBack(id) {
-            var user = getUser();
-            $.post('/stroke/api/invite', '{"inviterTripId": "' + $('#tripId').val() + '","inviteeTripId": "' + id + '"}',
-                function (d) {
-                    showMsg(d.message);
-                    toUrl('tripDetail.html?id=' + getParam('id'), 1000);
-                }
-            )
-        }
-        function letsGo(){
-            $.post('/stroke/api/departure/'+getParam('id'),
-                function (d) {
-                    showMsg(d.message);
-                    toUrl('tripConfirmed.html?id=' + getParam('id'), 1000);
-                }
-            )
-        }
+        });
     </script>
-</head>
 
-<body>
     <div id="template" style="display: none;">
         <li><a data-ajax="false" href="../message.html?t={inviteeTripId}"><img class="person-img" src="{avatar}"
                     style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
