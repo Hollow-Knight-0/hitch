@@ -17,7 +17,7 @@ public interface HtichConstants {
     STROKE_INVITE_PREFIX	    Hash	    存储行程的邀请状态	                        "trip_1001" -> { "trip_2002": "1" }
      */
     //出行直径范围
-    float STROKE_DIAMETER_RANGE = 100;
+    float STROKE_DIAMETER_RANGE = 1000;
     /* String STROKE_DATIL_PREFIX = "STROKE_DETAIL_";*/
 
     //司机GEO起点

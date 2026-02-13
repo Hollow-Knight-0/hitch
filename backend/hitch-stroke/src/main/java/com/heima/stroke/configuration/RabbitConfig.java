@@ -17,9 +17,9 @@ import java.util.Map;
 @Configuration
 public class RabbitConfig {
     /**
-     * 延迟时间 单位毫秒
+     * 延迟时间 单位毫秒 15分钟
      */
-    private static final long DELAY_TIME = 1000 * 30;
+    private static final long DELAY_TIME = 15 * 60 * 1000;
 
 
     //行程超时队列
@@ -38,7 +38,6 @@ public class RabbitConfig {
     public static final String STROKE_DEAD_KEY = "STROKE_DEAD_KEY";
 
 
-
     /**
      * 声明行程超时队列
      *
@@ -46,13 +45,13 @@ public class RabbitConfig {
      */
     @Bean
     public Queue strokeOverQueue() {
-        Map<String,Object> args = new HashMap<>();
+        Map<String, Object> args = new HashMap<>();
         // 声明当前队列绑定的死信交换机
-        args.put("x-dead-letter-exchange",STROKE_DEAD_QUEUE_EXCHANGE);
+        args.put("x-dead-letter-exchange", STROKE_DEAD_QUEUE_EXCHANGE);
         // 声明当前队列的死信路由key
-        args.put("x-dead-letter-routing-key",STROKE_DEAD_KEY);
+        args.put("x-dead-letter-routing-key", STROKE_DEAD_KEY);
         // 声明队列的TTL
-        args.put("x-message-ttl",DELAY_TIME);
+        args.put("x-message-ttl", DELAY_TIME);
         return QueueBuilder.durable(STROKE_OVER_QUEUE).withArguments(args).build();
     }
 
@@ -74,7 +73,7 @@ public class RabbitConfig {
      */
     @Bean
     DirectExchange strokeOverQueueExchange() {
-        return new DirectExchange(STROKE_OVER_QUEUE_EXCHANGE,true,false);
+        return new DirectExchange(STROKE_OVER_QUEUE_EXCHANGE, true, false);
     }
 
     /**
@@ -84,9 +83,8 @@ public class RabbitConfig {
      */
     @Bean
     DirectExchange strokeDeadQueueExchange() {
-        return new DirectExchange(STROKE_DEAD_QUEUE_EXCHANGE,true,false);
+        return new DirectExchange(STROKE_DEAD_QUEUE_EXCHANGE, true, false);
     }
-
 
 
     /**
