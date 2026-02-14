@@ -18,6 +18,7 @@
         <result column="departure_time" jdbcType="TIMESTAMP" property="departureTime"/>
         <result column="quick_confirm" jdbcType="TINYINT" property="quickConfirm"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="item_size" jdbcType="VARCHAR" property="itemSize"/>
         <result column="REVISION" jdbcType="INTEGER" property="revision"/>
         <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy"/>
         <result column="CREATED_TIME" jdbcType="TIMESTAMP" property="createdTime"/>
@@ -26,7 +27,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, publisher_id, role, start_geo_lng,start_geo_lat,start_addr, end_geo_lng,end_geo_lat, end_addr, quantity, departure_time,
-    quick_confirm, status, REVISION, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME
+    quick_confirm, status, item_size, REVISION, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -73,13 +74,13 @@
     insert into <include refid="table_name"/> (id,publisher_id, role,
       start_geo_lng,start_geo_lat,start_addr, end_geo_lng,end_geo_lat, end_addr,
       quantity, departure_time, quick_confirm, 
-      status, REVISION, CREATED_BY, 
+      status, item_size, REVISION, CREATED_BY, 
       CREATED_TIME, UPDATED_BY, UPDATED_TIME
       )
     values (#{id},#{publisherId,jdbcType=VARCHAR}, #{role,jdbcType=TINYINT}, #{startGeoLng,jdbcType=VARCHAR},#{startGeoLat,jdbcType=VARCHAR},
       #{startAddr,jdbcType=VARCHAR},#{endGeoLng,jdbcType=VARCHAR},#{endGeoLat,jdbcType=VARCHAR}, #{endAddr,jdbcType=VARCHAR},
       #{quantity,jdbcType=TINYINT}, #{departureTime,jdbcType=TIMESTAMP}, #{quickConfirm,jdbcType=TINYINT},
-      #{status,jdbcType=TINYINT}, #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{itemSize,jdbcType=VARCHAR}, #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR},
       #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -122,6 +123,9 @@
             </if>
             <if test="status != null">
                 status,
+            </if>
+            <if test="itemSize != null">
+                item_size,
             </if>
             <if test="revision != null">
                 REVISION,
@@ -176,6 +180,9 @@
             </if>
             <if test="status != null">
                 #{status,jdbcType=TINYINT},
+            </if>
+            <if test="itemSize != null">
+                #{itemSize,jdbcType=VARCHAR},
             </if>
             <if test="revision != null">
                 #{revision,jdbcType=INTEGER},
@@ -235,6 +242,9 @@
             <if test="status != null">
                 status = #{status,jdbcType=TINYINT},
             </if>
+            <if test="itemSize != null">
+                item_size = #{itemSize,jdbcType=VARCHAR},
+            </if>
             <if test="revision != null">
                 REVISION = #{revision,jdbcType=INTEGER},
             </if>
@@ -267,6 +277,7 @@
       departure_time = #{departureTime,jdbcType=TIMESTAMP},
       quick_confirm = #{quickConfirm,jdbcType=TINYINT},
       status = #{status,jdbcType=TINYINT},
+      item_size = #{itemSize,jdbcType=VARCHAR},
       REVISION = #{revision,jdbcType=INTEGER},
       CREATED_BY = #{createdBy,jdbcType=VARCHAR},
       CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},

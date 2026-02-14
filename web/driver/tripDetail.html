@@ -18,7 +18,8 @@
         var tripTime = '';
         var reqList = [];
 
-
+        // 新增：存储已邀请的ID列表（用于页面内状态保持）
+        var invitedIds = [];
 
         $(function () {
             //本行程详情
@@ -52,14 +53,28 @@
                     for (var i in d.data) {
                         var item = d.data[i];
                         item.tags = '';
-                        if(reqList.includes(item.id)){
+                        // 检查是否已在已邀请列表中
+                        if(invitedIds.includes(item.id)){
                             item.tags += '【邀请过】';
+                            item.inviteTag = '<div style="position:absolute; bottom:-20px; left:50%; transform:translateX(-50%); color:green; font-size:12px; white-space:nowrap;">已邀请</div>';
+                        } else {
+                            item.inviteTag = '';
                         }
                         if(item.quickConfirm == 1){
                             item.tags += '【闪电确认】';
                         }
                         item.diffDate = diffDate(tripTime, item.departureTime);
                         item.suitability = parseFloat(item.suitability).toFixed(2);
+                        
+                        // 物品大小显示转换
+                        item.itemSizeDisplay = '';
+                        switch(item.itemSize) {
+                            case '1': item.itemSizeDisplay = '小件'; break;
+                            case '2': item.itemSizeDisplay = '中件'; break;
+                            case '3': item.itemSizeDisplay = '大件'; break;
+                            default: item.itemSizeDisplay = '未知';
+                        }
+                        
                         renderByTemplate("#defaultpanel", '#template', item);
                         
                         // 处理对方（求助同学）的头像，默认头像处理
@@ -85,6 +100,11 @@
             $.post('/stroke/api/invite', '{"inviterTripId": "' + $('#tripId').val() + '","inviteeTripId": "' + id + '"}',
                 function (d) {
                     showMsg(d.message);
+                    // 邀请成功后，将ID添加到已邀请列表
+                    if(!invitedIds.includes(id)) {
+                        invitedIds.push(id);
+                    }
+                    // 刷新当前页面以显示已邀请状态
                     toUrl('tripDetail.html?id=' + getParam('id'), 1000);
                 }
             )
@@ -103,10 +123,13 @@
     <div id="template" style="display: none;">
         <li><a data-ajax="false" href="../message.html?t={inviteeTripId}"><img class="person-img" src="{avatar}"
                     style="width:70px;height:70px;margin-top:25px;margin-left:10px;">
+                <!-- 在头像下方添加绿色的"已邀请"文字 -->
+                {inviteTag}
                 <h2>{useralias}<span style="color:darkgoldenrod">&nbsp;&nbsp;{suitability}%顺路</span></h2>
                 <p><span>{startAddr}</span> <span style="color:darkgoldenrod">{startDistance} m</span></p>
                 <p><span>{endAddr}</span> <span style="color:darkgoldenrod">{endDistance} m</span></p>
                 <p><span>时间相差：</span><span style="color:darkgoldenrod">&nbsp;&nbsp;{diffDate}</span></p>
+                <p><span>物品大小：</span><span style="color:darkgoldenrod">&nbsp;&nbsp;{itemSizeDisplay}</span></p>
                 <p><span style="color:green">{tags}</span></p>
             </a>
             <a href="#myPopupDialog" data-icon="heart" data-rel="popup" data-position-to="window" data-mini="true"

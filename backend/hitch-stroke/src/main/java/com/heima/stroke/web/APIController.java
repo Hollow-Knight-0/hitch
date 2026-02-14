@@ -9,6 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @ApiResponses(@ApiResponse(code = 200, message = "处理成功"))
 public class APIController {
 
+    private static final Logger log = LoggerFactory.getLogger(APIController.class);
     @Autowired
     private StrokeHandler strokeHandler;
 
@@ -28,6 +31,7 @@ public class APIController {
     @PostMapping("/publish")
     @RequestInitial(groups = {Group.Create.class})
     public ResponseVO<StrokeVO> publish(@Validated(Group.Create.class) @RequestBody StrokeVO strokeVO) {
+        log.info("发布行程:{}", strokeVO);
         return strokeHandler.publish(strokeVO);
     }
 

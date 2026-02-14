@@ -50,7 +50,9 @@ spring:
 baidu:
   map:
     ak: SmJKgeR42LCFBdb841BHhz1Ilr8Ftr3T
-    api: https://api.map.baidu.com/routematrix/v2/driving
+#    api: https://api.map.baidu.com/routematrix/v2/driving
+#   步行：
+    api: https://api.map.baidu.com/routematrix/v2/walking
 
 #logging:
 #  level:

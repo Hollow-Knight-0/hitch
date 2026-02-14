@@ -114,6 +114,12 @@ public class StrokeVO implements VO {
     private Integer quantity;
 
     /**
+     * 货物规格
+     * 1.小件 2.中件 3.大件
+     */
+    private String itemSize;
+
+    /**
      * 出发时间
      */
     @NotNull(message = "出发时间不能为空", groups = {Group.Create.class})
@@ -262,9 +268,14 @@ public class StrokeVO implements VO {
     public void setEndDistance(Float endDistance) {
         this.endDistance = endDistance;
     }
-    
 
+    public String getItemSize() {
+        return itemSize;
+    }
 
+    public void setItemSize(String itemSize) {
+        this.itemSize = itemSize;
+    }
 
     public String getSuitability() {
         return suitability;
@@ -374,5 +385,40 @@ public class StrokeVO implements VO {
     @Override
     public Class getPO() {
         return StrokePO.class;
+    }
+
+
+    @Override
+    public String toString() {
+        return "StrokeVO{" +
+                "id='" + id + '\'' +
+                ", publisherId='" + publisherId + '\'' +
+                ", inviterTripId='" + inviterTripId + '\'' +
+                ", inviteeTripId='" + inviteeTripId + '\'' +
+                ", useralias='" + useralias + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", role=" + role +
+                ", startGeoLng='" + startGeoLng + '\'' +
+                ", startGeoLat='" + startGeoLat + '\'' +
+                ", endGeoLng='" + endGeoLng + '\'' +
+                ", endGeoLat='" + endGeoLat + '\'' +
+                ", startAddr='" + startAddr + '\'' +
+                ", startDistance=" + startDistance +
+                ", endAddr='" + endAddr + '\'' +
+                ", endDistance=" + endDistance +
+                ", startDistanceFormatted='" + startDistanceFormatted + '\'' +
+                ", endDistanceFormatted='" + endDistanceFormatted + '\'' +
+                ", suitability='" + suitability + '\'' +
+                ", quantity=" + quantity +
+                ", itemSize='" + itemSize + '\'' +
+                ", departureTime=" + departureTime +
+                ", quickConfirm=" + quickConfirm +
+                ", status=" + status +
+                ", revision=" + revision +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdTime=" + createdTime +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", updatedTime=" + updatedTime +
+                '}';
     }
 }

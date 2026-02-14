@@ -16,10 +16,9 @@ import com.heima.stroke.rabbitmq.MQProducer;
 import com.heima.stroke.service.AccountAPIService;
 import com.heima.stroke.service.OrderAPIService;
 import com.heima.stroke.service.StrokeAPIService;
-import com.heima.stroke.handler.valuation.BasicValuation;
-import com.heima.stroke.handler.valuation.FuelCostValuation;
-import com.heima.stroke.handler.valuation.StartPriceValuation;
 import com.heima.stroke.handler.valuation.Valuation;
+import com.heima.stroke.handler.valuation.PickupValuation;
+import com.heima.stroke.handler.valuation.ItemSizeValuation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +45,13 @@ public class StrokeHandler {
     @Autowired
     private MQProducer mqProducer;
 
+    @Autowired
+    BaiduMapClient baiduMapClient;
+
+//    //构建装饰者
+//    private static final Valuation valuation = new StartPriceValuation(new BasicValuation(new FuelCostValuation(null)));
+
+
 
     /**
      * 发布行程
@@ -58,7 +64,7 @@ public class StrokeHandler {
             throw new BusinessRuntimeException(BusinessErrors.DATA_NOT_EXIST, "发布人不存在");
         }
         if (strokeVO.getRole() == 1 && accountPO.getRole() == 0) {
-            throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR, "请先认证为车主");
+            throw new BusinessRuntimeException(BusinessErrors.AUTHENTICATION_ERROR, "请先认证为接单人");
         }
         StrokePO strokePO = CommonsUtils.toPO(strokeVO);
         //入mysql库
@@ -379,11 +385,6 @@ public class StrokeHandler {
         }
     }
 
-    @Autowired
-    BaiduMapClient baiduMapClient;
-    //构建装饰者
-    private static final Valuation valuation = new StartPriceValuation(new BasicValuation(new FuelCostValuation(null)));
-
     /**
      * 添加订单
      *
@@ -413,12 +414,19 @@ public class StrokeHandler {
         if (routePlanResultBO != null) {
             int distance = routePlanResultBO.getDistance().getValue();
             int estimatedTime = routePlanResultBO.getDuration().getValue();
+            estimatedTime += estimatedTime / 2;
             orderPO.setDistance(distance);
             orderPO.setEstimatedTime(estimatedTime);
 
-            //完成计费功能，使用装饰着模式，给orderPo设置金额
-            //计费规则：3公里以内起步价10元；3公里以上2.3元/公里；燃油附加费1次收取1元
-            orderPO.setCost(valuation.calculation((float) orderPO.getDistance() / 1000));
+            //完成计费功能，使用装饰者模式，给orderPo设置金额
+            //计费规则：起步价3元（包含1km），之后每超出500米加1元
+            //根据itemSize字段调整价格：1.小件(0.9) 2.中件(1.2) 3.大件(1.5)
+            String itemSize = invitee.getItemSize();
+
+            Valuation pickupValuation = new PickupValuation(null);
+            Valuation finalValuation = new ItemSizeValuation(pickupValuation, itemSize);
+            
+            orderPO.setCost(finalValuation.calculation((float) orderPO.getDistance()));
         }
 
         orderAPIService.add(orderPO);

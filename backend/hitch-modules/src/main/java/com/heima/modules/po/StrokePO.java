@@ -60,6 +60,12 @@ public class StrokePO implements Serializable, PO {
     private Integer quantity;
 
     /**
+     * 货物规格
+     * 1.小件 2.中件 3.大件
+     */
+    private String itemSize;
+
+    /**
      * 出发时间
      */
     private Date departureTime;
@@ -255,8 +261,41 @@ public class StrokePO implements Serializable, PO {
         this.updatedTime = updatedTime;
     }
 
+    public String getItemSize() {
+        return itemSize;
+    }
+
+    public void setItemSize(String itemSize) {
+        this.itemSize = itemSize;
+    }
+
     @Override
     public Class getVO() {
         return StrokeVO.class;
+    }
+
+    @Override
+    public String toString() {
+        return "StrokePO{" +
+                "id='" + id + '\'' +
+                ", publisherId='" + publisherId + '\'' +
+                ", role=" + role +
+                ", startGeoLng='" + startGeoLng + '\'' +
+                ", startGeoLat='" + startGeoLat + '\'' +
+                ", endGeoLng='" + endGeoLng + '\'' +
+                ", endGeoLat='" + endGeoLat + '\'' +
+                ", startAddr='" + startAddr + '\'' +
+                ", endAddr='" + endAddr + '\'' +
+                ", quantity=" + quantity +
+                ", itemSize='" + itemSize + '\'' +
+                ", departureTime=" + departureTime +
+                ", quickConfirm=" + quickConfirm +
+                ", status=" + status +
+                ", revision=" + revision +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdTime=" + createdTime +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", updatedTime=" + updatedTime +
+                '}';
     }
 }
