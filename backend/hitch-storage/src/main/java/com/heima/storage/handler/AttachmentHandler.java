@@ -3,8 +3,10 @@ package com.heima.storage.handler;
 import com.heima.commons.domin.vo.response.ResponseVO;
 import com.heima.commons.enums.BusinessErrors;
 import com.heima.commons.exception.BusinessRuntimeException;
+import com.heima.commons.initial.factory.InitialParserFactory;
 import com.heima.commons.utils.CommonsUtils;
 import com.heima.modules.po.AttachmentPO;
+import com.heima.modules.vo.AttachmentVO;
 import com.heima.storage.configuration.MinioConfig;
 import com.heima.storage.mapper.AttachmentMapper;
 import io.minio.MinioClient;
@@ -70,11 +72,17 @@ public class AttachmentHandler {
     }
 
     private AttachmentPO getAttachmentPO(MultipartFile file) throws IOException {
-        AttachmentPO attachmentPO = new AttachmentPO();
-        attachmentPO.setName(file.getOriginalFilename());
-        attachmentPO.setLenght(file.getSize());
-        attachmentPO.setExt(StringUtils.getFilenameExtension(file.getOriginalFilename()));
-        attachmentPO.setMd5(CommonsUtils.fileSignature(file.getBytes()));
-        return attachmentPO;
+        // 创建VO对象而不是直接创建PO
+        AttachmentVO attachmentVO = new AttachmentVO();
+        attachmentVO.setName(file.getOriginalFilename());
+        attachmentVO.setLenght(file.getSize());
+        attachmentVO.setExt(StringUtils.getFilenameExtension(file.getOriginalFilename()));
+        attachmentVO.setMd5(CommonsUtils.fileSignature(file.getBytes()));
+        
+        // 使用初始化工厂处理VO，生成主键等默认值
+        InitialParserFactory.initialDefValueForVO(attachmentVO);
+        
+        // 转换为PO
+        return CommonsUtils.toPO(attachmentVO);
     }
 }

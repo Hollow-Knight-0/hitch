@@ -2,27 +2,27 @@
 <html>
 
 <head>
-    <title>校  园顺路带</title>
-    <meta charset="utf-8" />
+    <title>校 园顺路带</title>
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
-    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/common.css"/>
     <script type="text/javascript" src="js/common.js"></script>
 
     <script>
         $(function () {
 
             // 登录
-            $('#go')                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  .click(function () {
+            $('#go').click(function () {
                 if ($('#u').val() == '' || $('#p').val() == '') return;
                 $.postForm("/account/api/login", '#loginForm', function (d) {
-                                                                                  if (d.code == 200) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   showMsg('登录成功');
+                    if (d.code == 200) {
+                        showMsg('登录成功');
                         localStorage.setItem('SESSION_TOKEN_KEY', d.data[0].token);
-                        localStorage.setItem('current_role',0); //默认切换
+                        localStorage.setItem('current_role', 0); //默认切换
                         if ($('#isDriver').val() == '1') {
                             toUrl('driver/user.html', 1000); // 接单同学
                         } else {
@@ -73,71 +73,71 @@
 <body>
 
 
-    <div data-role="page" id="pageone" class="bg-img">
-        <div data-role="header" data-position="fixed" data-tap-toggle="false">
-            <h1>登录</h1>
-        </div>
-        <div style="margin-top:60px;"></div>
-        <div data-role="main" class="ui-content ui-content2 ui-shadow-inset" style="background-color: white">
-            <form id="loginForm">
+<div data-role="page" id="pageone" class="bg-img">
+    <div data-role="header" data-position="fixed" data-tap-toggle="false">
+        <h1>登录</h1>
+    </div>
+    <div style="margin-top:60px;"></div>
+    <div data-role="main" class="ui-content ui-content2 ui-shadow-inset" style="background-color: white">
+        <form id="loginForm">
 
-                <div data-role="content">
-                    用户名：
-                    <input name="username" value="" id="u" />
-                    密码：
-                    <input name="password" value="" id="p" type="password">
-                    <br><br>
-                    <button type="button" class="ui-btn-active" id="go">登录</button>
-                    <div data-role="content" style="text-align: right;">
-                        <a href="#pagetwo" style="text-decoration: none;">还没有账号？注册新账号&gt;&gt;</a>
-                    </div>
+            <div data-role="content">
+                用户名：
+                <input name="username" value="" id="u"/>
+                密码：
+                <input name="password" value="" id="p" type="password">
+                <br><br>
+                <button type="button" class="ui-btn-active" id="go">登录</button>
+                <div data-role="content" style="text-align: right;">
+                    <a href="#pagetwo" style="text-decoration: none;">还没有账号？注册新账号&gt;&gt;</a>
                 </div>
-            </form>
+            </div>
+        </form>
 
+    </div>
+</div>
+
+<div data-role="page" id="pagetwo">
+    <div data-role="header">
+        <h1>注册</h1>
+    </div>
+
+    <div style="margin-top:60px;"></div>
+    <div data-role="main" class="ui-content ui-content2 ui-shadow-inset" style="background-color: white">
+        <form id="regForm">
+
+            <div data-role="content ">
+                用户名：
+                <input name="username" id="username"/>
+                手机号：
+                <input name="phone" id="phone"/>
+                密码：
+                <input name="password" id="password" type="password">
+                确认密码：
+                <input id="password2" type="password">
+                <br>
+                <button type="button" class="ui-btn-active" id="reg">注册新账号</button>
+            </div>
+        </form>
+        <div data-role="content" style="text-align: right;">
+            <a href="#pageone" style="text-decoration: none;">已有账号？立即登录&gt;&gt;</a>
         </div>
     </div>
 
-    <div data-role="page" id="pagetwo">
-        <div data-role="header">
-            <h1>注册</h1>
-        </div>
-
-        <div style="margin-top:60px;"></div>
-        <div data-role="main" class="ui-content ui-content2 ui-shadow-inset" style="background-color: white">
-            <form id="regForm">
-                
-                <div data-role="content ">
-                    用户名：
-                    <input name="username" id="username" />
-                    手机号：
-                    <input name="phone" id="phone" />
-                    密码：
-                    <input name="password" id="password" type="password">
-                    确认密码：
-                    <input id="password2" type="password">
-                    <br>
-                    <button type="button" class="ui-btn-active" id="reg">注册新账号</button>
-                </div>
-            </form>
-            <div data-role="content" style="text-align: right;">
-                <a href="#pageone" style="text-decoration: none;">已有账号？立即登录&gt;&gt;</a>
-            </div>
-        </div>
-
-        <div style="margin-bottom:75px;"></div>
-        <div data-role="footer" data-position="fixed" data-tap-toggle="false">
-            <div data-role="navbar" style="margin: 0;">
-                <ul>
-                    <li><a href="javascript:location.href='user/user.html'" data-icon="home"
-                            class="ui-btn-active">首页</a>
-                    </li>
-                    <li><a href="javascript:location.href='user/trip.html'" data-icon="grid">我的行程</a></li>
-                    <li><a href="javascript:location.href='user/order.html'" data-icon="bullets">我的订单</a></li>
-                    <li><a href="javascript:location.href='common/userCenter.html'" data-icon="user">个人中心</a></li>
-                </ul>
-            </div>
+    <div style="margin-bottom:75px;"></div>
+    <div data-role="footer" data-position="fixed" data-tap-toggle="false">
+        <div data-role="navbar" style="margin: 0;">
+            <ul>
+                <li><a href="javascript:location.href='user/user.html'" data-icon="home"
+                       class="ui-btn-active">首页</a>
+                </li>
+                <li><a href="javascript:location.href='user/trip.html'" data-icon="grid">我的行程</a></li>
+                <li><a href="javascript:location.href='user/order.html'" data-icon="bullets">我的订单</a></li>
+                <li><a href="javascript:location.href='common/userCenter.html'" data-icon="user">个人中心</a></li>
+            </ul>
         </div>
     </div>
+</div>
 
 </body>
 
